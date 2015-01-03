@@ -4,6 +4,11 @@
         Find the thirteen adjacent digits in the 1000-digit number that have the greatest product.
     Version: 2015.01.03
 
+    pylint.bat --version
+        No config file found, using default configuration
+        pylint 1.4.0,
+        astroid 1.3.2, common 0.63.2
+        Python 3.4.2 (v3.4.2:ab2c023a9432, Oct  6 2014, 22:15:05) [MSC v.1600 32 bit (Intel)]
     Your code has been rated at 10.00/10
 
     TODO:   add a functional programming solution
