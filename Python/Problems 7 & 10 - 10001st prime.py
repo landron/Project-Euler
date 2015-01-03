@@ -89,3 +89,4 @@ if __name__ == "__main__":
     validate_find_primes_sum()
 
     print("{:d}".format(FindPrimeNumber(10001)))
+    # print("{:d}".format(find_primes_sum(2000000)))
