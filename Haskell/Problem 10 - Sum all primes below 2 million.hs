@@ -4,6 +4,9 @@
 	Version: 2015.01.04
 
 	https://projecteuler.net/profile/landron.png
+
+	for performance measurements:
+		:set +s
 -}
 
 {-
@@ -11,14 +14,11 @@ TODO:
 	1. understand the magic of the trace lines
 		'|' => it first evaluates the 'trace'
 		why returning False => to skip executing the implementation (undefined)
-
-	2. get the result out of the monade and add some validations
 -}
 import Debug.Trace
 import qualified Data.Map as Map
 import qualified Data.Vector as Vec
 import Control.Monad.ST
-import Control.Monad
 import qualified Data.Vector.Mutable as MutableVec
 
 assert :: Monad a => Bool -> a ()
@@ -127,9 +127,7 @@ primes_sum4_1 limit = do
 	sieve <- update_sieve4 limit
 	return (Vec.sum sieve)
 
-primes_sum4 limit = do
-	result <- primes_sum4_1 limit
-	print result
+primes_sum4 limit = runST $ do primes_sum4_1 limit
 
 --------------------------------------------------------
 --------------------------------------------------------
@@ -222,8 +220,22 @@ validate = do
 	assert (True || 32405717 == primes_sum3 25000)
 	assert (True || 454396537 == primes_sum3 100000)
 
+	--primes_sum4
+	assert (17 == primes_sum4 9)
+	assert (17 == primes_sum4 10)
+	assert (17 == primes_sum4 11)
+	assert (28 == primes_sum4 12)
+	assert (100 == primes_sum4 29)
+	assert (129 == primes_sum4 30)
+	assert (1060 == primes_sum4 100)
+	assert (76127 == primes_sum4 1000)
+	assert (5736396 == primes_sum4 10000)
+	assert (32405717 == primes_sum4 25000)
+	assert (454396537 == primes_sum4 100000)
+	assert (False || 142913828922 == primes_sum4 2000000)	
+
 	putStrLn "Validation done!"
 
 main = do
 	--print $ primes_sum3 200000
-	primes_sum4 2000000
+	print $ primes_sum4 2000000
