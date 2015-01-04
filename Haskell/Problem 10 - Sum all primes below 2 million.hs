@@ -1,7 +1,9 @@
 {-
-# http://projecteuler.net/problem=10
-#   Problem 10. Sum all primes below N million
-# Version: 2015.01.04
+	http://projecteuler.net/problem=10
+		Problem 10. Sum all primes below N million
+	Version: 2015.01.04
+
+	https://projecteuler.net/profile/landron.png
 -}
 
 {-
@@ -22,6 +24,13 @@ import qualified Data.Vector.Mutable as MutableVec
 assert :: Monad a => Bool -> a ()
 assert False = error "assertion failed!"
 assert _     = return ()
+
+--You only need to start crossing out multiples at p^2, because any 
+--smaller multiple of p has a prime divisor less than p and has already 
+--been crossed out as a multipleof that.
+get_primes_limit :: Int -> Int
+get_primes_limit limit = 1 + floor (sqrt $ fromIntegral limit)
+get_primes_limit_old limit = (limit `quot` 3)
 
 --------------------------------------------------------
 --1. list of not primes:	too slow for 100000 already
@@ -82,13 +91,13 @@ update_sieve_step prime db limit = Vec.unsafeUpd db [(i,0) | i <- [3*prime, 5*pr
 --version 1
 update_sieve3_rec_1 prime db limit
 	| prime == 2 = update_sieve3_rec 3 (Vec.unsafeUpd db [(i,0) | i <- [4,6 .. limit-1]]) limit
-	| prime <= (limit `quot` 3) = update_sieve3_rec (prime+2) (update_sieve_step prime db limit) limit
+	| prime <= (get_primes_limit limit) = update_sieve3_rec (prime+2) (update_sieve_step prime db limit) limit
 	| otherwise = db
 update_sieve3_1 limit = update_sieve3_rec_1 2 (Vec.generate limit (id)) limit
 
 --version 2: not really faster than the previous one
 update_sieve3_rec prime db limit
-	| prime <= (limit `quot` 3) = update_sieve3_rec (prime+2) (update_sieve_step prime db limit) limit
+	| prime <= (get_primes_limit limit) = update_sieve3_rec (prime+2) (update_sieve_step prime db limit) limit
 	| otherwise = db
 update_sieve3_first db limit = update_sieve3_rec 3 (Vec.unsafeUpd db [(i,0) | i <- [4,6 .. limit-1]]) limit
 update_sieve3_2 limit = update_sieve3_first (Vec.generate limit (id)) limit
@@ -108,7 +117,7 @@ update_sieve4_step limit arrIn = do
 	arr <- Vec.unsafeThaw arrIn
 	MutableVec.write arr 1 0
 	update_sieve4_step_M 2 limit arr
-	mapM_ (\p -> update_sieve4_step_M p limit arr) [3, 5 .. limit-1]
+	mapM_ (\p -> update_sieve4_step_M p limit arr) [3, 5 .. get_primes_limit limit]
 	Vec.unsafeFreeze arr
 
 update_sieve4 limit = update_sieve4_step limit (Vec.generate limit (id))
@@ -169,6 +178,11 @@ primes_sum4 limit = do
 	*Main> primes_sum4 2000000
 	142913828922
 	(12.25 secs, 3193954912 bytes)
+
+	the new get_primes_limit version
+	*Main> primes_sum4 2000000
+	142913828922
+	(5.09 secs, 1368733064 bytes)
 -}
 
 validate = do

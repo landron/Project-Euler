@@ -21,7 +21,7 @@ def get_primes(limit):
     primes[2] = 2
 
     limit_of_sieve = limit
-    # You only need to start crossing out multiples at p2, because any 
+    # You only need to start crossing out multiples at p^2, because any 
     # smaller multiple of p has a prime divisor less than p and has already 
     # been crossed out as a multipleof that.
     limit_of_sieve = 1 + math.floor(math.sqrt(limit))
