@@ -114,11 +114,11 @@ update_sieve4_step_M prime limit arr = do
 	mapM_ (\i -> MutableVec.write arr i 0) [3*prime, 5*prime .. limit-1]
 
 update_sieve4_step limit arrIn = do
-	arr <- Vec.unsafeThaw arrIn
+	arr <- Vec.thaw arrIn
 	MutableVec.write arr 1 0
 	update_sieve4_step_M 2 limit arr
 	mapM_ (\p -> update_sieve4_step_M p limit arr) [3, 5 .. get_primes_limit limit]
-	Vec.unsafeFreeze arr
+	Vec.freeze arr
 
 update_sieve4 limit = update_sieve4_step limit (Vec.generate limit (id))
 
