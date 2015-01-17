@@ -111,7 +111,7 @@ primes_sum3 limit = Vec.sum (update_sieve3 limit) - 1
 update_sieve4_step_M 2 limit arr = do
 	mapM_ (\i -> MutableVec.write arr i 0) [4, 6 .. limit-1]
 update_sieve4_step_M prime limit arr = do
-	mapM_ (\i -> MutableVec.write arr i 0) [3*prime, 5*prime .. limit-1]
+	mapM_ (\i -> MutableVec.write arr i 0) [prime*prime, (prime+2)*prime .. limit-1]
 
 update_sieve4_step limit arrIn = do
 	arr <- Vec.thaw arrIn
