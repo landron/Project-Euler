@@ -29,7 +29,7 @@ def get_primes(limit):
     # sieve of Eratosthenes
     for i in range(3,limit_of_sieve,2):
         if primes[i]:
-            for j in range(3*i,limit,2*i):
+            for j in range(i*i,limit,2*i):
                 primes[j] = 0
 
     return primes
