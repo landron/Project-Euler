@@ -19,10 +19,21 @@
 
     Optimizations:
         1. calculate only once the prime divisors for each n in the (n,n+1) sequences
+        2. don't really get the divisors (formula from the site: 012_overview.pdf)
+            D(N) = (a1+1) * (a2+1) * (a3+1) * ...
+            an being the exponents of the distinct prime numbers which are factors of N
+
+            for coprime numbers:
+            D(t) = D(n/2)(D(n+1) if n is even
+            or D(t) = D(n)(D((n+1)/2) if (n+1) is even
+        3. for a number, the last possible prime divisor is sqrt
+            (except if it is a prime!)
+        4. since we know the result: start with the primes until 13000
 """
 
+import math
 import itertools
-import time
+from time import time
 from proj_euler import get_primes
 
 HARD_ASSERT = False
@@ -124,14 +135,19 @@ def get_prime_divisors(number, primes):
     """get the prime divisors of a given number"""
     assert 1 < number
     assert primes
+    limit = 1 + math.floor(math.sqrt(number))
     divisors = []
     for prime in primes:
+        if limit < prime:
+            break
         (number, power) = get_power(number, prime)
         if 0 != power:
             divisors.append((prime, power))
         if number == 1:
             break
-    assert 1 == number
+    if 1 != number:
+        #   a prime number
+        divisors.append(number)
     return divisors
 
 def divide_by_2(primes):
@@ -140,25 +156,41 @@ def divide_by_2(primes):
     if 1 == primes[0][1]:
         return primes[1:]
     else:
-        return [(2,primes[0][1]-1)]+primes[1:]
+        return [(2, primes[0][1]-1)] + primes[1:]
+
+def divisors_number(primes):
+    """get the number of divisors from a list of primes"""
+    divisors = 1
+    for prime in primes:
+        divisors *= (1+get_divisor_and_power(prime)[1])
+    return divisors
 
 def get_triangular_divisors(number, previous, primes):
-    """get the prime divisors of the resulting triangular number knowing the previous list
+    """get the divisors of the resulting triangular number knowing the previous list
             the numbers are coprime => we can safely combine the lists
     """
     if 0 == number%2:
-        first = divide_by_2(previous)
         second = get_prime_divisors(number+1, primes)
-        return (second, combine_primes(first, second))
+        divisors = combine_primes(divide_by_2(previous), second)
     else:
-        first = previous
-        second = get_prime_divisors(number+1, primes)    
-        return (second, combine_primes(first, divide_by_2(second)))
+        second = get_prime_divisors(number+1, primes)
+        divisors = combine_primes(previous, divide_by_2(second))
+    return (second, divisors)
+
+def get_triangular_divisors_number(number, previous, primes):
+    """ like the previous, but only the number of divisors"""
+    if 0 == number%2:
+        second = get_prime_divisors(number+1, primes)
+        divisors = divisors_number(divide_by_2(previous)) *divisors_number(second)
+    else:
+        second = get_prime_divisors(number+1, primes)
+        divisors = divisors_number(previous) * divisors_number(divide_by_2(second))
+    return (second, divisors)
 
 def first_triangle_number_base(number_of_divisors):
     """get the first triangular number with the given number of divisors"""
 
-    limit = 100
+    limit = 13000   # 100
     primes = get_primes(limit)
     # 3 because get_prime_divisors wants > 1 (2/2 = 1)
     previous = get_prime_divisors(3, primes)
@@ -169,9 +201,9 @@ def first_triangle_number_base(number_of_divisors):
         assert i < limit
 
         # !getting only the length of the list is enough
-        (previous, divisors) = get_triangular_divisors(i, previous, primes)
-        if len(divisors) >= number_of_divisors:
-            return (len(divisors), i, i*(i+1)//2)
+        (previous, divisors) = get_triangular_divisors_number(i, previous, primes)
+        if divisors >= number_of_divisors:
+            return (divisors, i, i*(i+1)//2)
 
 def first_triangle_number(number_of_divisors):
     """get the first triangular number with the given number of divisors"""
@@ -190,16 +222,20 @@ def debug_validations_basic():
 
     assert [1, 2, 4, 7, 14, 28] == combine_sorted((2, 2), 7)
     assert [1, 2, 4, 7, 14, 28] == combine_primes_sorted((2, 2), 7)
+    assert 6 == divisors_number([(2, 2), 7])
     assert [1, 2, 3, 4, 6, 11, 12, 22, 33, 44, 66, 132] == combine_primes_sorted([(2, 2), 3], 11)
+    assert 12 == divisors_number([(2, 2), 3, 11])
     assert combine_primes_sorted(3, [(2, 2), 11]) == combine_primes_sorted([(2, 2), 3], 11)
     # [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 24, 30, 40, 60, 120]
     assert 16 == len(combine_primes_sorted((2, 3), [3, 5]))
+    assert 16 == divisors_number([(2, 3), 3, 5])
 
     assert [(2, 2), (3, 2)] == get_prime_divisors(36, get_primes(100))
     assert [(2, 4), (3, 2)] == get_prime_divisors(144, get_primes(100))
     assert [(2, 2), (3, 1), (7, 1)] == get_prime_divisors(84, get_primes(100))
 
 def debug_get_triangular_divisors(number, primes):
+    """get_triangular_divisors version without the previous list parameter"""
     assert number > 4
     previous = get_prime_divisors(number, primes)
     return get_triangular_divisors(number, previous, primes)[1]
@@ -235,16 +271,22 @@ def debug_validations():
 # version 1:  8.49 seconds -> 10.31 seconds
 # version 2:  4.64 seconds -> 4.72 seconds
 #   optimization 1: calculate the prime divisors only once for each divisor
+# version 3:  3.95 seconds -> 4.64 seconds
+#   optimization 2: don't generate the divisors, only calculate their number
+# version 4:  0.59 seconds -> 0.74 seconds
+#   optimization 3: limit the maximum prime divisor
+# version 5:  0.57 -> 0.66
+#   optimization 4: limit of primes = 13000
 def problem_13():
     """solve the problem, print the needed time"""
-    start = time.time()
+    start = time()
 
     # print(len(sorted(get_triangular_divisors(24, get_primes(100)))))
     # (576, 12375, 76576500)
-    # print(first_triangle_number_base(500))
-    result = first_triangle_number(500)
-    assert 76576500 == result
-    print("Result {0} in {1:.2f} seconds".format(result, time.time()-start))
+    result = first_triangle_number_base(500)
+    # print(result)
+    assert 76576500 == result[2]
+    print("Result {0} in {1:.2f} seconds".format(result[2], time()-start))
 
 if __name__ == "__main__":
     debug_validations()

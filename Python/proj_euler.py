@@ -11,10 +11,11 @@
 """
 import math
 
-def get_primes(limit):
+def get_primes_1(limit):
     """get the list of primes until the given limit
             returns the list of them
-        it uses the good ol' sieve of Eratosthenes, ! there are better solutions
+        it uses the good ol' sieve of Eratosthenes
+            not optimized: keep it for reference!
     """
 
     # initialization
@@ -40,3 +41,20 @@ def get_primes(limit):
     primes = [i for i in primes if i != 0]
 
     return primes
+
+def get_primes_2(limit):
+    """minor optimization version of the previous"""
+    # not rounded since we skip 1 & 2
+    primes = [i*2+3 for i in range(limit//2-1)]
+    limit_of_sieve = 1+math.floor(math.sqrt(limit))
+    for i in range(3, limit_of_sieve, 2):
+        if primes[i//2-1]:
+            for j in range(i*i, limit, 2*i):
+                primes[j//2-1] = 0
+    return [2]+[i for i in primes if i != 0]
+
+def get_primes(limit):
+    """get the list of primes until the given limit
+            returns the list of them
+    """
+    return get_primes_2(limit)
