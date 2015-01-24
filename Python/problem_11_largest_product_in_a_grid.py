@@ -13,7 +13,6 @@
     Your code has been rated at 10.00/10
 """
 
-from operator import mul
 from functools import reduce
 
 GRID = b"""\
@@ -46,7 +45,7 @@ def get_grid(grid):
 def get_product(matrix, index, direction, size):
     """calculate hte product for a sequence"""
     sequence = [matrix[index[0]+direction[0]*i][index[1]+direction[1]*i] for i in range(size)]
-    return reduce(mul, sequence)
+    return reduce(lambda x,y: x*y, sequence)
 
 def compare_products(matrix, index, direction, size, result):
     """compare the sequence to the current maximum"""
