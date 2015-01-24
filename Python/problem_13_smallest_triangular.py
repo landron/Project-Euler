@@ -16,6 +16,9 @@
         1. pop "really" removes elements
         2. I had a lot of problems solving this one because I initially wrongly calculated the
         number of divisors for numbers with more of three prime divisors
+
+    Optimizations:
+        1. calculate only once the prime divisors for each n in the (n,n+1) sequences
 """
 
 import itertools
@@ -131,24 +134,34 @@ def get_prime_divisors(number, primes):
     assert 1 == number
     return divisors
 
-def get_triangular_divisors(number, primes):
-    """get the prime divisors of the resulting triangular number"""
-    if 0 == number%2:
-        second = number+1
-        first = number//2
+def divide_by_2(primes):
+    """divide a list of primes by 2"""
+    assert 2 == primes[0][0]
+    if 1 == primes[0][1]:
+        return primes[1:]
     else:
-        first = number
-        second = (number+1)//2
-    list1 = get_prime_divisors(first, primes)
-    list2 = get_prime_divisors(second, primes)
-    # the number are coprimes
-    return combine_primes(list1, list2)
+        return [(2,primes[0][1]-1)]+primes[1:]
+
+def get_triangular_divisors(number, previous, primes):
+    """get the prime divisors of the resulting triangular number knowing the previous list
+            the numbers are coprime => we can safely combine the lists
+    """
+    if 0 == number%2:
+        first = divide_by_2(previous)
+        second = get_prime_divisors(number+1, primes)
+        return (second, combine_primes(first, second))
+    else:
+        first = previous
+        second = get_prime_divisors(number+1, primes)    
+        return (second, combine_primes(first, divide_by_2(second)))
 
 def first_triangle_number_base(number_of_divisors):
     """get the first triangular number with the given number of divisors"""
 
     limit = 100
     primes = get_primes(limit)
+    # 3 because get_prime_divisors wants > 1 (2/2 = 1)
+    previous = get_prime_divisors(3, primes)
     for i in itertools.count(3):
         if i == limit:
             limit *= 10
@@ -156,7 +169,7 @@ def first_triangle_number_base(number_of_divisors):
         assert i < limit
 
         # !getting only the length of the list is enough
-        divisors = get_triangular_divisors(i, primes)
+        (previous, divisors) = get_triangular_divisors(i, previous, primes)
         if len(divisors) >= number_of_divisors:
             return (len(divisors), i, i*(i+1)//2)
 
@@ -186,11 +199,16 @@ def debug_validations_basic():
     assert [(2, 4), (3, 2)] == get_prime_divisors(144, get_primes(100))
     assert [(2, 2), (3, 1), (7, 1)] == get_prime_divisors(84, get_primes(100))
 
+def debug_get_triangular_divisors(number, primes):
+    assert number > 4
+    previous = get_prime_divisors(number, primes)
+    return get_triangular_divisors(number, previous, primes)[1]
+
 def debug_validations_triangular():
     """triangular validations"""
-    assert [1, 2, 4, 7, 14, 28] == get_triangular_divisors(7, get_primes(100))
-    assert [1, 2, 3, 6, 11, 22, 33, 66] == get_triangular_divisors(11, get_primes(100))
-    assert 16 == len(get_triangular_divisors(15, get_primes(100)))
+    assert [1, 2, 4, 7, 14, 28] == debug_get_triangular_divisors(7, get_primes(100))
+    assert [1, 2, 3, 6, 11, 22, 33, 66] == debug_get_triangular_divisors(11, get_primes(100))
+    assert 16 == len(debug_get_triangular_divisors(15, get_primes(100)))
 
     assert 28 == first_triangle_number(5)
     assert 28 == first_triangle_number(6)
@@ -215,6 +233,8 @@ def debug_validations():
     debug_validations_triangular()
 
 # version 1:  8.49 seconds -> 10.31 seconds
+# version 2:  4.64 seconds -> 4.72 seconds
+#   optimization 1: calculate the prime divisors only once for each divisor
 def problem_13():
     """solve the problem, print the needed time"""
     start = time.time()
@@ -223,8 +243,8 @@ def problem_13():
     # (576, 12375, 76576500)
     # print(first_triangle_number_base(500))
     result = first_triangle_number(500)
+    assert 76576500 == result
     print("Result {0} in {1:.2f} seconds".format(result, time.time()-start))
-
 
 if __name__ == "__main__":
     debug_validations()
