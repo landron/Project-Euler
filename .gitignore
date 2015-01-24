@@ -15,3 +15,4 @@
 /CPP/.gitignore
 /Python/*.gitignore
 /Haskell/*.gitignore
+*.pyc
