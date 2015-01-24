@@ -2,7 +2,7 @@
 #   What is the 10 001st prime number?
 # http://projecteuler.net/problem=10
 #   Problem 10. Sum all primes below N million
-# Version: 2015.01.04
+# Version: 2015.01.24
 
 # TODO: 
 #     ? 1. FindPrimesNumberCount, position <= 0

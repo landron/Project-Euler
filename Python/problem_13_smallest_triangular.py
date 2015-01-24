@@ -2,7 +2,7 @@
     Problem 12 : Highly divisible triangular number
     http://projecteuler.net/problem=12
         What is the value of the first triangle number to have over five hundred divisors?
-    Version: 2015.01.17
+    Version: 2015.01.24
     https://projecteuler.net/profile/landron.png
 
     pylint.bat --version
@@ -277,7 +277,7 @@ def debug_validations():
 #   optimization 3: limit the maximum prime divisor
 # version 5:  0.57 -> 0.66
 #   optimization 4: limit of primes = 13000
-def problem_13():
+def problem_12():
     """solve the problem, print the needed time"""
     start = time()
 
@@ -291,4 +291,4 @@ def problem_13():
 if __name__ == "__main__":
     debug_validations()
 
-    problem_13()
+    problem_12()
