@@ -9,6 +9,7 @@
 
 HARD_VALIDATE = False
 
+from time import time
 from proj_euler import get_primes
 
 def FindPrimesNumberCount(limit, position = 1):
@@ -56,9 +57,25 @@ def validate_find_primes_sum():
     if HARD_VALIDATE:
         assert (142913828922 == find_primes_sum(2000000))
 
+# 0.5 - 0.6 seconds
+def problem_7():
+    """solve the problem, print the needed time"""
+    start = time()
+    result = FindPrimeNumber(10001)
+    assert 104743 == result
+    print("Problem 7 - result {0:d} in {1:.2f} seconds".format(result, time()-start))
+
+# around 1 second, be aware of the validations
+def problem_11():
+    """solve the problem, print the needed time"""
+    start = time()
+    result = find_primes_sum(2000000)
+    assert 142913828922 == result
+    print("Problem 11 - result {0:d} in {1:.2f} seconds".format(result, time()-start))
+
 if __name__ == "__main__":
     validate_FindPrimesNumberCount()
     validate_find_primes_sum()
 
-    print("{:d}".format(FindPrimeNumber(10001)))
-    # print("{:d}".format(find_primes_sum(2000000)))
+    problem_7()
+    # problem_11()
