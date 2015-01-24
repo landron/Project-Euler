@@ -6,45 +6,17 @@
 
 # TODO: 
 #     ? 1. FindPrimesNumberCount, position <= 0
-#     2. Other optimizations (sieve)
-
-import math
 
 HARD_VALIDATE = False
 
-def get_primes(limit):
+from proj_euler import get_primes
 
-    # initialization 
-    primes = [0 for i in range(limit)]
-    for i in range(3,limit,2):
-        primes[i] = i
-    primes[2] = 2
-
-    limit_of_sieve = limit
-    # You only need to start crossing out multiples at p^2, because any 
-    # smaller multiple of p has a prime divisor less than p and has already 
-    # been crossed out as a multipleof that.
-    limit_of_sieve = 1 + math.floor(math.sqrt(limit))
-
-    # sieve of Eratosthenes
-    for i in range(3,limit_of_sieve,2):
-        if primes[i]:
-            for j in range(i*i,limit,2*i):
-                primes[j] = 0
-
-    return primes
-
-def FindPrimesNumberCount(limit, position = 0):
+def FindPrimesNumberCount(limit, position = 1):
+    assert position > 0
     primes = get_primes(limit)
-    count = 1 #2
-    if (1 == position):
-        return (1, 2)
-    for i in range(3,limit,2):
-        if (primes[i]>0):
-            count += 1
-            if (position == count):
-                return (count, i)
-    return (count, 0)
+    if position-1 < len(primes):
+        return (len(primes), primes[position-1])
+    return (len(primes), 0)
 
 def FindPrimeNumber(position):
     limit = 100
