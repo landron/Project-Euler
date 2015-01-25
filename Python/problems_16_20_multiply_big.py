@@ -2,6 +2,10 @@
     Problem 16 : Power digit sum
     http://projecteuler.net/problem=16
         What is the sum of the digits of the number 2^1000?
+    Problem 20 : Factorial digit sum
+    http://projecteuler.net/problem=20
+        Find the sum of the digits in the number 100!
+        
     Version: 2015.01.25
 
     pylint.bat --version
@@ -34,16 +38,27 @@ def debug_validations():
     assert 81918 == reduce(lambda x, y: 10*x+y, multiply([6, 6, 6], 123))
 
 def problem_16():
-    """solve the problem, print the needed time"""
+    """solve the problem"""
 
     number = [1]
     for i in range(1000):   #pylint: disable=unused-variable
         number = multiply(number, 2)
     result = sum(number)
     assert 1366 == result
-    print("Result: {0}".format(result))
+    print("Result 16: {0}".format(result))
+
+def problem_20():
+    """solve the problem"""
+
+    number = [1]
+    for i in range(100):
+        number = multiply(number, i+1)
+    result = sum(number)
+    assert 648 == result
+    print("Result 20: {0}".format(result))
 
 if __name__ == "__main__":
     debug_validations()
 
     problem_16()
+    problem_20()
