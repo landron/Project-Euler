@@ -163,12 +163,11 @@ def add_numbers_2(nb1, nb2):
     assert len(nb1) >= len(nb2)
     asum = [x + y for x, y in itertools.zip_longest(reversed(nb1), reversed(nb2), fillvalue=0)]
     # ! apply some map+reduce function
-    carry = False
+    carry = 0
     result = []
     for i in asum:
-        current = (1 if carry else 0)+i
-        carry = current >= 10
-        result += [current%10]
+        result += [(carry+i)%10]
+        carry = (carry+i) // 10
     if carry:
         result += [1]
     result.reverse()
