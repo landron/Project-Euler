@@ -20,21 +20,20 @@ def is_leap_year(year):
 
 def count_sundays():
     """solve the problem, print the needed time"""
-    days_by_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    days_by_month = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     # 1900 is not a leap year
     assert not is_leap_year(1900)
     # Convention: 0 = Monday
     day1 = 365%7
-    year = 1901
+
     sundays = 0
-    while year != 2001:
+    for year in range(1901, 2001):
         days_by_month[1] = 29 if is_leap_year(year) else 28
         for month in days_by_month:
             day1 += month
             if day1%7 == 6:
                 sundays += 1
-        year += 1
 
     return sundays
 
