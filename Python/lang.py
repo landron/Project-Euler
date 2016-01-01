@@ -1,5 +1,9 @@
-
+'''
+    Add here various trips & tricks & subtleties of the language
+    Be sure to follow the Pythonesque style closely!
+'''
 from functools import reduce
+from time import time
 
 def define_object_func(point):
     # point++ does not work !!
@@ -35,7 +39,17 @@ def list_comprehensions():
     print("Sort 3", some_table, ':', sorted(set(some_table), key=lambda x: x[1]))
     print("Sort 4", some_table, ':', [i for (i, j) in sorted(set(some_table), key=lambda x: x[1])])
 
-if __name__ == "__main__":
+def python_coding():
+    start = time()
+
+    result = 123
+
     define_object()
     print()
     list_comprehensions()
+    print()
+
+    print("Result {0} in {1:.2f} seconds".format(result, time()-start))
+
+if __name__ == "__main__":
+    python_coding()
