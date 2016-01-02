@@ -4,6 +4,7 @@
 '''
 from functools import reduce
 from time import time
+import proj_euler
 
 def define_object_func(point):
     # point++ does not work !!
@@ -24,6 +25,8 @@ def define_object():
 # creating a list based on existing lists.
 def list_comprehensions():
     print("Great functional programming")
+    # "Removed reduce(). Use functools.reduce() if you really need it; however, 99 percent of the \
+    # time an explicit for loop is more readable."
     smallest_number = reduce(lambda x, y: x if x[1] < y[1] else y, \
         enumerate([6, 5, 8, 9, 13, 4, 6, 8, 13, 5, 15, 4, 8, 6]))[1]
     print(smallest_number)
@@ -42,13 +45,12 @@ def list_comprehensions():
 def python_coding():
     start = time()
 
-    result = 123
-
     define_object()
     print()
     list_comprehensions()
     print()
 
+    result = proj_euler.get_divisors(48)
     print("Result {0} in {1:.2f} seconds".format(result, time()-start))
 
 if __name__ == "__main__":
