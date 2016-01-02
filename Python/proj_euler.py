@@ -1,5 +1,6 @@
 """
     Project Euler problems common functionality
+        primes, divisors
     Version: 2016.01.2
 
     Reference:
@@ -11,7 +12,6 @@
         astroid 1.4.3
         Python 3.5.1 (v3.5.1:37a07cee5969, Dec  6 2015, 01:38:48) [MSC v.1900 32 bit (Intel)]
     Your code has been rated at 10.00/10
-
 """
 import math
 import itertools
@@ -77,7 +77,8 @@ def __get_power(number, prime):
 
 def get_prime_divisors(number, primes):
     """get the prime divisors of a given number
-            the sqrt(number) is enough for the limit of the primes
+            the sqrt(number) is enough for the limit of the primes because
+                we consider the remainder, a last "big" prime number
     """
     assert number > 1
     assert primes
@@ -102,16 +103,17 @@ def get_divisors_as_primes(number):
     return get_prime_divisors(number, primes)
 
 def get_divisors(number):
-    """get the divisors of a given number as a list of primes and powers"""
+    """get all the divisors of a given number"""
     divisors_and_powers = get_divisors_as_primes(number)
-    # print(divisors_and_powers)
-    divisors1 = []
+
+
+    divisors_expanded = []
     for item in divisors_and_powers:
-        divisors1.append([item[0]**(i+1) for i in range(item[1])])
+        divisors_expanded.append([item[0]**(i+1) for i in range(item[1])])
 
     divisors = []
-    for i in range(1+len(divisors1)):
-        for item in itertools.combinations(divisors1, i):
+    for i in range(1+len(divisors_expanded)):
+        for item in itertools.combinations(divisors_expanded, i):
             for j in list(itertools.product(*item)):
                 prod = 1
                 for k in j:
