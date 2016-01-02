@@ -106,7 +106,6 @@ def get_divisors(number):
     """get all the divisors of a given number"""
     divisors_and_powers = get_divisors_as_primes(number)
 
-
     divisors_expanded = []
     for item in divisors_and_powers:
         divisors_expanded.append([item[0]**(i+1) for i in range(item[1])])
