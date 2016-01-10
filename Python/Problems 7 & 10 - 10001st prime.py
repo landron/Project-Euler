@@ -1,14 +1,21 @@
-# http://projecteuler.net/problem=7
-#   What is the 10 001st prime number?
-# http://projecteuler.net/problem=10
-#   Problem 10. Sum all primes below N million
-# Version: 2015.01.24
+'''
+    http://projecteuler.net/problem=7
+      What is the 10 001st prime number?
+    http://projecteuler.net/problem=10
+      Problem 10. Sum all primes below N million
 
-# TODO: 
-#     ? 1. FindPrimesNumberCount, position <= 0
+    Version: 2016.01.10
+
+    TODO: 
+        ? 1. FindPrimesNumberCount, position <= 0
+        2. FindPrimesNumberCount is still not fast enough (Sieve of Eratosthenes) for the latest test case of
+        http://www.hackerrank.com/contests/projecteuler/challenges/euler007
+        See http://math.stackexchange.com/questions/1257/is-there-a-known-mathematical-equation-to-find-the-nth-prime
+'''
 
 HARD_VALIDATE = False
 
+from math import log
 from time import time
 from proj_euler import get_primes
 
@@ -21,11 +28,19 @@ def FindPrimesNumberCount(limit, position = 1):
 
 def FindPrimeNumber(position):
     limit = 100
-    prime = 0
-    while (0 == prime):
-        limit *= 10
-        (count, prime) = FindPrimesNumberCount(limit, position) 
-    return prime
+    # Consequence Two: The nth prime is about n (ln n + ln (ln n))
+    if position >= 6:
+        limit = 1 + int(position * (log(position)+log(log(position))))
+    # print(position, limit)
+
+    # prime = 0
+    # while (0 == prime):
+    #     (count, prime) = FindPrimesNumberCount(limit, position) 
+    #     limit *= 10
+    # return prime
+    result = FindPrimesNumberCount(limit, position)[1]
+    assert result != 0
+    return result
 
 def find_primes_sum(limit):
     primes = get_primes(limit)
@@ -42,6 +57,8 @@ def validate_FindPrimesNumberCount():
     assert(13 == FindPrimeNumber(6))
     assert(97 == FindPrimeNumber(25))
     assert(997 == FindPrimeNumber(168))
+    assert(5 == FindPrimeNumber(3))
+    assert(13 == FindPrimeNumber(6))
 
 def validate_find_primes_sum():
     assert (17 == find_primes_sum(9))
@@ -79,3 +96,6 @@ if __name__ == "__main__":
 
     problem_7()
     # problem_11()
+
+    # for i in range(1,100):
+    #     print(FindPrimeNumber(i))
