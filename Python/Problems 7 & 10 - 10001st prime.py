@@ -83,7 +83,7 @@ def problem_7():
     print("Problem 7 - result {0:d} in {1:.2f} seconds".format(result, time()-start))
 
 # around 1 second, be aware of the validations
-def problem_11():
+def problem_10():
     """solve the problem, print the needed time"""
     start = time()
     result = find_primes_sum(2000000)
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     validate_find_primes_sum()
 
     problem_7()
-    # problem_11()
+    # problem_10()
 
     # for i in range(1,100):
     #     print(FindPrimeNumber(i))
