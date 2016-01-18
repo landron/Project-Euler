@@ -1,7 +1,7 @@
 """
     Project Euler problems common functionality
         primes, divisors
-    Version: 2016.01.2
+    Version: 2016.01.17
 
     Reference:
         divisors:   problem_12_smallest_triangular
@@ -57,6 +57,30 @@ def get_primes_2(limit):
             for j in range(i*i, limit, 2*i):
                 primes[j//2-1] = 0
     return [2]+[i for i in primes if i != 0]
+
+def get_primes_limits(limit_inf, limit_sup):
+    """get the prime numbers in an interval (but used ?)"""
+    primes = [i for i in range(limit_inf, limit_sup)]
+    # print(primes)
+    limit_of_sieve = 1+math.floor(math.sqrt(limit_sup))
+
+    for i in range(3, limit_of_sieve, 2):
+        remainder = limit_inf%i
+        inf = limit_inf-remainder+i if remainder != 0 else limit_inf-remainder
+        for j in range(inf, limit_sup, i):
+            if j != i:
+                primes[j-limit_inf] = 0
+    remainder = limit_inf%2
+    inf = limit_inf-remainder+2 if remainder != 0 else limit_inf-remainder
+    for j in range(inf, limit_sup, 2):
+        if j != 2:
+            primes[j-limit_inf] = 0
+    if limit_inf <= 1:
+        primes[1-limit_inf] = 0
+
+    primes = [i for i in primes if i != 0]
+
+    return primes
 
 def get_primes(limit):
     """get the list of primes until the given limit

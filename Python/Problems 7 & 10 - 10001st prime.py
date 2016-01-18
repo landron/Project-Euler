@@ -26,21 +26,30 @@ def FindPrimesNumberCount(limit, position = 1):
         return (len(primes), primes[position-1])
     return (len(primes), 0)
 
-def FindPrimeNumber(position):
-    limit = 100
-    # Consequence Two: The nth prime is about n (ln n + ln (ln n))
-    if position >= 6:
-        limit = 1 + int(position * (log(position)+log(log(position))))
-    # print(position, limit)
+# get_primes_limits(limitInf, limitSup) doesn't work as there are more primes in the interval
+def FindPrimeNumber2(position):
+    if position < 6:
+        return FindPrimeNumber1(position)
 
-    # prime = 0
-    # while (0 == prime):
-    #     (count, prime) = FindPrimesNumberCount(limit, position) 
-    #     limit *= 10
-    # return prime
-    result = FindPrimesNumberCount(limit, position)[1]
+    limitSup = 100
+    # Consequence Two: The nth prime is about n (ln n + ln (ln n))
+    limitSup = int(position * (log(position)+log(log(position))))
+
+    result = FindPrimesNumberCount(limitSup, position)[1]
     assert result != 0
     return result
+
+def FindPrimeNumber1(position):
+    limit = 100
+    prime = 0
+    while (0 == prime):
+        (count, prime) = FindPrimesNumberCount(limit, position) 
+        limit *= 10
+    return prime
+
+def FindPrimeNumber(position):
+    # return FindPrimeNumber1(position)
+    return FindPrimeNumber2(position)
 
 def find_primes_sum(limit):
     primes = get_primes(limit)
@@ -55,6 +64,8 @@ def validate_FindPrimesNumberCount():
         assert(9592 == FindPrimesNumberCount(100000)[0])
         assert(78498 == FindPrimesNumberCount(1000000)[0])
     assert(13 == FindPrimeNumber(6))
+    assert(47 == FindPrimeNumber(15))
+    assert(53 == FindPrimeNumber(16))
     assert(97 == FindPrimeNumber(25))
     assert(997 == FindPrimeNumber(168))
     assert(5 == FindPrimeNumber(3))
