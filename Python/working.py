@@ -28,7 +28,7 @@ def fi_base(limit, no_primes, primes_n):
  # http://en.wikipedia.org/wiki/Prime-counting_function, Ernst Meissel
 def fi(limit, no_primes):
     prob7_module = __import__("Problems 7 & 10 - 10001st prime")
-    primes_n = proj_euler.get_primes(1+prob7_module.FindPrimeNumber(no_primes))
+    primes_n = proj_euler.get_primes(1+prob7_module.find_prime_number(no_primes))
     # print(primes_n)
     assert no_primes == len(primes_n)
     return int(fi_base(limit, no_primes, primes_n))
@@ -36,7 +36,13 @@ def fi(limit, no_primes):
 def debug_validations():
     """module's assertions"""
 
-if __name__ == "__main__":
+def main():
+    '''main: defined here to avoid scope problems'''
     debug_validations()
 
     print(fi(17, 2))
+    prob7_module = __import__("Problems 7 & 10 - 10001st prime")
+    prob7_module.main()
+
+if __name__ == "__main__":
+    main()
