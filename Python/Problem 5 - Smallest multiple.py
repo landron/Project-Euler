@@ -12,6 +12,9 @@
         astroid 1.4.3
         Python 3.5.1 (v3.5.1:37a07cee5969, Dec  6 2015, 01:38:48) [MSC v.1900 32 bit (Intel)]
     Your code has been rated at 8.30/10 (previous run: 8.11/10, +0.19)
+
+    http://www.hackerrank.com/contests/projecteuler/challenges/euler005
+        Difficulty: Easy, passed
 '''
 
 import math

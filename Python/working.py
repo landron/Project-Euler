@@ -40,8 +40,8 @@ def main():
     '''main: defined here to avoid scope problems'''
     debug_validations()
 
-    print(fi(17, 2))
-    prob7_module = __import__("Problems 7 & 10 - 10001st prime")
+    # print(fi(17, 2))
+    prob7_module = __import__("problem_17_number_letter_counts")
     prob7_module.main()
 
 if __name__ == "__main__":
