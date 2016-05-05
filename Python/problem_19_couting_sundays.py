@@ -16,6 +16,11 @@
     hackerrank: 
         brute froce:                3/8 (timeout for the others)
         get_first_day improved:     6/8 (2 wrong answers)           Score: 71.43
+        get_leap_years_to_1900:     Score: 100.00
+            400 years margin correction
+
+    Attention !
+        1582 introduces the Gregorian calendar
 """
 
 def is_leap_year(year):
@@ -26,9 +31,12 @@ def is_leap_year(year):
 def get_leap_years_to_1900(year):
     """calculate the number of leap years between 1900 and the given one"""
     years = year-1900 if year > 1900 else 1900-year
-    leap_years = years//4-years//100+years//400
-    if year <= 1600 or year >= 2000:
-        leap_years += 1
+    leap_years = years//4-years//100
+    if year >= 1900:
+        if years >= 100:
+            leap_years += (1+(years-100)//400)
+    elif years >= 300:
+        leap_years += (1+(years-300)//400)
     return (years, leap_years)
 
 def get_first_day_1(year):
@@ -47,17 +55,17 @@ def get_first_day_1(year):
 def get_first_day_2(year):
     """get the first day of a given year: calculus"""
     (years, leap_years) = get_leap_years_to_1900(year)
-    if year >= 1900:
-        if is_leap_year(year):
+    # print(years, leap_years, is_leap_year(year))
+    if year >= 1900 and is_leap_year(year):
             # calculate for 1 of january
             assert leap_years > 0
             leap_years -= 1
-        # print(years, leap_years)
-        days = 366*leap_years + 365*(years-leap_years)
-        return days%7
+    days = 365*years + leap_years
+    day1 = days%7
+    if year >= 1900:
+        return day1
     else:
-        days = 366*leap_years + 365*(years-leap_years)
-        return 7-days%7
+        return 0 if day1 == 0 else 7-day1
 
 # 1 Jan 1900 was a Monday.
 # Convention: 0 = Monday
@@ -152,9 +160,22 @@ def debug_validations():
     assert get_first_day(1905) == 6
     for year in range(1897, 1900):
         assert (7-(1900-year)) == get_first_day(year)
+    assert get_first_day(1) == 0
+    assert get_first_day(1582) == 4
+    # 1582 introduces the Gregorian calendar
+    assert get_first_day(1585) == 1
+    assert get_first_day(1584) == 6
+    assert get_first_day(1583) == 5
+    assert get_first_day(1599) == 4
+    assert get_first_day(1600) == 5
+    assert get_first_day(1601) == 0
+    assert get_first_day(1602) == 1
     assert get_first_day(1896) == 2
     assert get_first_day(2000) == 5
     assert get_first_day(2001) == 0
+    assert get_first_day(3099) == 6
+    assert get_first_day(3100) == 0
+    assert get_first_day(3350) == 3
 
     assert count_sundays_noday1(1900, 1, 8) == 2
     assert count_sundays_noday1(1900, 4, 7) == 2
