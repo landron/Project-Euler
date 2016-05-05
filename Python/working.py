@@ -41,7 +41,7 @@ def main():
     debug_validations()
 
     # print(fi(17, 2))
-    prob7_module = __import__("problem_19_couting_sundays")
+    prob7_module = __import__("problem_8_largest_product_in_a_series")
     prob7_module.main()
 
 if __name__ == "__main__":
