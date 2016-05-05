@@ -13,7 +13,9 @@
         Python 3.5.1 (v3.5.1:37a07cee5969, Dec  6 2015, 01:38:48) [MSC v.1900 32 bit (Intel)]
     Your code has been rated at 10.00/10
 
-    hackerrank: 3/8 (timeout for the others)
+    hackerrank: 
+        brute froce:                3/8 (timeout for the others)
+        get_first_day improved:     6/8 (2 wrong answers)           Score: 71.43
 """
 
 def is_leap_year(year):
@@ -21,9 +23,16 @@ def is_leap_year(year):
     return year%4 == 0 and (year%100 != 0 or year%400 == 0)
 
 # 1 Jan 1900 was a Monday.
-# Convention: 0 = Monday
-def get_first_day(year):
-    """get the first day of a given year"""
+def get_leap_years_to_1900(year):
+    """calculate the number of leap years between 1900 and the given one"""
+    years = year-1900 if year > 1900 else 1900-year
+    leap_years = years//4-years//100+years//400
+    if year <= 1600 or year >= 2000:
+        leap_years += 1
+    return (years, leap_years)
+
+def get_first_day_1(year):
+    """get the first day of a given year: brute force"""
     assert not is_leap_year(1900)
     days = 0
     if year >= 1900:
@@ -34,6 +43,27 @@ def get_first_day(year):
         for i in range(year, 1900):
             days += 366 if is_leap_year(i) else 365
         return 7-days%7
+
+def get_first_day_2(year):
+    """get the first day of a given year: calculus"""
+    (years, leap_years) = get_leap_years_to_1900(year)
+    if year >= 1900:
+        if is_leap_year(year):
+            # calculate for 1 of january
+            assert leap_years > 0
+            leap_years -= 1
+        # print(years, leap_years)
+        days = 366*leap_years + 365*(years-leap_years)
+        return days%7
+    else:
+        days = 366*leap_years + 365*(years-leap_years)
+        return 7-days%7
+
+# 1 Jan 1900 was a Monday.
+# Convention: 0 = Monday
+def get_first_day(year):
+    """get the first day of a given year"""
+    return get_first_day_2(year)
 
 def count_sundays_base(day1, year, first_month, last_month):
     """calculate the number of sundays in the first day of the month for an interval in a year"""
@@ -102,6 +132,19 @@ def count_sundays(start, stop):
     """shortcut"""
     return count_sundays_full((start, 1, 1), (stop, 12, 31))
 
+def read_solve_print():
+    """read from console: hackerrank test"""
+
+    number_of_intervals = int(input().strip())
+    results = []
+    for _ in range(0, number_of_intervals):
+        date1 = [int(arr_temp) for arr_temp in input().strip().split(' ')]
+        date2 = [int(arr_temp) for arr_temp in input().strip().split(' ')]
+
+        results.append(count_sundays_full(date1, date2))
+    for result in results:
+        print(result)
+
 def debug_validations():
     """all the assertions"""
     for year in range(1900, 1905):
@@ -110,7 +153,8 @@ def debug_validations():
     for year in range(1897, 1900):
         assert (7-(1900-year)) == get_first_day(year)
     assert get_first_day(1896) == 2
-    # print (get_first_day(1897))
+    assert get_first_day(2000) == 5
+    assert get_first_day(2001) == 0
 
     assert count_sundays_noday1(1900, 1, 8) == 2
     assert count_sundays_noday1(1900, 4, 7) == 2
@@ -125,9 +169,6 @@ def debug_validations():
     assert count_sundays(2001, 2001) == 2
     assert count_sundays(2000, 2001) == 3
 
-    assert count_sundays(1901, 2000) == 171
-    assert count_sundays(1901, 2001) == 173
-
     assert count_sundays_full((1900, 1, 1), (1901, 1, 1)) == 2
     assert count_sundays_full((1900, 1, 1), (1900, 1, 1)) == 0
     assert count_sundays_full((1900, 4, 1), (1900, 5, 1)) == 1
@@ -137,28 +178,23 @@ def debug_validations():
     assert count_sundays_full((1900, 12, 1), (1901, 12, 2)) == 2
     assert count_sundays_full((1900, 12, 2), (1901, 2, 2)) == 0
 
+    # big ones
+    assert count_sundays(1900, 2010) == 190
+    assert count_sundays(1901, 2001) == 173
+
     # hackerrank
     assert count_sundays_full((1900, 1, 1), (1910, 1, 1)) == 18
     assert count_sundays_full((2000, 1, 1), (2020, 1, 1)) == 35
 
-def read_solve_print():
-    """read from console: hackerrank test"""
-
-    number_of_intervals = int(input().strip())
-    results = []
-    for _ in range(0, number_of_intervals):
-        date1 = [int(arr_temp) for arr_temp in input().strip().split(' ')]
-        date2 = [int(arr_temp) for arr_temp in input().strip().split(' ')]
-
-        results.append(count_sundays_full(date1, date2))
-    for result in results:
-        print(result)
+    # Project Euler
+    assert count_sundays(1901, 2000) == 171
 
 def main():
     """main function: defined explicitly for external calling and avoiding global scope"""
     debug_validations()
-    # print(count_sundays(1899, 1899))
+    # print(count_sundays(1900, 2010))
     # print(count_sundays_full((1900,12,2), (1901,5,1)))
+    # print(get_first_day(2000))
     # read_solve_print()
 
 if __name__ == "__main__":
