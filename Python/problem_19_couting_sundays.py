@@ -13,7 +13,7 @@
         Python 3.5.1 (v3.5.1:37a07cee5969, Dec  6 2015, 01:38:48) [MSC v.1900 32 bit (Intel)]
     Your code has been rated at 10.00/10
 
-    hackerrank: 
+    hackerrank:
         brute froce:                3/8 (timeout for the others)
         get_first_day improved:     6/8 (2 wrong answers)           Score: 71.43
         get_leap_years_to_1900:     Score: 100.00
@@ -57,9 +57,9 @@ def get_first_day_2(year):
     (years, leap_years) = get_leap_years_to_1900(year)
     # print(years, leap_years, is_leap_year(year))
     if year >= 1900 and is_leap_year(year):
-            # calculate for 1 of january
-            assert leap_years > 0
-            leap_years -= 1
+        # calculate for 1 of january
+        assert leap_years > 0
+        leap_years -= 1
     days = 365*years + leap_years
     day1 = days%7
     if year >= 1900:
