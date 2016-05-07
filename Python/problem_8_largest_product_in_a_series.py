@@ -2,7 +2,7 @@
     Problem 8 : largest product in a series
     http://projecteuler.net/problem=8
         Find the thirteen adjacent digits in the 1000-digit number that have the greatest product.
-    Version: 2016.05.05
+    Version: 2016.05.07
 
     pylint.bat --version
         No config file found, using default configuration
@@ -19,6 +19,7 @@
     hackerrank adapted
     4/10,   Score: 16.67,   "Runtime Error" for the others
     5/10,   Score: 22.22,   "Wrong Answer" for the others
+    Score: 100.00
 
     TODO:   add a functional programming solution
 """
@@ -54,6 +55,13 @@ def calculate_product(number, number_of_digits, index):
         prod *= (ord(number[index+i]) - ORD_CHAR_0)
     return prod
 
+def adjust_product(prod, char1, char2):
+    """replace a number in sequence, avoid to calculate the entire sequence"""
+    assert prod % (ord(char1) - ORD_CHAR_0) == 0
+    prod /= (ord(char1) - ORD_CHAR_0)
+    prod *= (ord(char2) - ORD_CHAR_0)
+    return int(prod)
+
 def compare_sequences_unused(number, number_of_digits, first, second):
     """compare two sequences"""
     assert first + number_of_digits <= len(number)
@@ -82,22 +90,13 @@ def get_first_not_zero(number, number_of_digits):
             break
     return partial
 
-def greatest_sequence(number, number_of_digits, trace):
-    """Find 13 digits sequence with the largest product"""
-    assert isinstance(number, str)
-    assert number_of_digits > 0
-    assert len(number) >= number_of_digits
-
-    partial = get_first_not_zero(number, number_of_digits)
-    if partial < 0:
-        return 0
+def greatest_sequence_from_index_1(number, number_of_digits, partial, dbg_stats):
+    """get the sequence starting from given index: initial variant
+        this variant is buggy, but good enough for project Euler
+        the bug is not very evident due to the complexity (the first if, I think)
+    """
     prod = calculate_product(number, number_of_digits, partial)
-    result = partial  # the found index
-
-    dbg_stats = lambda: None
-    dbg_stats.product_comp = 0
-    dbg_stats.zero_found = 0
-    dbg_stats.last_greater = 0
+    result = partial
 
     for i in range(partial+1, len(number) - number_of_digits + 1):
         # optimization 1: new last is greater than the first of the previous sequence
@@ -128,6 +127,49 @@ def greatest_sequence(number, number_of_digits, trace):
             result = partial
             prod = prod2
 
+    return result
+
+def greatest_sequence_from_index_2(number, number_of_digits, partial):
+    """get the sequence starting from given index: variant 2
+    """
+    prod = calculate_product(number, number_of_digits, partial)
+
+    for i in range(partial+1, len(number) - number_of_digits + 1):
+        if i == partial+1 and number[i+number_of_digits-1] >= number[partial]:
+            partial = i
+            prod = adjust_product(prod, number[i-1], number[i+number_of_digits-1])
+        elif number[i+number_of_digits-1] == '0':
+            i += number_of_digits
+        else:
+            prod2 = calculate_product(number, number_of_digits, i)
+            if prod < prod2:
+                partial = i
+                prod = prod2
+
+    return partial
+
+def greatest_sequence_from_index(number, number_of_digits, partial, dbg_stats): #pylint: disable=unused-argument
+    """get the sequence starting from gicen index"""
+    # return greatest_sequence_from_index_1(number, number_of_digits, partial, dbg_stats)
+    return greatest_sequence_from_index_2(number, number_of_digits, partial)
+
+def greatest_sequence(number, number_of_digits, trace):
+    """Find 13 digits sequence with the largest product"""
+    assert isinstance(number, str)
+    assert number_of_digits > 0
+    assert len(number) >= number_of_digits
+
+    partial = get_first_not_zero(number, number_of_digits)
+    if partial < 0:
+        return 0
+
+    dbg_stats = lambda: None
+    dbg_stats.product_comp = 0
+    dbg_stats.zero_found = 0
+    dbg_stats.last_greater = 0
+
+    result = greatest_sequence_from_index(number, number_of_digits, partial, dbg_stats)
+
     # 421: 13 digits
     if trace:
         print("Product stats: ", dbg_stats.__dict__)
@@ -135,7 +177,7 @@ def greatest_sequence(number, number_of_digits, trace):
 
     return result
 
-def greatest_sequence_wrap(number, number_of_digits, trace=True):
+def greatest_sequence_wrap(number, number_of_digits, trace=False):
     """greatest_sequence, but with print and validations"""
 
     index = greatest_sequence(number, number_of_digits, trace)
@@ -175,13 +217,32 @@ def debug_validations():
     assert greatest_sequence_wrap(LARGE_NUMBER, 13, False) == 23514624000
 
     # hackerrank adaptation
-    assert greatest_sequence_wrap("12", 1, False) == 2
-    assert greatest_sequence_wrap("21", 1, False) == 2
-    assert greatest_sequence_wrap("123", 1, False) == 3
-    assert greatest_sequence_wrap("23", 2, False) == 6
-    assert greatest_sequence_wrap("123", 2, False) == 6
-    assert greatest_sequence_wrap("12311", 3, False) == 6
-    assert greatest_sequence_wrap("123113", 3, False) == 6
+    simples_checks_1 = [
+        ("12", 2), ("21", 2), ("123", 3),
+        ("10", 1), ("01", 1), ("101", 1), ("2102", 2), ("12304", 4),
+        ("7230058", 8), ("8703005407", 8)
+        ]
+    for check in simples_checks_1:
+        assert greatest_sequence_wrap(check[0], 1, False) == check[1]
+    simples_checks_2 = [
+        ("23", 6), ("123", 6), ("1230", 6), ("1321", 6), ("13021", 3),
+        ("123033", 9),
+        ("1201031041", 4),
+        ]
+    for check in simples_checks_2:
+        assert greatest_sequence_wrap(check[0], 2, False) == check[1]
+    simples_checks_3 = [
+        ("12311", 6), ("123113", 6), ("120113", 3), ("1210131", 3),
+        ("1130212", 4),
+        ("123415", 24),
+        ]
+    for check in simples_checks_3:
+        assert greatest_sequence_wrap(check[0], 3, False) == check[1]
+    bug_checks = [
+        ("1130212", 3, 4),  # not 3
+        ]
+    for check in bug_checks:
+        assert greatest_sequence_wrap(check[0], check[1], False) == check[2]
 
     # hackerrank
     assert greatest_sequence_wrap("3675356291", 5, False) == 3150
@@ -191,7 +252,8 @@ def main():
     """main function: defined explicitly for external calling and avoiding global scope"""
     debug_validations()
 
-    # greatest_sequence_wrap(LARGE_NUMBER, 13)
+    # print(greatest_sequence_wrap(LARGE_NUMBER, 13))
+    # print(greatest_sequence_wrap("123415", 3))
     # read_solve_print()
 
 if __name__ == "__main__":
