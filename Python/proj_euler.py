@@ -121,14 +121,15 @@ def get_prime_divisors(number, primes):
         divisors.append((number, 1))
     return divisors
 
-def get_divisors_as_primes(number):
+def get_divisors_as_primes(number, primes=None):
     """get the divisors of a given number as a list of primes and powers"""
-    primes = get_primes(1 + math.floor(math.sqrt(number)))
+    if not primes:
+        primes = get_primes(1 + math.floor(math.sqrt(number)))
     return get_prime_divisors(number, primes)
 
-def get_divisors(number):
+def get_divisors(number, primes=None):
     """get all the divisors of a given number"""
-    divisors_and_powers = get_divisors_as_primes(number)
+    divisors_and_powers = get_divisors_as_primes(number, primes)
 
     divisors_expanded = []
     for item in divisors_and_powers:
