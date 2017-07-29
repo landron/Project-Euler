@@ -1,19 +1,15 @@
 #!/bin/python3
 '''    
     https://projecteuler.net/problem=67
+        https://www.hackerrank.com/contests/projecteuler/challenges/euler067
     https://projecteuler.net/problem=18
+        https://www.hackerrank.com/contests/projecteuler/challenges/euler018
 
     tag_knapsack, tag_dynamic
 '''
 
 import sys
 import time
-
-'''
-n,m = input().strip().split(' ')
-n,m = [int(n),int(m)]
-c = [int(c_temp) for c_temp in input().strip().split(' ')]
-'''
 
 TRIANGLE_SIMPLE = '''
 3
@@ -165,10 +161,23 @@ def parse_triangle_file(triangle_file):
     # print(triangle)
     parse_triangle(triangle)
 
+# https://www.hackerrank.com/contests/projecteuler/challenges/euler018
+def parse_triangle_input():
+    T = int(input().strip())
+    for _ in range(T):
+        N = int(input().strip())
+        mat = []
+        for _ in range(N):
+            c = [int(i) for i in input().strip().split(' ')]
+            mat.append(c)
+        max = solve_triangle(mat)
+        print(max)
+
 def main():
     # parse_triangle(TRIANGLE_SIMPLE)
     # parse_triangle(TRIANGLE)
     parse_triangle_file("p067_triangle.txt")
+    # parse_triangle_input()
 
 if __name__ == "__main__":
     main()
