@@ -2,4 +2,4 @@
 http://projecteuler.net/
 
 http://projecteuler.net/profile/landron.png
-Solved: 19
+Solved: 21		2017.07.29
