@@ -123,7 +123,7 @@ def debug_assertions(primes):
     assert get_proper_divisor(220, primes) == 284 
     assert get_proper_divisor(284, primes) == 220
 
-def project():
+def project_euler_test():
     n = 10000
     # n is too much
     primes = proj_euler.get_primes(n)
@@ -150,8 +150,8 @@ def WIP_parse_input():
         print(sum)
 
 def main():
-    # project()
-    WIP_parse_input()
+    project_euler_test()
+    # WIP_parse_input()
 
 if __name__ == "__main__":
     main()
