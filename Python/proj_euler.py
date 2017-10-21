@@ -8,13 +8,16 @@
 
     pylint --version
         No config file found, using default configuration
-        pylint 1.5.2,
-        astroid 1.4.3
+        pylint 1.5.5,
+        astroid 1.4.5
         Python 3.5.1 (v3.5.1:37a07cee5969, Dec  6 2015, 01:38:48) [MSC v.1900 32 bit (Intel)]
     Your code has been rated at 10.00/10
 """
 import math
 import itertools
+
+####################################################
+# primes
 
 def get_primes_1(limit):
     """get the list of primes until the given limit
@@ -147,6 +150,27 @@ def get_divisors(number, primes=None):
     divisors = sorted(divisors)
     return divisors
 
+####################################################
+# generic
+
+def no_digits(number, base=10):
+    """get the number of the digits of the given number in the given base"""
+    digits = 0
+    while number >= 1:
+        number //= base
+        digits += 1
+    return digits
+
+def get_digits(number, base=10):
+    """get the digits of the given number in the given base"""
+    digits = []
+    while number >= 1:
+        digits.append(number%base)
+        number //= base
+    return digits
+
+####################################################
+
 def debug_validations():
     """module's assertions"""
     assert [1, 2, 3, 5, 6, 7, 9, 10, 14, 15, 18, 21, 25, 30, 35, 42, 45, 50, 63, 70, 75, 90, \
@@ -155,6 +179,11 @@ def debug_validations():
     assert [1, 2, 3, 4, 6, 8, 9, 12, 16, 18, 24, 36, 48, 72, 144] == get_divisors(144)
     assert [1, 2, 4, 8, 16, 32, 64] == get_divisors(64)
     assert [1, 2, 3, 4, 6, 8, 12, 16, 24, 48] == get_divisors(48)
+
+    assert no_digits(7) == 1
+    assert no_digits(7567) == 4
+    assert get_digits(1037567) == [7, 6, 5, 7, 3, 0, 1]
+    assert get_digits(7567, 8) == [7, 1, 6, 6, 1]
 
 if __name__ == "__main__":
     debug_validations()
