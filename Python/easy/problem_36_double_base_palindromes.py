@@ -8,6 +8,9 @@
 
     pylint
         Your code has been rated at 7.62/10.
+
+    Optimization:
+        generate the palindromes instead of test all the numbers
 '''
 
 def get_digits(n, base):
