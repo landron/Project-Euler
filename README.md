@@ -4,6 +4,6 @@ http://projecteuler.net/
 > Solved: 30   
 > 2017.10.21
 
-[HackerRank](https://www.hackerrank.com/contests/projecteuler/challenges): 3755 (5.5%)
+[HackerRank](https://www.hackerrank.com/contests/projecteuler/challenges): 3418 (4.99%), challenges: 12/18
 > 2017.10.21  
 \todo todo_hackerrank : no optimal solution yet
