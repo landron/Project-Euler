@@ -5,4 +5,5 @@ http://projecteuler.net/
 > 2017.10.15
 
 [HackerRank](https://www.hackerrank.com/contests/projecteuler/challenges): 4786
-> 2017.10.16
+> 2017.10.16  
+\todo todo_hackerrank : no optimal solution yet
