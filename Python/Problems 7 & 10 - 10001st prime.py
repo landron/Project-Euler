@@ -6,6 +6,9 @@
 
     Version: 2016.05.01
 
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler007
+        todo_hackerrank:    75/100
+
     TODO:
         ? 1. find_primes_number_count, position <= 0
         2. find_primes_number_count is still not fast enough (Sieve of Eratosthenes) for the latest

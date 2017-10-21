@@ -1,7 +1,9 @@
 #!/bin/python3
 '''    
     https://projecteuler.net/problem=21
-        https://www.hackerrank.com/contests/projecteuler/challenges/euler021
+
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler021
+        todo_hackerrank: 33.33
 '''
 
 import sys

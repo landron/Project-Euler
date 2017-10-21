@@ -5,6 +5,9 @@
 
 	https://projecteuler.net/profile/landron.png
 
+	https://www.hackerrank.com/contests/projecteuler/challenges/euler010
+		todo_hackerrank: 71.43, Python
+
 	for performance measurements:
 		:set +s
 -}
