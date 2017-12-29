@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 '''
-    tag_primes
+    This problem was a crazy story, such a blast!
 
     https://projecteuler.net/problem=31
         How many different ways can £2 be made using any number of coins?
@@ -11,7 +11,6 @@
             also found in problem overview
         solve_problem_recursive_3   :   same 25.00, even if improved
 
-        todo_hackerrank
         solve_problem_precalculate  :
             using the "Investigating combinations of English currency denominations" document
              from https://projecteuler.net/problem=31
@@ -30,13 +29,21 @@
 
                 s(c) = previous coin
 
+        100/100:
+            get_precalculated_1 did it !!!
+
+            - cache the precalculated table for the set of tests
+            - "as the result can be large, print answer mod 10^9+7"
+            - get_precalculated_2 still has timeouts, even if it seemed an improvement over
+                get_precalculated_1
+
     pylint --version
         No config file found, using default configuration
         pylint 1.8.1,
         astroid 1.6.0
         Python 3.6.4
 
-        Your code has been rated at 9.61/10.
+        Your code has been rated at 9.86/10.
 '''
 
 COINS = [1, 2, 5, 10, 20, 50, 100, 200]
@@ -74,8 +81,11 @@ def solve_problem_recursive_1(initial_dbg, pences, coins, position):
     coins[position] = 0
     return possibilities
 
-# this variant does not generate all the possibilities; it uses a cache
 def solve_problem_recursive_2(already_calculated, pences, position):
+    '''
+        no w(t, c) function use
+        this variant does not generate all the possibilities; it uses a cache
+    '''
     if position == 0 or pences == 0:
         # first position is 1 pence => can express everything
         return 1
@@ -99,8 +109,12 @@ def solve_problem_recursive_2(already_calculated, pences, position):
 ##################################################################################################
 #   hackerrank : 25/100
 
-# this variant does not generate all the possibilities; it uses a cache
 def solve_problem_recursive_3(already_calculated, pences, position):
+    '''
+        no w(t, c) function use
+        this variant does not generate all the possibilities; it uses a cache
+        final variant
+    '''
     if position == 0 or pences == 0:
         # first position is 1 pence => can express everything
         return 1
@@ -128,6 +142,10 @@ def solve_problem_recursive_3(already_calculated, pences, position):
     return possibilities
 
 def solve_problem_rec(pences):
+    '''
+        solve the problem recursively, without the w(t, c) function
+            calculate without the last (usable) coin, then add coins of this type progressively
+    '''
     types = len(COINS)
 
     already_calculated = []
@@ -139,11 +157,11 @@ def solve_problem_rec(pences):
     return solve_problem_recursive_3(already_calculated, pences, types-1)
 
 ##################################################################################################
-#   hackerrank : 25/100
+#   hackerrank : 100/100
 #
-#   solve_problem_precalculated_1:
-#       #3 - #4 : "wrong answer"s
-#       #5 - #8 : timeouts
+#       cache the precalculated table and reuse it
+#       it calculates ALL the values to the needed sum, no optimization
+#
 
 def get_last_coin(pences):
     '''get last usable coin'''
@@ -156,7 +174,7 @@ def get_last_coin(pences):
     return last_coin
 
 def get_precalculated_1(pences, print_it=False):
-    '''build the entire cache'''
+    '''build the entire cache (for all the values)'''
 
     precalcul = {}
 
@@ -187,19 +205,17 @@ def get_precalculated_1(pences, print_it=False):
     return precalcul
 
 def solve_problem_precalculate_all(pences, print_it=False):
-
-    precalcul = get_precalculated_1(pences, print_it)
-    last_coin = get_last_coin(pences)
-
-    return precalcul[last_coin][-1]
+    '''shortcut function: the table is not cached between calls'''
+    return solve_problem_precalculated_1(pences, None, print_it)
 
 def solve_problem_precalculated_1(pences, precalcul, print_it=False):
+    '''solve the given sum using the given precalculated cache'''
 
     if not precalcul or len(precalcul[0]) < pences+1:
         precalcul = get_precalculated_1(pences, print_it)
     last_coin = get_last_coin(pences)
 
-    return precalcul[last_coin][-1]
+    return precalcul[last_coin][pences]
 
 ##################################################################################################
 #   hackerrank : 25/100
@@ -251,6 +267,8 @@ def precalculate_on_demand(pences, print_it=False):
 
 ##################################################################################################
 #   hackerrank : 0/100
+#       ERROR:  precalculate_english_coins_norec(151) == 22412
+#           should be 22414
 #
 #   adapted for English coins
 #       can still be optimized: 1,2 do not need to be calculated
@@ -283,6 +301,7 @@ def precalculate_remainder(pences, precalcul, last_coin):
         for i in range(remainder+5, pences+1, 5):
             precalcul[2][i] = precalcul[1][i] + precalcul[2][i-5]
 
+ # ERROR: precalculate_english_coins_norec(151) == 22412
 def precalculate_english_coins_norec(pences, print_it=False):
     '''
         hackerrank: 0
@@ -331,10 +350,104 @@ def precalculate_english_coins_norec(pences, print_it=False):
     return precalcul[last_coin][pences]
 
 ##################################################################################################
-#   hackerrank
+#   hackerrank: 25/100 (probably more after the modulo correction)
 #
-#       cache the precalculated table and reuse it
-#       25/100: #3 -#8 = wrong answers
+#   #5-#8 : timeouts
+#       memory optimization, but the valuer are calculated on demand
+#       SO more passings through the entire table - this might be the reason
+#
+
+def get_precalculated_2(pences):
+    '''build the intelligent cache:
+        - always larger > 200
+        - English coins knowledge:
+            - 1,2 are unneeded
+            - 5 must be calculated for all
+            - 20 also for the 10 intermediate interval
+
+        it works only with special function
+    '''
+
+    if pences < 200:
+        pences += 200
+
+    # space can be optimized, lots of 0
+    precalcul = {}
+    for i in range(2, len(COINS)):
+        precalcul[i-2] = [0]*(pences+1)
+
+    # 5 pennies: calculate them all
+    for i in range(5):
+        precalcul[0][i] = 1+i//2
+    for i in range(5, pences+1):
+        precalcul[0][i] = (1+i//2) + precalcul[0][i-5]
+
+    return precalcul
+
+def precalculated_2_extend(pences, remainder, precalcul, coin_index):
+    '''
+        extend cache on demand: calculate the values for this new remainder
+    '''
+    assert coin_index != 0
+
+    coin = COINS[coin_index+2]
+    # if coin == 50:
+    #     print('50', coin_index, remainder, remainder%coin)
+
+    precalcul[coin_index][remainder%coin] = precalcul[coin_index-1][remainder%coin]
+    freq = coin
+
+    # 20 pennies : also the intermediate 10s
+    if coin == 20:
+        remainder2 = (remainder+10)%coin
+        # print('20', coin_index, remainder, remainder2)
+        precalcul[coin_index][remainder2] = precalcul[coin_index-1][remainder2]
+        if remainder%coin > remainder2:
+            remainder = remainder2
+        freq = 10
+
+    for i in range(remainder%coin+coin, pences+1, freq):
+        precalcul[coin_index][i] = precalcul[coin_index-1][i] + precalcul[coin_index][i-coin]
+
+def solve_problem_precalculated_2(pences, precalcul, print_it=False):
+    '''
+        solve the given sum using the (actively) precalculated cache
+        #5-#8 : timeouts
+    '''
+
+    precalcul = get_precalculated_2(pences)
+    last_coin = get_last_coin(pences)
+
+    if last_coin < 2:
+        return pences-1 if pences > 2 else pences
+    coin = COINS[last_coin]
+    last_coin -= 2
+
+    val = precalcul[last_coin][pences]
+    if val != 0:
+        return val
+
+    remainder = pences%coin
+    # print('remainder', remainder, last_coin)
+    for i in range(1, last_coin+1):
+        precalculated_2_extend(pences, remainder, precalcul, i)
+
+    if print_it:
+        print()
+        for i in precalcul:
+            print(COINS[i+2], precalcul[i])
+            print()
+
+    return precalcul[last_coin][pences]
+
+##################################################################################################
+#   hackerrank
+#       "as the result can be large, print answer mod 10^9+7"
+#
+#   get_precalculated_1:  100/100
+#   get_precalculated_2:  25/100    #5-#8 : timeouts
+#       why the first is faster ? see get_precalculated_2 comments
+#
 
 def parse_input():
     '''the hackerrank solution
@@ -353,11 +466,18 @@ def parse_input():
         sums.append(next_sum)
 
     pre = get_precalculated_1(max_sum)
+    # pre = get_precalculated_2(max_sum)
     # print(pre)
+
+    mod_print = 10**9+7
 
     for i in sums:
         last_coin = get_last_coin(i)
-        print(pre[last_coin][i])
+
+        result = pre[last_coin][i]
+        # result = solve_problem_precalculated_2(i, pre)
+        result = result%mod_print
+        print(result)
 
 ##################################################################################################
 #   main
@@ -410,18 +530,32 @@ def debug_assertions():
     # solve_problem_precalculate_on_demand is very strong
     assert solve_problem_precalculate_on_demand(2000) == 23812353521
 
-    for i in range(1, 100):
-        no1 = solve_problem_precalculate_all(i)
-        no2 = precalculate_english_coins_norec(i)
+    assert precalculate_english_coins_norec(151) == 22412
+    assert solve_problem_rec(151) == 22414
+    assert solve_problem_precalculate_all(60) == 793
+    assert solve_problem_precalculate_all(70) == 1311
+
+    pre1 = get_precalculated_1(1000)
+    pre2 = get_precalculated_2(1000)
+    for i in range(1, 201):
+        no1 = solve_problem_precalculated_1(i, pre1)
+        no2 = solve_problem_precalculated_2(i, pre2)
         # print(i, no1, no2)
+        assert no1 == no2
+
+        # no2 = solve_problem_rec(i)
+        # assert no1 == no2
+
+        no2 = precalculate_on_demand(i)
         assert no1 == no2
 
 def just_debug():
     '''debugging code'''
 
     if 0:   #pylint: disable=using-constant-test
-        print(solve_problem_precalculate_all(69, True))
-        print(precalculate_english_coins_norec(69, True))
+        print(solve_problem_precalculate_all(151, True))
+        print(precalculate_english_coins_norec(151, True))
+        print(solve_problem_rec(151))
 
     if 0:   #pylint: disable=using-constant-test
         for i in range(1, 11):
@@ -429,6 +563,12 @@ def just_debug():
             print(solve_problem_precalculate_all(i, True))
             # print(solve_problem_precalculate_on_demand(i, True))
             print()
+
+    if 0:   #pylint: disable=using-constant-test
+        get_precalculated_1(70, True)
+
+        pre = get_precalculated_2(70)
+        print(solve_problem_precalculated_2(70, pre, True))
 
 def main():
     '''THE main'''
