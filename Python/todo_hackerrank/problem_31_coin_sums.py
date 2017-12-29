@@ -13,23 +13,30 @@
 
         todo_hackerrank
         solve_problem_precalculate  :
-            using the "Investigating combinations of English currency denominations" document on https://projecteuler.net/problem=31
-            The idea is simple: pre-calculate all the sums less than the needed one starting with the smaller coin
+            using the "Investigating combinations of English currency denominations" document
+             from https://projecteuler.net/problem=31
+             The idea is simple: pre-calculate all the sums less than the needed one starting
+             with the smaller coin
 
             With t = total sum, c = coin
             "The function w(t, c) can be reformulated as follows:
-                
-                w(t, c) =   1           
+
+                w(t, c) =   1
                                 if c = 1 or t = 0
-                            w(t, s(c))  
+                            w(t, s(c))
                                 if c > 1 and t < c
-                            w(t, s(c)) + w(t − c, c) 
+                            w(t, s(c)) + w(t − c, c)
                                 if c > 1 and t ≥ c
 
                 s(c) = previous coin
 
-    pylint 1.5.5
-        Your code has been rated at 8.78/10.
+    pylint --version
+        No config file found, using default configuration
+        pylint 1.8.1,
+        astroid 1.6.0
+        Python 3.6.4
+
+        Your code has been rated at 9.61/10.
 '''
 
 COINS = [1, 2, 5, 10, 20, 50, 100, 200]
@@ -135,39 +142,42 @@ def solve_problem_rec(pences):
 #   hackerrank : 25/100
 #
 #   solve_problem_precalculated_1:
-#       #3 - #4 : "wrong answer"s    
+#       #3 - #4 : "wrong answer"s
 #       #5 - #8 : timeouts
 
 def get_last_coin(pences):
+    '''get last usable coin'''
+
     last_coin = 0
-    for i, el in enumerate(COINS):
-        if el > pences:
+    for i, coin in enumerate(COINS):
+        if coin > pences:
             break
         last_coin = i
     return last_coin
 
 def get_precalculated_1(pences, print_it=False):
+    '''build the entire cache'''
+
     precalcul = {}
 
     last_coin = 0
-    for i, el in enumerate(COINS):
-        if el > pences:
+    for i, coin in enumerate(COINS):
+        if coin > pences:
             break
         last_coin = i
         precalcul[i] = [0]*(1+pences)   #space for 0
 
     prev = -1
-    for i, el in enumerate(COINS):
-        if el > pences:
-            break
+    for i in range(1+last_coin):
+        coin = COINS[i]
         for j in range(1+pences):
             if i == 0:
-                if pences % el == 0:  # always for COINS[0]=1
+                if pences % coin == 0:  # always for COINS[0]=1
                     precalcul[i][j] = 1
-            elif j < el:
+            elif j < coin:
                 precalcul[i][j] = precalcul[prev][j]
             else:
-                precalcul[i][j] = precalcul[prev][j] + precalcul[i][j-el]
+                precalcul[i][j] = precalcul[prev][j] + precalcul[i][j-coin]
         prev = i
 
     if print_it:
@@ -179,11 +189,7 @@ def get_precalculated_1(pences, print_it=False):
 def solve_problem_precalculate_all(pences, print_it=False):
 
     precalcul = get_precalculated_1(pences, print_it)
-    last_coin = 0
-    for i, el in enumerate(COINS):
-        if el > pences:
-            break
-        last_coin = i
+    last_coin = get_last_coin(pences)
 
     return precalcul[last_coin][-1]
 
@@ -191,12 +197,7 @@ def solve_problem_precalculated_1(pences, precalcul, print_it=False):
 
     if not precalcul or len(precalcul[0]) < pences+1:
         precalcul = get_precalculated_1(pences, print_it)
-
-    last_coin = 0
-    for i, el in enumerate(COINS):
-        if el > pences:
-            break
-        last_coin = i
+    last_coin = get_last_coin(pences)
 
     return precalcul[last_coin][-1]
 
@@ -206,26 +207,32 @@ def solve_problem_precalculated_1(pences, precalcul, print_it=False):
 #   Probably:   "RecursionError: maximum recursion depth exceeded in comparison"
 #
 
-def solve_problem_precalculate_rec(precalculated, pences, coin):
+def precalculate_rec(precalculated, pences, coin):
+    '''
+        calculate on demand using (unlimited) recursion
+    '''
 
     no_possibilities = precalculated[coin][pences]
     if no_possibilities != 0:
         return no_possibilities
 
     assert coin != 0
-    no_possibilities = solve_problem_precalculate_rec(precalculated, pences, coin-1)
+    no_possibilities = precalculate_rec(precalculated, pences, coin-1)
     if pences >= COINS[coin]:
-        no_possibilities += solve_problem_precalculate_rec(precalculated, pences-COINS[coin], coin)
+        no_possibilities += precalculate_rec(precalculated, pences-COINS[coin], coin)
     precalculated[coin][pences] = no_possibilities
     return no_possibilities
 
-def solve_problem_precalculate_on_demand_1(pences, print_it=False):
+def precalculate_on_demand(pences, print_it=False):
+    '''
+        RecursionError: maximum recursion depth exceeded in comparison
+    '''
 
     last_coin = 0
 
     precalcul = {}
-    for i, el in enumerate(COINS):
-        if el > pences:
+    for i, coin in enumerate(COINS):
+        if coin > pences:
             break
         elif i == 0:
             precalcul[i] = [1]*(1+pences)   #space for 0
@@ -234,7 +241,7 @@ def solve_problem_precalculate_on_demand_1(pences, print_it=False):
             precalcul[i] = [0]*(1+pences)   #space for 0
             precalcul[i][0] = 1
 
-    result = solve_problem_precalculate_rec(precalcul, pences, last_coin)
+    result = precalculate_rec(precalcul, pences, last_coin)
 
     if print_it:
         for i in precalcul:
@@ -243,14 +250,12 @@ def solve_problem_precalculate_on_demand_1(pences, print_it=False):
     return result
 
 ##################################################################################################
-#   hackerrank : 25/100 , but no runtime error
+#   hackerrank : 0/100
 #
-#   #3 - #4 : "wrong answer"s    
-#   #5 - #8 : timeouts
-#
-#   adapted for English coins 
+#   adapted for English coins
 #       can still be optimized: 1,2 do not need to be calculated
 #       score: 0
+#       no recursion
 
 def precalculate_remainder(pences, precalcul, last_coin):
     '''
@@ -265,27 +270,35 @@ def precalculate_remainder(pences, precalcul, last_coin):
     if last_coin > 0:
         for i in range(pences+1):
             precalcul[1][i] = 1+i//2
-    
+
     for i in range(2, 1+last_coin):
-        r = remainder%COINS[i]
-        # print("remainder", r, COINS[i])
-        precalcul[i][r] = precalcul[i-1][r]
-        # print(i, r, precalcul[i][r])
-        for j in range(r+COINS[i], remainder+1, COINS[i]):
+        start = remainder%COINS[i]
+        # print("remainder", start, COINS[i])
+        precalcul[i][start] = precalcul[i-1][start]
+        # print(i, start, precalcul[i][start])
+        for j in range(start+COINS[i], remainder+1, COINS[i]):
             precalcul[i][j] = precalcul[i-1][j] + precalcul[i][j-COINS[i]]
 
     if last_coin > 1:
         for i in range(remainder+5, pences+1, 5):
             precalcul[2][i] = precalcul[1][i] + precalcul[2][i-5]
 
-# no recursion
-def solve_problem_precalculate_English_coins(pences, print_it=False):
+def precalculate_english_coins_norec(pences, print_it=False):
+    '''
+        hackerrank: 0
+
+        adapted for English coins
+            can still be optimized: 1,2 do not need to be calculated
+            no recursion
+
+        unfortunately, it does not work for the hackerrank cases
+    '''
 
     last_coin = 0
 
     precalcul = {}
-    for i, el in enumerate(COINS):
-        if el > pences:
+    for i, coin in enumerate(COINS):
+        if coin > pences:
             break
         elif i == 0:
             precalcul[i] = [1]*(1+pences)   #space for 0
@@ -302,14 +315,14 @@ def solve_problem_precalculate_English_coins(pences, print_it=False):
 
     remainder = pences%COINS[last_coin]
     for j in range(3, 1+last_coin):
-        for i in range(remainder+COINS[j], pences+1, COINS[j]):  
-            precalcul[j][i] = precalcul[j-1][i] + precalcul[j][i-COINS[j]] 
+        for i in range(remainder+COINS[j], pences+1, COINS[j]):
+            precalcul[j][i] = precalcul[j-1][i] + precalcul[j][i-COINS[j]]
         # also do ... the other 10s
         if COINS[j] == 20:
-            r = (remainder+10)%20
-            precalcul[j][r] = precalcul[j-1][r]
-            for i in range(r+COINS[j], pences+1, COINS[j]):
-                precalcul[j][i] = precalcul[j-1][i] + precalcul[j][i-COINS[j]] 
+            start = (remainder+10)%20
+            precalcul[j][start] = precalcul[j-1][start]
+            for i in range(start+COINS[j], pences+1, COINS[j]):
+                precalcul[j][i] = precalcul[j-1][i] + precalcul[j][i-COINS[j]]
 
     if print_it:
         for i in precalcul:
@@ -323,11 +336,15 @@ def solve_problem_precalculate_English_coins(pences, print_it=False):
 #       cache the precalculated table and reuse it
 #       25/100: #3 -#8 = wrong answers
 
-# https://www.hackerrank.com/contests/projecteuler/challenges/euler031
 def parse_input():
+    '''the hackerrank solution
+
+        https://www.hackerrank.com/contests/projecteuler/challenges/euler031
+    '''
+
     cases = int(input().strip())
 
-    sums = [] 
+    sums = []
     max_sum = 0
     for _ in range(cases):
         next_sum = int(input().strip())
@@ -341,22 +358,23 @@ def parse_input():
     for i in sums:
         last_coin = get_last_coin(i)
         print(pre[last_coin][i])
-    
+
 ##################################################################################################
 #   main
 
 def solve_problem_precalculate_on_demand(pences, print_it=False):
-    # return solve_problem_precalculate_on_demand_3(pences, print_it)
-    return solve_problem_precalculate_all(pences, print_it)
-
-def solve_problem(pences):
-    return solve_problem_precalculate_on_demand(pences)
+    '''calculate values only when needed'''
+    return precalculate_english_coins_norec(pences, print_it)
 
 def problem():
-    print(solve_problem(200))
+    '''the (simple) problem enonced by project Euler'''
+
+    print(solve_problem_precalculate_on_demand(200))
 
 def debug_assertions():
-    # 5x1, 2+3x1, 2x2+1x1, 5
+    '''unit tests'''
+
+    # 4: 5x1, 2+3x1, 2x2+1x1, 5
     for i in range(4, 10):
         assert solve_problem_rec(i) == i-1
     assert solve_problem_rec(10) == 11
@@ -394,17 +412,18 @@ def debug_assertions():
 
     for i in range(1, 100):
         no1 = solve_problem_precalculate_all(i)
-        no2 = solve_problem_precalculate_English_coins(i)
+        no2 = precalculate_english_coins_norec(i)
         # print(i, no1, no2)
         assert no1 == no2
 
 def just_debug():
+    '''debugging code'''
 
-    if 0:
+    if 0:   #pylint: disable=using-constant-test
         print(solve_problem_precalculate_all(69, True))
-        print(solve_problem_precalculate_English_coins(69, True))
+        print(precalculate_english_coins_norec(69, True))
 
-    if 0:
+    if 0:   #pylint: disable=using-constant-test
         for i in range(1, 11):
             print(i)
             print(solve_problem_precalculate_all(i, True))
@@ -412,6 +431,8 @@ def just_debug():
             print()
 
 def main():
+    '''THE main'''
+
     debug_assertions()
     just_debug()
 
