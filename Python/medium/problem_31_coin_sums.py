@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 '''
     This problem was a crazy story, such a blast!
+        Done in 2018, during two distant sessions. 2017/12/29
 
     https://projecteuler.net/problem=31
         How many different ways can £2 be made using any number of coins?
@@ -576,7 +577,7 @@ def main():
     debug_assertions()
     just_debug()
 
-    # parse_input()
+    # parse_input()  # activate for hackerrank
     problem()
 
 if __name__ == "__main__":
