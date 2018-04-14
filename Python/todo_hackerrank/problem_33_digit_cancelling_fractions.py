@@ -38,25 +38,19 @@ def is_curious_calc(start, end, common):
         digits += 1
     return is_curious(start, end, common, digits)
 
-def get_not_last_0(N):
-    min = 10**N+1
-    if min != 1:
-        min += 1
-    return min
-
 def solve_problem_base(N, K):
     nominator = []
     denominator = []
-    
-    for i in range(10**(N-K-1), 10**(N-K)):
+
+    for _ in range(10**(N-K-1), 10**(N-K)):
         # get digits of i, the nominator
         # if > 2, get combinations with the other digits for the denominator
         pass
 
     return (nominator, denominator)
 
-# https://projecteuler.net/problem=33 only 
-def solve_problem_original():
+# https://projecteuler.net/problem=33 only
+def solve_problem_original_base():
     nominator = []
     denominator = []
 
@@ -68,11 +62,16 @@ def solve_problem_original():
                 continue
             if is_curious(d1, d2, j, 1):
                 # print("curious: {0}{1}/{1}{2}".format(d1, j, d2))
-                nominator.append(d1)
-                denominator.append(d2)
+                nominator.append(d1*10+j)
+                denominator.append(j*10+d2)
 
     # print(nominator, denominator)
-    
+    return (nominator, denominator)
+
+# https://projecteuler.net/problem=33 only
+def solve_problem_original():
+    (nominator, denominator) = solve_problem_original_base()
+
     nom = 1
     for i in nominator:
         nom *= i
@@ -81,18 +80,27 @@ def solve_problem_original():
         denom *= i
 
     gcd = get_greatest_common_divisor(nom, denom)
-    return denom/gcd
+    return denom//gcd
 
-# https://www.hackerrank.com/contests/projecteuler/challenges/euler033 
+# https://www.hackerrank.com/contests/projecteuler/challenges/euler033
 def solve_problem(N, K):
-    pass
+    if N == 2 and K == 1:
+        return solve_problem_original_base()
+    return solve_problem_base(N, K)
 
 # https://www.hackerrank.com/contests/projecteuler/challenges/euler033
 def parse_input():
-    (N, K) = [int(j) for j in input().strip().split(' ')]
-    for _ in range(cases):
-        positions = [int(i) for i in input().strip().split(' ')]
-        print(solve_problem(positions))
+    (N, K) = (int(i) for i in input().strip().split(' '))
+    (nominator, denominator) = solve_problem(N, K)
+
+    s1 = 0
+    for i in nominator:
+        s1 += i
+    s2 = 0
+    for i in denominator:
+        s2 += i
+
+    print(s1, s2)
 
 def problem():
     return solve_problem_original()

@@ -488,7 +488,7 @@ def solve_problem_precalculate_on_demand(pences, print_it=False):
     return precalculate_english_coins_norec(pences, print_it)
 
 def problem():
-    '''the (simple) problem enonced by project Euler'''
+    '''the (simple) problem articulated by project Euler'''
 
     print(solve_problem_precalculate_on_demand(200))
 
