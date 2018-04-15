@@ -11,6 +11,9 @@
                 use direct numbers multiplications (has_permuted_multiples_2) \
                     instead of digits operation (has_permuted_multiples)
 
+            88.89 (timeout: 6)
+                iterator wrongly used a second time
+
     pylint 1.8.1
         Your code has been rated at 8.62/10.
 
