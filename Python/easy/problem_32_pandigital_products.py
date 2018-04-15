@@ -138,8 +138,6 @@ def is_pandigital(number_digits, mul, div, N):
 
 def solve_problem(N):
     '''
-        the project Euler original version of the problem
-
         MAX:    10000 is enough : [4396, 5346, 5796, 6952, 7254, 7632, 7852]
             (altough I calculated a maximum of 100000)
     '''

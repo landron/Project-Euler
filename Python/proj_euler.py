@@ -8,10 +8,18 @@
 
     pylint --version
         No config file found, using default configuration
-        pylint 1.5.5,
-        astroid 1.4.5
-        Python 3.5.1 (v3.5.1:37a07cee5969, Dec  6 2015, 01:38:48) [MSC v.1900 32 bit (Intel)]
-    Your code has been rated at 10.00/10
+        pylint 1.8.1,
+        astroid 1.6.0
+        Python 3.6.4 (v3.6.4:d48eceb, Dec 19 2017, 06:54:40) [MSC v.1900 64 bit (AMD64)]
+    Your code has been rated at 10.00/10    2018.04.15
+
+    Functions:
+        get_primes
+        get_divisors (needs all the primes section)
+        get_digits
+        permutation
+
+    \todo better organize it (namespace ?) & simplify use (see permutations)
 """
 import math
 import itertools
@@ -151,9 +159,69 @@ def get_divisors(number, primes=None):
     return divisors
 
 ####################################################
+# combinatorics
+
+def get_permutation_next(indexes, taken, limit):
+    '''
+        Number (N, K) = N! / (N-K)!
+    '''
+    assert indexes
+    max_i = len(indexes)-1
+    assert indexes[max_i] < limit
+
+    i = max_i
+
+    # propagate the value change
+    taken[indexes[i]] = False
+    indexes[i] += 1
+
+    while indexes[i] == limit or taken[indexes[i]]:
+        if indexes[i] == limit:
+            if i == 0:
+                return False
+            i -= 1
+            # available now
+            taken[indexes[i]] = False
+        indexes[i] += 1
+
+    taken[indexes[i]] = True
+
+    # give proper values to the remaining
+
+    next_free = 0
+    for j in range(i+1, max_i+1):
+        while taken[next_free]:
+            next_free += 1
+            assert next_free != limit
+        taken[next_free] = True
+        indexes[j] = next_free
+
+    # print(indexes, taken)
+
+    return True
+
+def get_permutation_start(indexes, taken, limit, subset=0):
+    '''
+        initialisation; taken = used indexes (each index appears one time only)
+
+        limit, subset = (usually known as) N, K
+    '''
+    if subset == 0:
+        subset = limit
+
+    # not like this: it will create another list
+    # taken = [False] * limit
+    for i in range(limit):
+        taken.append(False)
+
+    for i in range(subset):
+        indexes.append(i)
+        taken[i] = True
+
+####################################################
 # generic
 
-def no_digits(number, base=10):
+def number_of_digits(number, base=10):
     """get the number of the digits of the given number in the given base"""
     digits = 0
     while number >= 1:
@@ -169,7 +237,40 @@ def get_digits(number, base=10):
         number //= base
     return digits
 
+def get_number(digits, revert=False):
+    """get the number from the digits"""
+    number = 0
+    size = len(digits)
+    for i in range(size):
+        number *= 10
+        number += digits[i] if not revert else digits[size-i-1]
+    return number
+
 ####################################################
+
+def debug_get_permutations(limit, subset_limit=0, print_it=False):
+    """
+        debug function to test permutations
+        \todo: simplify the usage of this API
+    """
+    # pylint: disable=invalid-name
+
+    N = limit
+    K = subset_limit
+
+    a = []
+    temp = []
+    get_permutation_start(a, temp, N, K)
+    if print_it:
+        print(a)
+
+    cnt = 1
+    while get_permutation_next(a, temp, N):
+        if print_it:
+            print(a)
+        cnt += 1
+
+    return cnt
 
 def debug_validations():
     """module's assertions"""
@@ -180,10 +281,19 @@ def debug_validations():
     assert [1, 2, 4, 8, 16, 32, 64] == get_divisors(64)
     assert [1, 2, 3, 4, 6, 8, 12, 16, 24, 48] == get_divisors(48)
 
-    assert no_digits(7) == 1
-    assert no_digits(7567) == 4
+    assert number_of_digits(7) == 1
+    assert number_of_digits(7567) == 4
     assert get_digits(1037567) == [7, 6, 5, 7, 3, 0, 1]
     assert get_digits(7567, 8) == [7, 1, 6, 6, 1]
+
+    assert debug_get_permutations(2) == 2
+    assert debug_get_permutations(3) == 6
+    assert debug_get_permutations(4) == 24
+
+    assert debug_get_permutations(3, 2) == 6
+    assert debug_get_permutations(2, 1) == 2
+    assert debug_get_permutations(3, 1) == 3
+    assert debug_get_permutations(4, 2) == 12
 
 if __name__ == "__main__":
     debug_validations()
