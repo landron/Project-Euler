@@ -78,7 +78,7 @@ def solve_problem(limit, use_triangular):
 
 def parse_input():
     '''
-        https://www.hackerrank.com/contests/projecteuler/challenges/euler033
+        https://www.hackerrank.com/contests/projecteuler/challenges/euler045
     '''
     (N, a, b) = (int(i) for i in input().strip().split(' '))
     result = solve_problem(N, a == 3 or b == 3)
