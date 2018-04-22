@@ -4,15 +4,19 @@
         Permuted multiples
 
     https://www.hackerrank.com/contests/projecteuler/challenges/euler052
-        todo_hackerrank:
             55.56 (4/9 timeouts: 5,6,7,8)
 
             77.78 (2/9 timeouts: 5,6)
                 use direct numbers multiplications (has_permuted_multiples_2) \
                     instead of digits operation (has_permuted_multiples)
 
-            88.89 (timeout: 6)
+            88.89 (timeout: 5)
                 iterator wrongly used a second time
+
+            100 : all passed in Python 2
+                (one line changed: raw_input instead of input, see tag_python_2)
+
+            There are still some improvements that can be done, there is only brute force here.
 
     pylint 1.8.1
         Your code has been rated at 8.62/10.
@@ -120,6 +124,8 @@ def parse_input():
         https://www.hackerrank.com/contests/projecteuler/challenges/euler052
     '''
     (N, K) = (int(i) for i in input().strip().split(' '))
+    # tag_python_2
+    # (N, K) = (int(i) for i in raw_input().strip().split(' '))
     result = get_all(N, K)
     for i in result:
         show = ''
