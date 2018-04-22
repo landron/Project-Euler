@@ -229,6 +229,7 @@ def number_of_digits(number, base=10):
         digits += 1
     return digits
 
+# the result is in reversed order
 def get_digits(number, base=10):
     """get the digits of the given number in the given base"""
     digits = []
