@@ -15,7 +15,7 @@
                 solve_problem_generate_testthem => no gain
 
     pylint 1.8.1
-        Your code has been rated at 8.82/10.
+        Your code has been rated at 8.93/10.
 
     tag_cache
 '''
@@ -24,9 +24,15 @@ import math
 # import collections
 import bisect
 
-from proj_euler import get_primes
-from proj_euler import get_digits, number_of_digits
-from proj_euler import get_permutation_next, get_permutation_start
+import sys
+
+PROJ_EULER = 1
+if PROJ_EULER:
+    sys.path.append("..")
+    # pylint: disable=import-error
+    from proj_euler import get_primes
+    from proj_euler import get_digits, number_of_digits
+    from proj_euler import get_permutation_next, get_permutation_start
 
 def is_pandigital(number_digits):
     assert len(number_digits) < 10
@@ -98,7 +104,8 @@ def solve_problem_generate_reallimit(limit_in):
 def solve_problem_generate_testthem(limit_in):
     '''
         desperate try to pass the hackerrank tests
-            just test for small enough numbers (instead of calculating based on the number of digits)
+            just test for small enough numbers (instead of calculation
+                based on the number of digits)
     '''
     no_digits = number_of_digits(limit_in)
     max_factor = math.floor(math.sqrt(limit_in))

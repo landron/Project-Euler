@@ -6,6 +6,13 @@ from functools import reduce
 from time import time
 import proj_euler
 
+# how to include proj_euler in subfolders
+PROJ_EULER = 1
+if PROJ_EULER:
+    import sys
+    sys.path.append("..") # Adds higher directory to python modules path.
+    # pylint: disable=import-error
+
 def define_object_func(point):
     # point++ does not work !!
     point.x -= 1
