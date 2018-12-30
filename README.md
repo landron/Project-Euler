@@ -1,9 +1,9 @@
 # Project Euler
-http://projecteuler.net/ 
+http://projecteuler.net/    
 [2018.12] I stopped giving the number of the problem or direct links to the sites (Project Euler, HackerRank). Unfortunately, I am still using the name.
 
 [Badge](http://projecteuler.net/profile/landron.png)
-> Solved: 47
+> Solved: 47    
 > 2018.12.30
 
 [HackerRank](https://www.hackerrank.com/contests/projecteuler/challenges): 1582 (/92411), challenges (solved perfectly): 24/34
