@@ -181,9 +181,9 @@ def solve_with_primes_func(primes, limit, debug, test_primality):
 
         current_sum = get_sum(primes, no_terms, 0)
         no_terms_from_2 = 1
+
         while current_sum <= limit:
-            found = test_primality(primes, current_sum)
-            if found:
+            if test_primality(primes, current_sum):
                 if debug:
                     print("Lucky solution for {0} terms: {1}.".
                           format(no_terms_from_2, current_sum))
@@ -192,8 +192,8 @@ def solve_with_primes_func(primes, limit, debug, test_primality):
                 solution.no_terms = no_terms
                 solution.first = 2
 
+            current_sum += primes[no_terms_from_2]
             no_terms_from_2 += 1
-            current_sum = get_sum(primes, no_terms_from_2, 0)
 
         return no_terms
 
@@ -202,12 +202,11 @@ def solve_with_primes_func(primes, limit, debug, test_primality):
     while True:
         current_sum = get_sum(primes, no_terms, 0)
         if current_sum > limit:
-            if debug:
-                print("Limit break for {0} terms.".format(no_terms))
+            # if debug:
+            #     print("Limit break for {0} terms.".format(no_terms))
             break
 
-        found = test_primality(primes, current_sum)
-        if found:
+        if test_primality(primes, current_sum):
             if debug:
                 print("Lucky solution for {0} terms: {1}.".
                       format(no_terms, current_sum))
@@ -222,8 +221,7 @@ def solve_with_primes_func(primes, limit, debug, test_primality):
                 if current_sum > limit:
                     break
 
-                found = test_primality(primes, current_sum)
-                if found:
+                if test_primality(primes, current_sum):
                     if debug:
                         print("Solution for {0} terms: {1}.".
                               format(no_terms, current_sum))
