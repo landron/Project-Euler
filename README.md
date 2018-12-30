@@ -1,9 +1,11 @@
 # Project Euler
-http://projecteuler.net/  
-[Badge](http://projecteuler.net/profile/landron.png)
-> Solved: 34  
-> 2017.10.21
+http://projecteuler.net/ 
+[2018.12] I stopped giving the number of the problem or direct links to the sites (Project Euler, HackerRank). Unfortunately, I am still using the name.
 
-[HackerRank](https://www.hackerrank.com/contests/projecteuler/challenges): 2574 (3.76%), challenges (solved perfectly): 15/21
-> 2017.10.21  
+[Badge](http://projecteuler.net/profile/landron.png)
+> Solved: 47
+> 2018.12.30
+
+[HackerRank](https://www.hackerrank.com/contests/projecteuler/challenges): 1582 (/92411), challenges (solved perfectly): 24/34
+> 2018.12.30  
 \todo todo_hackerrank : no optimal solution yet

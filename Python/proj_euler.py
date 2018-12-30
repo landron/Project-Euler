@@ -1,17 +1,12 @@
 """
     Project Euler problems common functionality
         primes, divisors
-    Version: 2018.09.08
+    Version: 2018.12.30
 
     Reference:
         divisors:   problem_12_smallest_triangular
 
-    pylint --version
-        No config file found, using default configuration
-        pylint 1.8.1,
-        astroid 1.6.0
-        Python 3.6.4 (v3.6.4:d48eceb, Dec 19 2017, 06:54:40)
-    Your code has been rated at 10.00/10    2018.04.15
+    pylint, flake8
 
     Functions:
         get_primes
@@ -102,6 +97,38 @@ def get_primes(limit):
             returns the list of them
     """
     return get_primes_2(limit)
+
+
+def isprime(n):  # pylint: disable=invalid-name
+    """Returns True if n is prime.
+
+        Reference
+            https://stackoverflow.com/questions/1801391/what-is-the-best-algorithm-for-checking-if-a-number-is-prime
+
+        Next:
+            - AKS primality test (Agrawal–Kayal–Saxena primality test)
+            - Miller-Rabin test
+    """
+    if n == 2:
+        return True
+    if n == 3:
+        return True
+    if n % 2 == 0:
+        return False
+    if n % 3 == 0:
+        return False
+
+    i = 5
+    w = 2  # pylint: disable=invalid-name
+
+    while i * i <= n:
+        if n % i == 0:
+            return False
+
+        i += w
+        w = 6 - w  # pylint: disable=invalid-name
+
+    return True
 
 
 def __get_power(number, prime):
@@ -316,6 +343,10 @@ def debug_validations():
     assert debug_get_permutations(2, 1) == 2
     assert debug_get_permutations(3, 1) == 3
     assert debug_get_permutations(4, 2) == 12
+
+    assert isprime(131)
+    assert isprime(149)
+    assert not isprime(19519)
 
 
 if __name__ == "__main__":
