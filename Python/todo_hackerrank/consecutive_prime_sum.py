@@ -16,6 +16,7 @@
             - Miller-Rabin test
 
     tag_primes
+    tag_is_prime
     todo_hackerrank
 
     Reference

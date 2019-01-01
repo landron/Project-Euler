@@ -9,3 +9,10 @@ http://projecteuler.net/
 [HackerRank](https://www.hackerrank.com/contests/projecteuler/challenges): 1582 (/92411), challenges (solved perfectly): 24/34
 > 2018.12.30  
 \todo todo_hackerrank : no optimal solution yet
+
+## Todos
+
+### Large prime number detections   
+tag_is_prime
+- AKS primality test (Agrawal–Kayal–Saxena)
+- Miller-Rabin test
