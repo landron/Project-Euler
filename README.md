@@ -12,7 +12,7 @@ http://projecteuler.net/
 
 ## Todos
 
-### Large prime number detections   
+### Large prime number detection
 tag_is_prime
 - AKS primality test (Agrawal–Kayal–Saxena)
 - Miller-Rabin test
