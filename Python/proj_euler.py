@@ -103,16 +103,18 @@ def isprime(n):  # pylint: disable=invalid-name
     """Returns True if n is prime.
 
         Reference
+            "a variant of the classic O(sqrt(N)) algorithm. It uses the fact
+            that a prime (except 2 and 3) is of form 6k - 1 or 6k + 1 and
+            looks only at divisors of this form"
             https://stackoverflow.com/questions/1801391/what-is-the-best-algorithm-for-checking-if-a-number-is-prime
 
         Next:
             - AKS primality test (Agrawal–Kayal–Saxena primality test)
             - Miller-Rabin test
     """
-    if n == 2:
-        return True
-    if n == 3:
-        return True
+    assert n > 0
+    if n < 4:
+        return n != 1
     if n % 2 == 0:
         return False
     if n % 3 == 0:
@@ -121,7 +123,9 @@ def isprime(n):  # pylint: disable=invalid-name
     i = 5
     w = 2  # pylint: disable=invalid-name
 
-    while i * i <= n:
+    # while i * i <= n:
+    limit = 1+math.floor(math.sqrt(n))
+    while i < limit:
         if n % i == 0:
             return False
 
@@ -344,6 +348,10 @@ def debug_validations():
     assert debug_get_permutations(3, 1) == 3
     assert debug_get_permutations(4, 2) == 12
 
+    assert not isprime(1)
+    assert isprime(2)
+    assert isprime(3)
+    assert not isprime(15)
     assert isprime(131)
     assert isprime(149)
     assert not isprime(19519)
