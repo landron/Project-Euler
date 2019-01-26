@@ -1,14 +1,14 @@
 # Project Euler
 http://projecteuler.net/    
 - [2018.12] I stopped giving the number of the problem or direct links to the sites (Project Euler, HackerRank). Unfortunately, I am still using the name.    
-- [2019.02] Most of the new solutions are private, especially if the result is not very interesting.
+- [2019.01] Most of the new solutions are private, especially if the result is not very interesting.
 
 [Badge](http://projecteuler.net/profile/landron.png)
-> Solved: 47    
-> 2018.12.30
+> Solved: 53   
+> 2019.01.26
 
-[HackerRank](https://www.hackerrank.com/contests/projecteuler/challenges): 1582 (/92411), challenges (solved perfectly): 24/34
-> 2018.12.30  
+[HackerRank](https://www.hackerrank.com/results/projecteuler/Liviul): 1108 (/94071), challenges (solved perfectly): 30/40
+> 2019.01.26  
 \todo todo_hackerrank : no optimal solution yet
 
 ## Todos
