@@ -8,7 +8,7 @@ from time import time
 import proj_euler
 
 # how to include proj_euler in subfolders
-PROJ_EULER = 1
+PROJ_EULER = True
 if PROJ_EULER:
     import sys
     sys.path.append("..")  # Adds higher directory to python modules path.

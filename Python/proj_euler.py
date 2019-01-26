@@ -19,6 +19,8 @@
 import math
 import itertools
 
+__version__ = "1.0.1"
+
 ####################################################
 # primes
 
@@ -99,6 +101,19 @@ def get_primes(limit):
     return get_primes_2(limit)
 
 
+def get_primes_for_divisors_of(limit):
+    """
+        Get the list of primes until the greatest possible
+        divisor of the given limit.
+
+        Returns the list of these prime numbers.
+
+        ATTENTION: this does not include all the prime numbers smaller
+            than the given limit!
+    """
+    return get_primes(1 + math.floor(math.sqrt(limit)))
+
+
 def isprime(n):  # pylint: disable=invalid-name
     """Returns True if n is prime.
 
@@ -137,14 +152,14 @@ def isprime(n):  # pylint: disable=invalid-name
 
 def __get_power(number, prime):
     """gets the maximal power of the prime that divides the number"""
-    if number % prime != 0:
+    if number % prime:
         return (number, 0)
     power = 1
     divisor = prime*prime
     while number % divisor == 0:
         divisor *= prime
         power += 1
-    return (number//int(divisor/prime), power)
+    return number//(divisor//prime), power
 
 
 def get_prime_divisors(number, primes):
@@ -159,7 +174,7 @@ def get_prime_divisors(number, primes):
     for prime in primes:
         if limit < prime:
             break
-        (number, power) = __get_power(number, prime)
+        number, power = __get_power(number, prime)
         if power != 0:
             divisors.append((prime, power))
         if number == 1:
@@ -173,7 +188,7 @@ def get_prime_divisors(number, primes):
 def get_divisors_as_primes(number, primes=None):
     """get the divisors of a given number as a list of primes and powers"""
     if not primes:
-        primes = get_primes(1 + math.floor(math.sqrt(number)))
+        primes = get_primes_for_divisors_of(number)
     return get_prime_divisors(number, primes)
 
 
@@ -333,6 +348,7 @@ def debug_validations():
         get_divisors(144)
     assert [1, 2, 4, 8, 16, 32, 64] == get_divisors(64)
     assert [1, 2, 3, 4, 6, 8, 12, 16, 24, 48] == get_divisors(48)
+    assert get_divisors(21) == [1, 3, 7, 21]
 
     assert number_of_digits(7) == 1
     assert number_of_digits(7567) == 4
