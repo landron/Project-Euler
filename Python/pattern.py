@@ -1,31 +1,56 @@
 """
-    Problem 666 : Large sum
-    http://projecteuler.net/problem=666
-        What is the value of the first triangle number to have over
-        five hundred divisors?
-    Version: 2018.09.08
-
     pylint, flake8
 """
+import time
 
-from time import time
+
+USE_LIB = False
+
+if USE_LIB:
+    # from lib.proj_euler import get_primes
+    pass
+else:
+    # import math
+    pass
 
 
-def problem_666():
+def parse_input():
+    '''
+        read input and solve the problem as defined on hackerrank
+    '''
+    limit, terms_no = (int(i) for i in input().strip().split())
+    solution = solve(limit, terms_no)
+    solution.sort()
+    for i in solution:
+        print(i, end='')
+    print()
+
+
+def solve(limit, terms_no=0):  # pylint: disable=unused-argument
+    '''
+        Solve problem and return the solution
+    '''
+    return limit
+
+
+def problem():
     """solve the problem, print the needed time"""
-    start = time()
+    start = time.time()
 
-    result = 666
+    result = solve(666)
     assert result == 666
-    print("Result {0} in {1:.2f} seconds".format(result, time()-start))
+    print("Result {0} in {1:.2f} seconds".format(result, time.time()-start))
 
 
 def debug_validations():
     """all the assertions"""
-    pass
 
 
 if __name__ == "__main__":
     debug_validations()
 
-    problem_666()
+    # original problem
+    print(problem())
+
+    # harden/generalized problem
+    # parse_input()
