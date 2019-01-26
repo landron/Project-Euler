@@ -16,25 +16,27 @@ else:
 
 def parse_input():
     '''
-        read input and solve the problem as defined on hackerrank
+        read input and solve the problem as defined on HackerRank
     '''
-    limit, terms_no = (int(i) for i in input().strip().split())
-    solution = solve(limit, terms_no)
+    limit, _ = (int(i) for i in input().strip().split())
+    solution = solve(limit)
     solution.sort()
     for i in solution:
         print(i, end='')
     print()
 
 
-def solve(limit, terms_no=0):  # pylint: disable=unused-argument
+def solve(limit):
     '''
-        Solve problem and return the solution
+        Return the solution of the problem.
     '''
     return limit
 
 
 def problem():
-    """solve the problem, print the needed time"""
+    """
+        Solve the problem as formulated on the original site.
+    """
     start = time.time()
 
     result = solve(666)
@@ -50,7 +52,7 @@ if __name__ == "__main__":
     debug_validations()
 
     # original problem
-    print(problem())
+    problem()
 
-    # harden/generalized problem
+    # harden/generalized HackerRank problem
     # parse_input()
