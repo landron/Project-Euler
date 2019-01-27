@@ -153,7 +153,7 @@ def isprime(n):  # pylint: disable=invalid-name
 def __get_power(number, prime):
     """gets the maximal power of the prime that divides the number"""
     if number % prime:
-        return (number, 0)
+        return number, 0
     power = 1
     divisor = prime*prime
     while number % divisor == 0:
@@ -298,7 +298,7 @@ def get_digits(number, base=10):
     while number >= 1:
         digits.append(number % base)
         number //= base
-    return digits
+    return digits if digits else [0]
 
 
 def get_number(digits, revert=False):

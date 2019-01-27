@@ -1,4 +1,9 @@
 """
+    This is private code.
+
+    https://projecteuler.net/problem=63
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler063
+
     pylint, flake8
 """
 import time
@@ -40,7 +45,6 @@ def problem():
     start = time.time()
 
     result = solve(666)
-    assert result == 666
     print("Result {0} in {1:.2f} seconds".format(result, time.time()-start))
 
 
