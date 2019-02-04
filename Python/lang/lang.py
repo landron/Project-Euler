@@ -1,18 +1,57 @@
 '''
-    Add here various trips & tricks & subtleties of the language
+    Purpose
+        Add here various trips & tricks & subtleties of the language.
+        For the moment it is intimately related to proj_euler.py.
 
     pylint, flake8
 '''
 from functools import reduce
 from time import time
-import proj_euler
+
+if __name__ == "__main__" and __package__ is None:
+    # https://stackoverflow.com/questions/6323860/sibling-package-imports
+    #
+    #   This is tough because:
+    #     "The only use case seems to be running scripts that happen to be
+    #     living inside a module's directory, which I've always seen as an
+    #     antipattern."
+    #
+    #   from ... import proj_euler
+    #   #   ValueError: attempted relative import beyond top-level package
+
+    import sys
+    import os
+    sys.path.append(os.path.dirname(sys.path[0]))
+    __package__ = 'Tests'  # pylint: disable=redefined-builtin
+import proj_euler  # pylint: disable=wrong-import-position  # noqa: E402
 
 # how to include proj_euler in subfolders
 PROJ_EULER = True
 if PROJ_EULER:
-    import sys
-    sys.path.append("..")  # Adds higher directory to python modules path.
-    # pylint: disable=import-error
+    # pylint: disable=unused-import
+    from proj_euler import get_primes  # noqa: F401
+
+
+def eliminate_duplicates(lista):
+    '''
+        eliminate duplicate elements from the given sorted list in-place
+
+        remove while iterating
+        https://stackoverflow.com/questions/1207406/how-to-remove-items-from-a-list-while-iterating
+
+        reverse to delete while not affecting the iteration
+    '''
+    assert lista
+    assert all(lista[i] <= lista[i+1] for i in range(len(lista)-1))
+
+    last = lista[-1] + 1
+    size = len(lista)
+    for i, val in enumerate(reversed(lista)):
+        if val == last:
+            # the indexes are reversed
+            del lista[size-i-1]
+        else:
+            last = val
 
 
 def increment(point):
@@ -39,6 +78,9 @@ def list_comprehensions():
     '''
         A list comprehension is a syntactic construct available in some
         programming languages for creating a list based on existing lists.
+
+        DEPRECATED: the pythonic way is apparently to clearly express what
+            what you mean instead of being smart.
     '''
     print("Great functional programming")
     # "Removed reduce(). Use functools.reduce() if you really need it; \
