@@ -16,7 +16,14 @@
 
 #include "gtest/gtest.h"
 
-//  various bigint libraries
+//#include "TinyBigInt.h"
+
+using CppBigInt = unsigned long long int;
+/*
+    various bigint libraries
+
+    the given times are for problem_rec(80); HackerRank expects decent times until 200
+*/
 
 #include "bigint/BigIntegerLibrary.hh"
 //  https://github.com/sercantutar/infint
@@ -26,19 +33,29 @@
 //  https://github.com/faheel/BigInt : does not compile, then even slower
 //#include "BigInt.hpp"
 
-//using MyBigInteger = BigInt; // ??
+//using MyBigInteger = BigInt; // ?? very, veyr big
 //using MyBigInteger = InfInt;  //  133250 ms !!
 //using MyBigInteger = bigint; // 89093 ms
-using MyBigInteger = BigUnsigned;   // 17427 ms
 
-/*constexpr*/ auto get_pow(unsigned number, unsigned power) {
+// this seems alright, unfortunately the implementation is hard to transpose on HackerRank
+using MyBigInteger = BigUnsigned;   // 17427 ms
+//using MyBigInteger = lee_woo::BigInt;
+
+// constexpr does not get along with most implementations: memory allocation is needed
+constexpr auto get_pow(unsigned number, unsigned power) {
+    auto result = static_cast<CppBigInt>(1);
+    for (unsigned i = 0; i < power; ++i) result *= number;
+    return result;
+};
+
+auto get_pow_big(unsigned number, unsigned power) {
     auto result = static_cast<MyBigInteger>(1);
     for (unsigned i = 0; i < power; ++i) result *= number;
     return result;
 };
 
-static const auto MODULO_HK = get_pow(10,9) + 7;
-//static const auto MODULO = get_pow(10, 10);
+//  get_pow: it works if MyBigInteger knows about CppBigInt
+static const auto MODULO_HK = get_pow_big(10,9) + 7;
 
 constexpr auto sum_of_pow_digits(unsigned number)
 {
@@ -127,8 +144,6 @@ auto problem_rec(unsigned digits_no) {
             const auto prev = number - i * i;
             if (prev < 0) break;
             sum_of += get_happy_count_rec(digits_no - 1, prev, table);
-
-            //sum_of %= MODULO;
         }
         table[digits_no - 1][number - 1] = sum_of+1;
         return sum_of;
@@ -154,14 +169,10 @@ auto problem_rec(unsigned digits_no) {
         if (solved[i] == 1) {
             const auto count = get_happy_count_with_hash(digits_no, i, table);
             happy += count;
-
-            //happy %= MODULO;
         }
     }
 
-    //const auto total = (digits_no < 10) ? get_pow(10, digits_no) : MODULO;
-    //return total-happy-1;
-    return get_pow(10, digits_no) - happy - 1;
+    return get_pow_big(10, digits_no) - happy - 1;
 }
 
 void parse_input() 
@@ -211,12 +222,13 @@ TEST(test_units, happy_numbers)
     ASSERT_TRUE(problem_rec(9) == 854325192);
     ASSERT_TRUE(problem_rec(10)%MODULO_HK == 507390796);
     ASSERT_TRUE(problem_rec(11)%MODULO_HK == 908800055);
+}
 
-    if (1) {
-        auto result = problem_rec(80);
-        result = result % MODULO_HK;
-        std::cout << result << std::endl;
+TEST(performance_tests, limit_80)
+{
+    auto result = problem_rec(80);
+    result = result % MODULO_HK;
+    std::cout << result << std::endl;
 
-        //parse_input();
-    }
+    //parse_input();
 }
