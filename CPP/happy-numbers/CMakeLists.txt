@@ -26,6 +26,6 @@ find_library(BigInt bigint)
 # It builds without ... . Does it help with something ? Path still not found ...
 find_path(BigIntInc "bigint/BigIntegerLibrary.hh")
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp TinyBigInt.h)
 target_include_directories(${PROJECT_NAME} PRIVATE ${BigIntInc})
 target_link_libraries(${PROJECT_NAME} PRIVATE GTest::GTest GTest::Main ${BigInt})

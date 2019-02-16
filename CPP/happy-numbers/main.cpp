@@ -1,5 +1,8 @@
 /*
-    Still do not passes 5,6,7: "Terminated due to timeout".
+    Problems:
+        Still do not passes 5,6,7: "Terminated due to timeout".
+
+        I use some "return BigInt" and most implementations are old enough and do not know about move operations.
 
     Reference
         https://github.com/landron/Project-Euler/blob/master/Python/todo_hackerrank/happy_numbers.py
@@ -16,7 +19,7 @@
 
 #include "gtest/gtest.h"
 
-//#include "TinyBigInt.h"
+#include "TinyBigInt.h"
 
 using CppBigInt = unsigned long long int;
 /*
@@ -33,7 +36,7 @@ using CppBigInt = unsigned long long int;
 //  https://github.com/faheel/BigInt : does not compile, then even slower
 //#include "BigInt.hpp"
 
-//using MyBigInteger = BigInt; // ?? very, veyr big
+//using MyBigInteger = BigInt; // ?? very, very big
 //using MyBigInteger = InfInt;  //  133250 ms !!
 //using MyBigInteger = bigint; // 89093 ms
 
@@ -198,8 +201,60 @@ TEST(test_units, basic)
     ASSERT_TRUE(sum_of_pow_digits(999) == 243);
 }
 
-//TEST(test_units, DISABLED_get_precalculated_table)
-TEST(test_units, get_precalculated_table)
+TEST(test_units, tiny_big_int_additions)
+{
+    using BigInt = lee_woo::BigInt;
+
+    BigInt test;
+    ASSERT_TRUE(test == 0);
+    test = 13;
+    ASSERT_TRUE(test == 13);
+    ASSERT_TRUE(test.increase_size(4) == 13);
+    ASSERT_TRUE(test.add(8) == 21);
+    ASSERT_TRUE(test.add(138) == 159);
+    ASSERT_TRUE(test.add(892) == 1051);
+    ASSERT_TRUE(test.add(32123) == 33174);
+
+    test = 999123;
+    ASSERT_TRUE(test.add(877) == 1000000);
+}
+
+TEST(test_units, tiny_big_int_multiplications)
+{
+    using BigInt = lee_woo::BigInt;
+
+    auto test = BigInt(13);
+    ASSERT_TRUE(test.multiply(3) == 39);
+    test = 13;
+    ASSERT_TRUE(test.multiply(137) == 1781);
+    ASSERT_TRUE(test.multiply(0) == 0);
+
+    test = 6073;
+    auto second = BigInt(631);
+    test += second;
+    ASSERT_TRUE(test == 6704);
+    second = BigInt(228);
+    test += second;
+    ASSERT_TRUE(test == 6932);
+    second = BigInt(3111);
+    test += second;
+    ASSERT_TRUE(test == 10043);
+
+    second = BigInt(3);
+    test *= second;
+    ASSERT_TRUE(test == 30129);
+    second = BigInt(11);
+    test *= second;
+    ASSERT_TRUE(test == 331419);
+    test = 10043;
+    second = BigInt(417);
+    test *= second;
+    ASSERT_TRUE(test == 4187931);
+}
+
+
+TEST(test_units, DISABLED_get_precalculated_table)
+//TEST(test_units, get_precalculated_table)
 {
     ASSERT_TRUE(get_precalculated_table(1).size() == 243+1);
     ASSERT_TRUE(get_precalculated_table(10).size() == 810+1);
@@ -210,7 +265,7 @@ TEST(test_units, get_precalculated_table)
     ASSERT_TRUE(table[2] == 89);
 }
 
-TEST(test_units, happy_numbers)
+TEST(test_units, DISABLED_happy_numbers)
 {
     ASSERT_TRUE(problem_rec(1) == 7);
     ASSERT_TRUE(problem_rec(2) == 80);
@@ -224,7 +279,7 @@ TEST(test_units, happy_numbers)
     ASSERT_TRUE(problem_rec(11)%MODULO_HK == 908800055);
 }
 
-TEST(performance_tests, limit_80)
+TEST(performance_tests, DISABLED_limit_80)
 {
     auto result = problem_rec(80);
     result = result % MODULO_HK;
