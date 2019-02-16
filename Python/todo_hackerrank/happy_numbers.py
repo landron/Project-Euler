@@ -7,7 +7,9 @@
         n >= 10^(N-1) > 81*N for N >= 4
 
     HackerRank: 75/100
-    todo_hackerrank: ... C++
+    todo_hackerrank: 62.5/100
+        not the fastest BigInteger implementation
+        https://github.com/landron/Project-Euler/tree/master/CPP/happy-numbers
 
     tag_nice
     tag_recurrence_relation
@@ -176,8 +178,10 @@ def problem_rec(digits_no, trace=False):
         assert digits_no >= 0
         if number < 0:
             return 0
+        if number == 0:
+            return 1
         if digits_no == 0:
-            return number == 0
+            return 0
         if table[digits_no-1][number-1] is not None:
             return table[digits_no-1][number-1]
 
@@ -199,9 +203,9 @@ def problem_rec(digits_no, trace=False):
 
     if trace and 0:
         for i in range(100):
-            count = get_happy_count_rec_pure(1, i)
+            count = get_happy_count_rec_pure(2, i)
             if count:
-                print(i)
+                print(i, count)
 
     happy = 0
     table = [[None for _ in range(precalculated)] for _ in range(digits_no)]
