@@ -1,6 +1,6 @@
 # All about Python
 
-Some of the code is in the proper location [workshop](https://github.com/landron/workshop/tree/master/python), for the moment  HackerRank Python problems like decorators or context manager.
+Some of the code is in the proper location ([workshop](https://github.com/landron/workshop/tree/master/python)), for the moment  HackerRank Python problems like decorators or context manager.
 
 ## Scholar
 
@@ -21,5 +21,5 @@ A better import mechanism proposal.
 
 ## References
  * "Sibling package imports" on [SO](https://stackoverflow.com/questions/6323860/sibling-package-imports)
-
- * tag_python
+ 
+tag_python
