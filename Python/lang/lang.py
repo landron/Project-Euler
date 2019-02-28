@@ -32,6 +32,43 @@ if PROJ_EULER:
     from proj_euler import get_primes  # noqa: F401
 
 
+def context_manager():
+    '''
+        The Context Manager way of "subclassing"
+    '''
+    class PrettyFileWriter:
+        '''
+            "A Gentle Introduction to Context Managers:
+                The Pythonic Way of Managing Resources"
+            https://alysivji.github.io/managing-resources-with-context-managers-pythonic.html
+
+            "subclassing file objects"
+            https://stackoverflow.com/questions/16085292
+        '''
+        def __init__(self, fileName):
+            self.file = open(fileName, 'w')
+
+        def __enter__(self):
+            # return self.file
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            self.file.close()
+
+        def writenl(self, line):
+            '''
+                normal "write" function, but also add a new line
+                    (the reason of this "subclassing", PrettyFileWriter)
+            '''
+            self.file.write(line)
+            self.file.write('\n')
+
+    path = 'test.cm.txt'
+    print("Subclassing with context manager to", path)
+    with PrettyFileWriter(path) as fptr_w:
+        fptr_w.writenl("Context manager is some nice feature!")
+
+
 def eliminate_duplicates(lista):
     '''
         eliminate duplicate elements from the given sorted list in-place
@@ -110,6 +147,7 @@ def python_coding():
     '''
     start = time()
 
+    context_manager()
     define_object()
     print()
     list_comprehensions()
