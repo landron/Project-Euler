@@ -23,6 +23,10 @@ namespace lee_woo
             return equals(*this, val);
         }
 
+        bool operator!=(unsigned val) const noexcept {
+            return !operator==(val);
+        }
+
     public:
         BigInt& operator *= (const BigInt& factor) {
             multiply_big(*this, factor);

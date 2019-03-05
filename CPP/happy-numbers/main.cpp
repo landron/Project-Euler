@@ -140,7 +140,7 @@ auto problem_rec(unsigned digits_no) {
         if (number < 0) return 0;
         if (number == 0) return 1;
         if (digits_no == 0) return 0;
-        if (table[digits_no - 1][number - 1] > 0) return table[digits_no - 1][number - 1]-1;
+        if (table[digits_no - 1][number - 1] != 0) return table[digits_no - 1][number - 1]-1;
 
         auto sum_of = static_cast<MyBigInteger>(0);
         for (auto i = 0; i < 10; ++i) {
