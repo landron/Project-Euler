@@ -18,6 +18,7 @@ A better import mechanism proposal.
 ## tags
  * tag_learn_python
  * tag_class_python
+ * tag_tree_class : a tree class (nodes, description, cost)
 
 ## References
  * "Sibling package imports" on [SO](https://stackoverflow.com/questions/6323860/sibling-package-imports)
