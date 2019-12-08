@@ -1,12 +1,17 @@
 '''
     Purpose
         Add here various trips & tricks & subtleties of the language.
+
+    TODO
         For the moment it is intimately related to proj_euler.py.
 
     pylint, flake8
 '''
 from functools import reduce
 from time import time
+from dataclasses import dataclass
+import collections
+import typing
 
 if __name__ == "__main__" and __package__ is None:
     # https://stackoverflow.com/questions/6323860/sibling-package-imports
@@ -91,24 +96,58 @@ def eliminate_duplicates(lista):
             last = val
 
 
-def increment(point):
-    ''' point.x++ does not work !! '''
-    point.x -= 1
-    point.y += 2
-
-
 def define_object():
     '''
-        rapidly define structures using lambdas
+        rapidly define structures
     '''
+    def change(point):
+        ''' point.x++ does not work !! '''
+        point.x -= 1
+        point.y += 2
+
+    # lambda : DEPRECATED
+
     print("Passing simple objects")
     something = lambda: 0  # noqa: E731
     something.x = 30
     something.y = 67
-    increment(something)
+    change(something)
     print(something.x, ' ', end='')
     print(something.y)
     print(something.__dict__)
+
+    # NamedTuple : they are immutable
+
+    class Point1(typing.NamedTuple):
+        '''
+            Simple Point class
+        '''
+        x: int
+        y: int
+    something = Point1(30, 67)
+    #  cannot be changed: read only
+    # change(something)
+    print(something)
+
+    Point2 = collections.namedtuple("Point2", "x y")
+    something = Point2(30, 67)
+    #  cannot be changed: read only
+    # change(something)
+    print(something)
+
+    # dataclass
+
+    @dataclass(unsafe_hash=True)
+    class Point3:
+        '''
+            Simple Point generated class
+        '''
+        # pylint: disable=invalid-name
+        x: int = 0
+        y: int = 0
+    something = Point3(30, 67)
+    change(something)
+    print(something)
 
 
 def list_comprehensions():
@@ -153,9 +192,32 @@ def python_coding():
     list_comprehensions()
     print()
 
-    result = proj_euler.get_divisors(48)
-    print("Result {0} in {1:.2f} seconds".format(result, time()-start))
+    value = 48
+    result = proj_euler.get_divisors(value)
+    print("get_divisors({0}): {1} in {2:.2f} seconds".
+          format(value, result, time()-start))
+
+
+def debug_validations():
+    ''' module's assertions'''
+
+    # +=: append vs extend
+
+    test_l = ["abc"]
+    test_l += ["def"]
+    assert test_l == ["abc", "def"]
+    test_l = ["abc"]
+    test_l.append("def")
+    assert test_l == ["abc", "def"]
+
+    test_l = ["abc"]
+    test_l += "def"
+    assert test_l == ["abc", "d", "e", "f"]
+    test_l = ["abc"]
+    test_l.extend("def")
+    assert test_l == ["abc", "d", "e", "f"]
 
 
 if __name__ == "__main__":
+    debug_validations()
     python_coding()
