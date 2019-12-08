@@ -1,25 +1,29 @@
 """
     Project Euler problems common functionality
         primes, divisors
-    Version: 2018.12.30
-
-    Reference:
-        divisors:   problem_12_smallest_triangular
-
-    pylint, flake8
 
     Functions:
         get_primes
         get_divisors (needs all the primes section)
         get_digits
-        permutation
 
-    \todo better organize it (namespace ?) & simplify use (see permutations)
+        get_totient
+
+        Combinatorics
+            k-permutations & combinations
+
+    Reference:
+        divisors:       problem_12_smallest_triangular
+        get_totient:    p72_totient_summatory.py
+
+    \todo better organize it (namespace ?)
+
+    pylint, flake8
 """
 import math
 import itertools
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"   # 2019.11
 
 ####################################################
 # primes
@@ -71,7 +75,7 @@ def get_primes_2(limit):
 
 def get_primes_limits(limit_inf, limit_sup):
     """get the prime numbers in an interval (but used ?)"""
-    primes = [i for i in range(limit_inf, limit_sup)]
+    primes = list(range(limit_inf, limit_sup))
     # print(primes)
     limit_of_sieve = 1+math.floor(math.sqrt(limit_sup))
 
@@ -185,6 +189,49 @@ def get_prime_divisors(number, primes):
     return divisors
 
 
+def get_totient(number, primes):
+    '''
+        In number theory, Euler's totient function counts the positive
+        integers up to a given integer n that are relatively prime to n.
+
+        using get_prime_divisors is significantly slower
+
+        Reference
+            p72_totient_summatory.py
+            https://projecteuler.net/problem=72
+
+            https://en.wikipedia.org/wiki/Euler%27s_totient_function
+    '''
+    def get_prime_divisors_list(number, primes):
+        '''
+            get the set of divisors for a number
+
+            like get_prime_divisors, but without powers
+        '''
+        assert number > 1
+        assert primes
+        limit = 1 + math.floor(math.sqrt(number))
+        divisors = set()
+        for prime in primes:
+            if limit < prime:
+                break
+            while number % prime == 0:
+                number //= prime
+                divisors.add(prime)
+        if number > 1:
+            divisors.add(number)
+        return divisors
+    divisors = get_prime_divisors_list(number, primes)
+
+    numerator = number
+    denominator = 1
+    for i in divisors:
+        numerator *= (i-1)
+        denominator *= i
+    assert numerator % denominator == 0
+    return numerator // denominator
+
+
 def get_divisors_as_primes(number, primes=None):
     """get the divisors of a given number as a list of primes and powers"""
     if not primes:
@@ -216,63 +263,130 @@ def get_divisors(number, primes=None):
 # combinatorics
 
 
-def get_permutation_next(indexes, taken, limit):
+class Combinatorics:
     '''
-        Number (N, K) = N! / (N-K)!
+        Generate k-permutations & combinations
     '''
-    assert indexes
-    max_i = len(indexes)-1
-    assert indexes[max_i] < limit
 
-    i = max_i
+    def __init__(self, is_combinations, limit, limit_subset=0):
+        '''
+            initialisation
+            taken = used indexes (each index appears one time only)
+        '''
+        self.is_combinations = is_combinations
 
-    # propagate the value change
-    taken[indexes[i]] = False
-    indexes[i] += 1
+        assert limit_subset <= limit
+        if limit_subset == 0:
+            limit_subset = limit
 
-    while indexes[i] == limit or taken[indexes[i]]:
-        if indexes[i] == limit:
-            if i == 0:
-                return False
-            i -= 1
-            # available now
+        self.taken = [False] * limit
+        self.indexes = []
+
+        for i in range(limit_subset):
+            self.indexes.append(i)
+            self.taken[i] = True
+
+    def get_limit(self):
+        '''
+            the superior limit of our groupings
+        '''
+        return len(self.taken)
+
+    def get_limit_subset(self):
+        '''
+            the count of our generated set
+        '''
+        return len(self.indexes)
+
+    def current(self):
+        '''
+            current permutation/combination
+        '''
+        return self.indexes
+
+    @staticmethod
+    def get_combinatorics_next(indexes, taken, is_combinations):
+        '''
+            P(n,k) = k-permutations of n
+                Number (n, k) = n! / (n-k)!
+            k-combination of a set
+
+            n & k are deduced (not explicitly set):
+                n = len(taken)
+                k = len(indexes)
+        '''
+        assert is_combinations in [True, False]
+        assert indexes and taken
+
+        max_i = len(indexes)-1
+        limit = len(taken)
+        assert indexes[max_i] < limit
+
+        i = max_i
+
+        found = False
+        while not found:
+            found = True
+
+            # propagate the value change
+            #   if the limit is reached, we increment the previous digits
+            #   (like for a number base "limit")
+
             taken[indexes[i]] = False
-        indexes[i] += 1
+            indexes[i] += 1
 
-    taken[indexes[i]] = True
+            while indexes[i] == limit or taken[indexes[i]]:
+                if indexes[i] == limit:
+                    if i == 0:
+                        return False
+                    i -= 1
+                    # available now
+                    taken[indexes[i]] = False
+                indexes[i] += 1
+            assert indexes[i] != limit, "test"
 
-    # give proper values to the remaining
+            taken[indexes[i]] = True
 
-    next_free = 0
-    for j in range(i+1, max_i+1):
-        while taken[next_free]:
-            next_free += 1
-            assert next_free != limit
-        taken[next_free] = True
-        indexes[j] = next_free
+            # give proper values to the remaining
 
-    # print(indexes, taken)
+            if not is_combinations:
+                next_free = 0
+                for j in range(i+1, max_i+1):
+                    while taken[next_free]:
+                        next_free += 1
+                        assert next_free != limit
+                    taken[next_free] = True
+                    indexes[j] = next_free
+            else:
+                # taken ignored
+                for j in range(i+1, max_i+1):
+                    indexes[j] = indexes[j-1]+1
+                    if indexes[j] == limit:
+                        found = False
+                        break
 
-    return True
+        # print(indexes, taken)
+
+        return True
+
+    def get_next(self):
+        '''
+            get the next combination/permutation
+        '''
+        if not Combinatorics.get_combinatorics_next(
+                self.indexes, self.taken, self.is_combinations):
+            self.indexes = []
+            return None
+        return self.current()
 
 
-def get_permutation_start(indexes, taken, limit, subset=0):
+def get_combinatorics_start(is_combinatorics, limit, limit_subset=0):
     '''
-        initialisation; taken = used indexes (each index appears one time only)
-
-        limit, subset = (usually known as) N, K
+        limit, limit_subset = (usually known as) n, k
+            P(n,k) = k-permutations of n
     '''
-    if subset == 0:
-        subset = limit
+    return Combinatorics(is_combinatorics, limit, limit_subset)
 
-    # not like this: it will create another list
-    # taken = [False] * limit
-    for i in range(limit):
-        taken.append(False)
-
-    for i in range(subset):
-        indexes.append(i)
-        taken[i] = True
 
 ####################################################
 # generic
@@ -293,6 +407,7 @@ def get_digits(number, base=10):
 
         Return
             the result is in reversed order
+                use reversed to run trough in ascending order
     '''
     digits = []
     while number >= 1:
@@ -313,29 +428,35 @@ def get_number(digits, revert=False):
 ####################################################
 
 
-def debug_get_permutations(limit, subset_limit=0, print_it=False):
+def debug_combinatorics(is_combinations, limit, subset_limit, print_it):
     """
-        debug function to test permutations
-        \todo: simplify the usage of this API
+        debug function to test combinations & permutations
     """
-    # pylint: disable=invalid-name
-
-    N = limit
-    K = subset_limit
-
-    a = []
-    temp = []
-    get_permutation_start(a, temp, N, K)
+    combination = get_combinatorics_start(is_combinations, limit, subset_limit)
     if print_it:
-        print(a)
+        print(combination.current())
 
     cnt = 1
-    while get_permutation_next(a, temp, N):
+    while combination.get_next():
         if print_it:
-            print(a)
+            print(combination.current())
         cnt += 1
 
     return cnt
+
+
+def debug_get_permutations(limit, subset_limit=0, print_it=False):
+    """
+        debug function to test permutations
+    """
+    return debug_combinatorics(False, limit, subset_limit, print_it)
+
+
+def debug_get_combinations(limit, subset_limit=0, print_it=False):
+    """
+        debug function to test combinations
+    """
+    return debug_combinatorics(True, limit, subset_limit, print_it)
 
 
 def debug_validations():
@@ -355,6 +476,7 @@ def debug_validations():
     assert get_digits(1037567) == [7, 6, 5, 7, 3, 0, 1]
     assert get_digits(7567, 8) == [7, 1, 6, 6, 1]
 
+    # add print_it=True to see them
     assert debug_get_permutations(2) == 2
     assert debug_get_permutations(3) == 6
     assert debug_get_permutations(4) == 24
@@ -363,15 +485,35 @@ def debug_validations():
     assert debug_get_permutations(2, 1) == 2
     assert debug_get_permutations(3, 1) == 3
     assert debug_get_permutations(4, 2) == 12
+    assert debug_get_permutations(4, 3) == 24
+
+    assert debug_get_combinations(3, 3) == 1
+    assert debug_get_combinations(5, 5) == 1
+    assert debug_get_combinations(4, 3) == 4
+    assert debug_get_combinations(5, 2) == 10
 
     assert not isprime(1)
     assert isprime(2)
     assert isprime(3)
+    assert not isprime(4)
     assert not isprime(15)
     assert isprime(131)
     assert isprime(149)
     assert not isprime(19519)
 
+    primes_1000 = get_primes(1000)
+    assert get_totient(5, primes_1000) == 4
+    assert get_totient(11, primes_1000) == 10
+    assert get_totient(12, primes_1000) == 4
+    assert get_totient(15, primes_1000) == 8
+    assert get_totient(16, primes_1000) == 8
+    assert get_totient(34, primes_1000) == 16
+    assert get_totient(35, primes_1000) == 24
+    assert get_totient(36, primes_1000) == 12
+    assert get_totient(37, primes_1000) == 36
+
 
 if __name__ == "__main__":
     debug_validations()
+
+    # debug_get_combinations(7, 4, print_it=True)
