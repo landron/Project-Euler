@@ -16,3 +16,5 @@
 /Python/*.gitignore
 /Haskell/*.gitignore
 *.pyc
+/Python/lang/build
+/Python/lang/src/project_euler_landron.egg-info
