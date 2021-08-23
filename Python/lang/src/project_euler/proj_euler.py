@@ -184,7 +184,7 @@ def get_prime_divisors(number, primes):
         if number == 1:
             break
     if number != 1:
-        #   a prime number
+        #   a final (prime) divisor (like 7 in 28)
         divisors.append((number, 1))
     return divisors
 
@@ -243,13 +243,18 @@ def get_divisors(number, primes=None):
     """get all the divisors of a given number"""
     divisors_and_powers = get_divisors_as_primes(number, primes)
 
+    # each element is a prime with all the possible powers
+    # Ex.: 3150 [[2], [3, 9], [5, 25], [7]]
     divisors_expanded = []
     for item in divisors_and_powers:
         divisors_expanded.append([item[0]**(i+1) for i in range(item[1])])
 
     divisors = []
+    # 0 generates [1]
     for i in range(1+len(divisors_expanded)):
+        # combinations of divisors_expanded of size i
         for item in itertools.combinations(divisors_expanded, i):
+            # cartesian product of the combination item
             for j in list(itertools.product(*item)):
                 prod = 1
                 for k in j:
@@ -511,6 +516,8 @@ def debug_validations():
     assert get_totient(35, primes_1000) == 24
     assert get_totient(36, primes_1000) == 12
     assert get_totient(37, primes_1000) == 36
+
+    assert get_prime_divisors(28, primes_1000) == [(2, 2), (7, 1)]
 
 
 if __name__ == "__main__":

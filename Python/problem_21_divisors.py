@@ -11,7 +11,7 @@ import math
 
 ####################################################
 # switch between project euler and hackerrank
-import proj_euler
+from project_euler import proj_euler
 import itertools
 
 ########################################################################################################################

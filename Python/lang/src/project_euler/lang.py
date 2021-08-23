@@ -28,13 +28,12 @@ if __name__ == "__main__" and __package__ is None:
     import os
     sys.path.append(os.path.dirname(sys.path[0]))
     __package__ = 'Tests'  # pylint: disable=redefined-builtin
-import proj_euler  # pylint: disable=wrong-import-position  # noqa: E402
 
 # how to include proj_euler in subfolders
 PROJ_EULER = True
 if PROJ_EULER:
-    # pylint: disable=unused-import
-    from proj_euler import get_primes  # noqa: F401
+    # pylint: disable=import-error
+    import proj_euler
 
 
 def context_manager():
@@ -51,7 +50,7 @@ def context_manager():
             https://stackoverflow.com/questions/16085292
         '''
         def __init__(self, fileName):
-            self.file = open(fileName, 'w')
+            self.file = open(fileName, 'w', encoding="utf8")
 
         def __enter__(self):
             # return self.file
@@ -137,6 +136,7 @@ def define_object():
 
     # dataclass
 
+    #   TODO:   unsafe_hash
     @dataclass(unsafe_hash=True)
     class Point3:
         '''
