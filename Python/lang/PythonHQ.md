@@ -4,9 +4,9 @@ Some of the code is in the proper location ([workshop](https://github.com/landro
 
 ## How-to
 
-from project_euler.proj_euler import get_primes
-   Problems 7 & 10 - 10001st prime.py
-   problem_21_divisors.py
+from project_euler.proj_euler import get_primes  
+   * Problems 7 & 10 - 10001st prime.py  
+   * problem_21_divisors.py  
 
 ## Scholar
 
