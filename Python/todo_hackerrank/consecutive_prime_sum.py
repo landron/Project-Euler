@@ -30,7 +30,7 @@ import time
 PROJ_EULER = True
 
 if PROJ_EULER:
-    from lib.proj_euler import get_primes, isprime
+    from project_euler.proj_euler import get_primes, isprime
 else:
     def get_primes_2(limit):
         """minor optimization version of the previous"""

@@ -27,7 +27,7 @@ from math import log
 from time import time
 from datetime import datetime
 
-from project_euler.project_euler import get_primes
+from project_euler.proj_euler import get_primes
 
 HARD_VALIDATE = False
 

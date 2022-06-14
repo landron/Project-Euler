@@ -34,7 +34,7 @@
 # import math
 import itertools
 from time import time
-from project_euler.project_euler import get_primes, get_prime_divisors
+from project_euler.proj_euler import get_primes, get_prime_divisors
 
 HARD_ASSERT = False
 

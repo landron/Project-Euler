@@ -2,6 +2,12 @@
 
 Some of the code is in the proper location ([workshop](https://github.com/landron/workshop/tree/master/python)), for the moment  HackerRank Python problems like decorators or context manager.
 
+## How-to
+
+from project_euler.proj_euler import get_primes
+   Problems 7 & 10 - 10001st prime.py
+   problem_21_divisors.py
+
 ## Scholar
 
 ### Packages are not supposed to be self tested.
