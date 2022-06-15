@@ -5,8 +5,7 @@
 
     https://www.hackerrank.com/contests/projecteuler/challenges/euler038
 
-    pylint 1.8.1
-        Your code has been rated at 9.85/10.
+    pylint, flake8
 
     tag_permutation, tag_digits
 '''
@@ -14,12 +13,13 @@
 PROJ_EULER = 1
 
 if PROJ_EULER:
-    import sys
-    sys.path.append("..") # Adds higher directory to python modules path.
+    # import sys
+    # sys.path.append("..") # Adds higher directory to python modules path.
     # pylint: disable=import-error
-    from proj_euler import get_permutation_start, get_permutation_next
-    from proj_euler import get_digits
+    from project_euler.proj_euler import get_combinatorics_start
+    from project_euler.proj_euler import get_digits
 else:
+    # DEPRECATED
     def get_permutation_next(indexes, taken, limit):
         '''
             Number (N, K) = N! / (N-K)!
@@ -59,11 +59,12 @@ else:
 
         return True
 
+    # DEPRECATED
     def get_permutation_start(indexes, taken, limit, subset=0):
         '''
-            initialisation; taken = used indexes (each index appears one time only)
-
-            limit, subset = (usually known as) N, K
+            Initialisation
+                taken = used indexes (each index appears one time only)
+                limit, subset = (usually known as) N, K
         '''
         if subset == 0:
             subset = limit
@@ -78,7 +79,8 @@ else:
             taken[i] = True
 
     def number_of_digits(number, base=10):
-        """get the number of the digits of the given number in the given base"""
+        """get the number of the digits of the given number
+            in the given base"""
         digits = 0
         while number >= 1:
             number //= base
@@ -90,11 +92,12 @@ else:
         """get the digits of the given number in the given base"""
         digits = []
         while number >= 1:
-            digits.append(number%base)
+            digits.append(number % base)
             number //= base
         return digits
 
-##################################################################################################
+#####################################################################
+
 
 def number_from_permutation(indexes, limit=0):
     '''get the number from the (reversed) digits'''
@@ -108,6 +111,7 @@ def number_from_permutation(indexes, limit=0):
         number *= 10
         number += (max_digit - indexes[i])
     return number
+
 
 def is_prod(indexes, digits_n, idx, factor):
     '''
@@ -133,16 +137,18 @@ def is_prod(indexes, digits_n, idx, factor):
             return 0
     return idx+len(prod_idx)
 
+
 def get_solution(indexes, max_multiplier):
     '''
         max_multiplier: needed only for the hackerrank variant
     '''
-    # number of digits in the number < n/2 to contain at least 2 numbers (x, x*2)
+    # number of digits in the number < n/2 to contain at least
+    #   2 numbers (x, x*2)
     for i in range(len(indexes)//2):
         if max_multiplier != 0:
             mul = number_from_permutation(indexes, i+1)
             # print(mul)
-            if  mul >= max_multiplier:
+            if mul >= max_multiplier:
                 return 0
         j = i+1
         prod = 2
@@ -157,9 +163,11 @@ def get_solution(indexes, max_multiplier):
             return number_from_permutation(indexes, i+1)
     return 0
 
+
 def is_solution(indexes):
     '''are the given digits a solution ?'''
     return get_solution(indexes, 0) != 0
+
 
 def solve_problem(no_digits, max_multiplier=0, stop_when_found=True):
     '''
@@ -170,42 +178,43 @@ def solve_problem(no_digits, max_multiplier=0, stop_when_found=True):
 
     # generate all the pandigital numbers
 
-    indexes = []
-    taken = []
-    get_permutation_start(indexes, taken, no_digits)
+    comb = get_combinatorics_start(False, no_digits)
     # print(indexes)
     # print(number_from_permutation(indexes))
-    if is_solution(indexes):
+    if is_solution(comb.current()):
         # get_solution ignored here
-        return number_from_permutation(indexes)
-    while get_permutation_next(indexes, taken, no_digits):
+        return number_from_permutation(comb.current())
+    while comb.get_next():
         # print(indexes)
         # print(number_from_permutation(indexes))
-        mul = get_solution(indexes, max_multiplier)
+        mul = get_solution(comb.current(), max_multiplier)
         # 0 = no solution, 1 = direct soltuion
         if mul > 1:
             if stop_when_found:
-                return number_from_permutation(indexes)
+                return number_from_permutation(comb.current())
             multipliers.append(mul)
 
     return 0 if stop_when_found else multipliers
+
 
 def parse_input():
     '''
         solve the problem as defined on hackerrank
         https://www.hackerrank.com/contests/projecteuler/challenges/euler038
     '''
-    (N, K) = [int(j) for j in input().strip().split(' ')]
-    sol = solve_problem(K, N, False)
+    (limit, no_digits) = [int(j) for j in input().strip().split(' ')]
+    sol = solve_problem(no_digits, limit, False)
     sol.sort()
     for i in sol:
         print(i)
+
 
 def problem():
     '''
         solve the problem as defined on project Euler site
     '''
     return solve_problem(9)
+
 
 def debug_assertions():
     '''unit tests'''
@@ -227,6 +236,7 @@ def debug_assertions():
     assert not is_solution([7, 0, 5, 4, 3, 2, 1, 6])
     assert is_solution([1, 0, 7, 3, 2, 6, 5, 4])
 
+
 def main():
     '''main: unit tests, project Euler, hackerrank'''
     debug_assertions()
@@ -238,6 +248,7 @@ def main():
     # print(solve_problem(8, 100, False))
     # print(solve_problem(9, 1000, False))
     # parse_input()
+
 
 if __name__ == "__main__":
     main()
