@@ -15,8 +15,128 @@ USE_LIB = True
 if USE_LIB:
     from project_euler.proj_euler import get_combinatorics_start
 else:
-    # import math
-    pass
+    class Combinatorics:
+        '''
+            Generate k-permutations & combinations
+        '''
+
+        def __init__(self, is_combinations, limit, limit_subset=0):
+            '''
+                initialisation
+                taken = used indexes (each index appears one time only)
+            '''
+            self.is_combinations = is_combinations
+
+            assert limit_subset <= limit
+            if limit_subset == 0:
+                limit_subset = limit
+
+            self.taken = [False] * limit
+            self.indexes = []
+
+            for i in range(limit_subset):
+                self.indexes.append(i)
+                self.taken[i] = True
+
+        def get_limit(self):
+            '''
+                the superior limit of our groupings
+            '''
+            return len(self.taken)
+
+        def get_limit_subset(self):
+            '''
+                the count of our generated set
+            '''
+            return len(self.indexes)
+
+        def current(self):
+            '''
+                current permutation/combination
+            '''
+            return self.indexes
+
+        @staticmethod
+        def get_combinatorics_next(indexes, taken, is_combinations):
+            '''
+                P(n,k) = k-permutations of n
+                    Number (n, k) = n! / (n-k)!
+                k-combination of a set
+
+                n & k are deduced (not explicitly set):
+                    n = len(taken)
+                    k = len(indexes)
+            '''
+            assert is_combinations in [True, False]
+            assert indexes and taken
+
+            max_i = len(indexes)-1
+            limit = len(taken)
+            assert indexes[max_i] < limit
+
+            i = max_i
+
+            found = False
+            while not found:
+                found = True
+
+                # propagate the value change
+                #   if the limit is reached, we increment the previous digits
+                #   (like for a number base "limit")
+
+                taken[indexes[i]] = False
+                indexes[i] += 1
+
+                while indexes[i] == limit or taken[indexes[i]]:
+                    if indexes[i] == limit:
+                        if i == 0:
+                            return False
+                        i -= 1
+                        # available now
+                        taken[indexes[i]] = False
+                    indexes[i] += 1
+                assert indexes[i] != limit, "test"
+
+                taken[indexes[i]] = True
+
+                # give proper values to the remaining
+
+                if not is_combinations:
+                    next_free = 0
+                    for j in range(i+1, max_i+1):
+                        while taken[next_free]:
+                            next_free += 1
+                            assert next_free != limit
+                        taken[next_free] = True
+                        indexes[j] = next_free
+                else:
+                    # taken ignored
+                    for j in range(i+1, max_i+1):
+                        indexes[j] = indexes[j-1]+1
+                        if indexes[j] == limit:
+                            found = False
+                            break
+
+            # print(indexes, taken)
+
+            return True
+
+        def get_next(self):
+            '''
+                get the next combination/permutation
+            '''
+            if not Combinatorics.get_combinatorics_next(
+                    self.indexes, self.taken, self.is_combinations):
+                self.indexes = []
+                return None
+            return self.current()
+
+    def get_combinatorics_start(is_combinatorics, limit, limit_subset=0):
+        '''
+            limit, limit_subset = (usually known as) n, k
+                P(n,k) = k-permutations of n
+        '''
+        return Combinatorics(is_combinatorics, limit, limit_subset)
 
 
 def set_dic(dic, number):
@@ -132,46 +252,54 @@ def gen_octogonal():
     return dic
 
 
-def find_solution_step(dicts, order, solution):
+def find_current_step(dicts, order, current, solutions):
     '''
-        Recursively complete the solution chain.
+        Recursively complete the current chain.
     '''
-    if len(solution) == 6:
-        first = solution[0][0]
-        last = solution[-1][0]
-        total = 0
-        if first//100 == last % 100:
-            for i in solution:
-                total += i[0]
-            print(solution, total)
-        return total
-    assert len(solution) < 6
-    position = len(solution) - 1
-    prev = solution[-1][0]
+    size = len(dicts)
+
+    if len(current) == size:
+        def get_sum(solution, size):
+            if solution[0][0]//100 != solution[-1][0] % 100:
+                return 0
+            # validate solution: distinct numbers
+            #     needed for hackerrank, not project Euler
+            unique = [0] * size
+            for i, _ in enumerate(solution):
+                unique[i] = solution[i][0]
+            unique = set(unique)
+            if len(unique) < size:
+                return 0
+            total = 0
+            for i in unique:
+                total += i
+            return total
+
+        total = get_sum(current, size)
+        if total:
+            # print(current, total)
+            solutions.append(total)
+        return
+
+    assert len(current) < size
+    position = len(current) - 1
+    prev = current[-1][0]
     dic = dicts[1+order[position]]
     if prev % 100 not in dic:
-        return 0
-    total = 0
+        return
     for i in dic[prev % 100]:
-        solution.append((i, 1+order[position]))
-        res = find_solution_step(dicts, order, solution)
-        if res:
-            total = res
-        solution.pop()
-    return total
+        current.append((i, 1+order[position]))
+        find_current_step(dicts, order, current, solutions)
+        current.pop()
 
 
-def find_solution(dicts, order):
+def find_current(dicts, order, solutions):
     '''
         Solve with the given dictionaries for the current order.
     '''
-    total = 0
     for i in dicts[0]:
         for j in dicts[0][i]:
-            res = find_solution_step(dicts, order, [(j, 0)])
-            if res:
-                total = res
-    return total
+            find_current_step(dicts, order, [(j, 0)], solutions)
 
 
 def solve(dicts_selection):
@@ -188,17 +316,15 @@ def solve(dicts_selection):
     for i in dicts_selection:
         dicts.append(all_dicts[i-3])
 
-    comb = get_combinatorics_start(False, 5)
+    comb = get_combinatorics_start(False, len(dicts_selection)-1)
     # print(comb.current())
-    total = find_solution(dicts, comb.current())
-    assert not total
+    solutions = []
+    find_current(dicts, comb.current(), solutions)
 
     while comb.get_next():
         # print(comb.current())
-        res = find_solution(dicts, comb.current())
-        if res:
-            total = res
-    return total
+        find_current(dicts, comb.current(), solutions)
+    return solutions
 
 
 def problem():
@@ -207,8 +333,9 @@ def problem():
     """
     start = time.time()
 
-    result = solve([3, 4, 5, 6, 7, 8])
-    print(f"solve(): {result} in {time.time()-start:.2f}s")
+    selection = [3, 4, 5, 6, 7, 8]
+    result = solve(selection)
+    print(f"solve({selection}): {result} in {time.time()-start:.2f}s")
 
 
 def parse_input():
@@ -221,11 +348,14 @@ def parse_input():
         assert i not in selection
         selection.append(i)
         assert 3 <= i <= 8
-    solution = solve(selection)
-    solution.sort()
-    for i in solution:
-        print(i, end='')
-    print()
+    current = solve(selection)
+    if current:
+        # remove duplicates
+        current = list(set(current))
+        current.sort()
+        for i in current:
+            print(i)
+        print()
 
 
 def debug_validations():
