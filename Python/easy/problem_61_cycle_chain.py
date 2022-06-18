@@ -3,7 +3,6 @@
 
     https://projecteuler.net/problem=61
     https://www.hackerrank.com/contests/projecteuler/challenges/euler061/problem
-        WIP
 
     pylint, flake8
 """
