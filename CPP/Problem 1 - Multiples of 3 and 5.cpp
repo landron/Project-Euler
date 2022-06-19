@@ -3,12 +3,13 @@
 #include <cstdint>
 #include <sstream>
 #include <atlbase.h>
+#include <cassert>
 
 #include "Perform.h"
 
 typedef std::uint64_t UIntType;
 
-static bool s_debug = true;
+static bool s_debug = false;
 
 static 
 UIntType MultiplesDe3Et5_1_B(const UIntType below)
@@ -72,7 +73,7 @@ UIntType MultiplesDe3Et5_W(const UIntType below, unsigned index)
 	case 3:
 		return MultiplesDe3Et5_3_B(below);
 	default:
-		ATLASSERT(false && "MultiplesDe3Et5_W_44");
+		assert(false && "MultiplesDe3Et5_W_44");
 		return 0;
 	}
 }
@@ -154,4 +155,9 @@ UIntType MultiplesDe3Et5()
 std::uint64_t Problem1()
 {
 	return MultiplesDe3Et5();
+}
+
+std::uint64_t Multiples3and5(const std::uint64_t below)
+{
+	return MultiplesDe3Et5_WD(below, 3, s_debug);
 }

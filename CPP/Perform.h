@@ -1,9 +1,8 @@
-//	Version:	2013.12.10
-
 #pragma once
 
 #include <iostream>
 #include <string>
+#include <chrono>
 
 class DbgCnt
 {
@@ -12,14 +11,19 @@ public:
 	~DbgCnt();
 
 private:
-	unsigned m_cnt;
+	std::chrono::time_point<std::chrono::high_resolution_clock> m_cnt;
 	const std::string m_text;
 };
 
-inline DbgCnt::DbgCnt(const char* function): m_cnt(::GetTickCount()), m_text(function)
+inline DbgCnt::DbgCnt(const char* function):
+	m_cnt(std::chrono::high_resolution_clock::now()),
+	m_text(function)
 {}
 
 inline DbgCnt::~DbgCnt()
 {
-	std::cout<<m_text.c_str()<<" : "<<(::GetTickCount()-m_cnt)<<" ms."<<std::endl;
+	const auto elapsed = std::chrono::high_resolution_clock::now()-m_cnt;
+	const auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+
+	std::cout<<m_text.c_str()<<" : "<<microseconds<<" ms."<<std::endl;
 }
