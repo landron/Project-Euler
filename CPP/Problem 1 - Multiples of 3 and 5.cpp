@@ -157,7 +157,7 @@ std::uint64_t Problem1()
 	return MultiplesDe3Et5();
 }
 
-std::uint64_t Multiples3and5(const std::uint64_t below)
+size_t Multiples3and5(const size_t below)
 {
 	return MultiplesDe3Et5_WD(below, 3, s_debug);
 }

@@ -12,4 +12,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 project(project-euler)
 
 set(sources main.cpp "Problem 1 - Multiples of 3 and 5.cpp")
+list(APPEND sources "Problem 2 - Even Fibonacci numbers.cpp")
 add_executable(${PROJECT_NAME} ${sources})

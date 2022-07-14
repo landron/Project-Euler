@@ -11,17 +11,16 @@ typedef std::uint64_t UIntType;
 static bool s_debug = true;
 
 static 
-UIntType EvenFibonacci_1_B(const UIntType below)
+auto EvenFibonacci_1_B(const UIntType below)
 {
 	UIntType sum = 0;
 
-	UIntType prev = 1;
-	for (UIntType curr = 2; curr < below;)
+	for (UIntType curr = 2, prev = 1; curr < below;)
 	{
 		if (0 == curr%2)
 			sum += curr;
 
-		UIntType temp = prev;
+		auto temp = prev;
 		prev = curr;
 		curr += temp;
 	}
@@ -29,8 +28,9 @@ UIntType EvenFibonacci_1_B(const UIntType below)
 	return sum;
 }
 
-static inline 
-UIntType Fibonacci(const unsigned n)
+template <typename T>
+static inline
+UIntType Fibonacci(T n)
 {
 	//	(1 + sqrt(5)) / 2
 	static double const nombreDOr = 1.61803398874989;
@@ -43,7 +43,7 @@ UIntType EvenFibonacci_2_B(const UIntType below)
 {
 	UIntType sum = 0;
 	UIntType next = 0;
-	for (size_t i = 0; next < below; i+=3, next =  Fibonacci(i))
+	for (size_t i = 0; next < below; i+=3, next = Fibonacci(i))
 		sum += next;
 	return sum;
 }
@@ -121,8 +121,8 @@ UIntType EvenFibonacci_W(const UIntType below, unsigned index)
 	}
 }
 
-static
-UIntType EvenFibonacci_WD(const UIntType below, unsigned index, bool debug)
+static inline
+UIntType EvenFibonacci_WD(UIntType below, unsigned index, bool debug)
 {
 	if (debug)
 	{
@@ -170,7 +170,7 @@ UIntType EvenFibonacci_5(const UIntType below)
 	return EvenFibonacci_WD(below, 5, s_debug);
 }
 
-UIntType EvenFibonacci()
+UIntType EvenFibonacci(UIntType below)
 {
 	//for (int i = 1; i < 100; ++i)
 	//	std::cout<<i<<" : "<<Fibonacci(i)<<std::endl;
@@ -217,10 +217,15 @@ UIntType EvenFibonacci()
 	ATLASSERT(EvenFibonacci_1(100000000000) == EvenFibonacci_2(100000000000));
 	ATLASSERT(EvenFibonacci_1(1000000000000) == EvenFibonacci_2(1000000000000));
 
-	return EvenFibonacci_1(4000000);
+	return EvenFibonacci_1(below);
+}
+
+size_t even_Fibonacci_sum(size_t below)
+{
+	return EvenFibonacci_WD(below, 1, false);
 }
 
 std::uint64_t Problem2()
 {
-	return EvenFibonacci();
+	return EvenFibonacci(4000000);
 }
