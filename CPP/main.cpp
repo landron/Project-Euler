@@ -19,24 +19,43 @@ void parse_input()
 }
 }
 
-namespace problem_2 {
+namespace problem_2_3 {
+template <class T>
 void parse_input()
 {
 	size_t tests_no;
 	std::cin >> tests_no;
 	for (size_t i = 0; i < tests_no; ++i) {
-		size_t limit;
-		std::cin >> limit;
-		std::cout<<even_Fibonacci_sum(limit)<<std::endl;
+		size_t number;
+		std::cin >> number;
+		std::cout<<T::func(number)<<std::endl;
 	}
 }
 }
+
+struct EvenFibonacciSum
+{
+	static inline
+	auto func(size_t below) {
+		return even_Fibonacci_sum(below);
+	}
+};
+
+struct LargestPrimeFactor
+{
+	static inline
+	auto func(size_t number) {
+		extern size_t largest_prime_factor(size_t);
+		return largest_prime_factor(number);
+	}
+};
 
 int main()
 {
 	//std::cout<<std::endl<<"Solution: "<<Problem1()<<std::endl;
 	//problem_1::parse_input();
-	problem_2::parse_input();
+	//problem_2_3::parse_input<EvenFibonacciSum>();
+	problem_2_3::parse_input<LargestPrimeFactor>();
 
 	return 0;
 }

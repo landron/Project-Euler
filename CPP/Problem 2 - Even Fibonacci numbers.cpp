@@ -126,7 +126,7 @@ UIntType EvenFibonacci_WD(UIntType below, unsigned index, bool debug)
 {
 	if (debug)
 	{
-		std::string func("MultiplesDe3Et5_");
+		std::string func("EvenFibonacci_WD_");
 		func += ('0'+(char)index);
 		func += (", ");
 		std::stringstream ss;

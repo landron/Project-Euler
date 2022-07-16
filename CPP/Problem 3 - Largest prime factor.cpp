@@ -7,6 +7,7 @@
 	for 600851475143: 1<3<2
 */
 
+#include <cassert>
 #include <cstdint>
 #include <sstream>
 #include <atlbase.h>
@@ -16,7 +17,7 @@
 
 typedef std::uint64_t UIntType;
 
-static bool s_debug = true;
+static bool s_debug = false;
 
 static
 void SieveOfEratosthenes(std::vector<UIntType>& sieve, UIntType first, const size_t size)
@@ -101,7 +102,10 @@ template <typename U>
 static inline
 bool IsPrime(const U number)
 {
-	ATLASSERT(1 == number%2);
+	if (number < 3)
+		return number == 2;
+	if (0 == number%2)
+		return false;
 
 	const U max = static_cast<U>(sqrt(number));
 	size_t i;
@@ -112,14 +116,30 @@ bool IsPrime(const U number)
 static 
 UIntType LargestPrimeFactor_2_Base(const UIntType number)
 {
-	UIntType largest = !(number%2) ? 2 : 1;
+	if (number%2 == 0) {
+		auto candidate =  LargestPrimeFactor_2_Base(number/2);
+		return candidate > 1 ? candidate : 2;
+	}
 
-	const UIntType max = static_cast<UIntType>(sqrt(number));
+	UIntType largest = 1;
+	const auto max = static_cast<UIntType>(sqrt(number));
 	for (size_t i = 3; i <= max; i+=2)
 	{
-		if (!(number%i) && IsPrime(i))
+		if (number%i)
+			continue;
+		if (IsPrime(i))
 			largest = i;
+		if (number/i > largest) {
+			auto candidate = LargestPrimeFactor_2_Base(number/i);
+			if (candidate > largest) {
+				//std::cout<<"132: " << i << " " << candidate << " " << largest << std::endl;
+				return candidate;
+			}
+		}
 	}
+	if (largest < 3)
+		if (largest == 1 || IsPrime(number/largest))
+			return number/largest;
 
 	return largest;
 }
@@ -130,7 +150,7 @@ UIntType LargestPrimeFactor_3_Base(const UIntType number)
 {
 	UIntType largest = !(number%2) ? 2 : 1;
 
-	const UIntType max = static_cast<UIntType>(sqrt(number));
+	const auto max = static_cast<UIntType>(sqrt(number));
 	for (size_t i = 3; i <= max; i+=2)
 	{
 		if (IsPrime(i) && !(number%i))
@@ -178,7 +198,7 @@ UIntType LargestPrimeFactor_WrapperDebug(const UIntType number, unsigned index, 
 {
 	if (debug)
 	{
-		std::string func("MultiplesDe3Et5_");
+		std::string func("LargestPrimeFactor_");
 		func += ('0'+(char)index);
 		func += (", ");
 		std::stringstream ss;
@@ -210,6 +230,18 @@ UIntType LargestPrimeFactor_3(const UIntType number)
 	return LargestPrimeFactor_WrapperDebug(number, 3, s_debug);
 }
 
+void debug_assert()
+{
+	assert(29 == LargestPrimeFactor_1(13195));
+	assert(6857 == LargestPrimeFactor_1(600851475143));
+	assert(29 == LargestPrimeFactor_2(13195));
+	assert(6857 == LargestPrimeFactor_2(600851475143));
+	assert(29 == LargestPrimeFactor_3(13195));
+	assert(6857 == LargestPrimeFactor_3(600851475143));
+
+	assert(17 == LargestPrimeFactor_2(17));
+}
+
 UIntType LargestPrimeFactor()
 { 
 	if (0)
@@ -222,14 +254,14 @@ UIntType LargestPrimeFactor()
 		std::cout<<std::endl;
 	}
 
-	ATLASSERT(29 == LargestPrimeFactor_1(13195));
-	ATLASSERT(6857 == LargestPrimeFactor_1(600851475143));
-	ATLASSERT(29 == LargestPrimeFactor_2(13195));
-	ATLASSERT(6857 == LargestPrimeFactor_2(600851475143));
-	ATLASSERT(29 == LargestPrimeFactor_3(13195));
-	ATLASSERT(6857 == LargestPrimeFactor_3(600851475143));
-
+ 	debug_assert();
 	return LargestPrimeFactor_2(600851475143);
+}
+
+size_t largest_prime_factor(size_t number)
+{
+	debug_assert();
+	return LargestPrimeFactor_WrapperDebug(number, 2, false);
 }
 
 std::uint64_t Problem3()

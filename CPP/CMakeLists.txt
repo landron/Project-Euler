@@ -13,4 +13,5 @@ project(project-euler)
 
 set(sources main.cpp "Problem 1 - Multiples of 3 and 5.cpp")
 list(APPEND sources "Problem 2 - Even Fibonacci numbers.cpp")
+list(APPEND sources "Problem 3 - Largest prime factor.cpp")
 add_executable(${PROJECT_NAME} ${sources})
