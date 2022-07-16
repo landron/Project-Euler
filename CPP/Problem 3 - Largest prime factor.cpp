@@ -113,35 +113,26 @@ bool IsPrime(const U number)
 	return (max < i);
 }
 
-static 
-UIntType LargestPrimeFactor_2_Base(const UIntType number)
+template <typename T>
+static inline
+T LargestPrimeFactor_2_Base(T number)
 {
 	if (number%2 == 0) {
-		auto candidate =  LargestPrimeFactor_2_Base(number/2);
-		return candidate > 1 ? candidate : 2;
+		if (number == 2)
+			return 2;
+		return LargestPrimeFactor_2_Base(number/2);
 	}
 
-	UIntType largest = 1;
-	const auto max = static_cast<UIntType>(sqrt(number));
+	const auto max = static_cast<T>(sqrt(number));
 	for (size_t i = 3; i <= max; i+=2)
 	{
 		if (number%i)
 			continue;
 		if (IsPrime(i))
-			largest = i;
-		if (number/i > largest) {
-			auto candidate = LargestPrimeFactor_2_Base(number/i);
-			if (candidate > largest) {
-				//std::cout<<"132: " << i << " " << candidate << " " << largest << std::endl;
-				return candidate;
-			}
-		}
+			return LargestPrimeFactor_2_Base(number/i);
 	}
-	if (largest < 3)
-		if (largest == 1 || IsPrime(number/largest))
-			return number/largest;
 
-	return largest;
+	return number;
 }
 
 //	same as the previous, but reverses the comparisons order: IsPrime, then division
@@ -151,22 +142,6 @@ UIntType LargestPrimeFactor_3_Base(const UIntType number)
 	UIntType largest = !(number%2) ? 2 : 1;
 
 	const auto max = static_cast<UIntType>(sqrt(number));
-	for (size_t i = 3; i <= max; i+=2)
-	{
-		if (IsPrime(i) && !(number%i))
-			largest = i;
-	}
-
-	return largest;
-}
-
-//	same as version 2, but 
-static 
-UIntType LargestPrimeFactor_4_Base(const UIntType number)
-{
-	UIntType largest = !(number%2) ? 2 : 1;
-
-	const UIntType max = static_cast<UIntType>(sqrt(number));
 	for (size_t i = 3; i <= max; i+=2)
 	{
 		if (IsPrime(i) && !(number%i))
@@ -240,6 +215,12 @@ void debug_assert()
 	assert(6857 == LargestPrimeFactor_3(600851475143));
 
 	assert(17 == LargestPrimeFactor_2(17));
+	assert(31 == LargestPrimeFactor_2(124));
+	assert(2 == LargestPrimeFactor_2(2));
+	assert(5 == LargestPrimeFactor_2(10));
+	assert(7 == LargestPrimeFactor_2(84));
+	assert(11 == LargestPrimeFactor_2(121));
+	assert(3 == LargestPrimeFactor_2(144));
 }
 
 UIntType LargestPrimeFactor()
