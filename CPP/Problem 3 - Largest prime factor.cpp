@@ -1,4 +1,3 @@
-//	Version:	2013.12.31
 /*
 	LargestPrimeFactor_1_Base:	it builds the sieve of Eratosthenes
 	LargestPrimeFactor_2_Base:	brute force, first validates the divison, then the prime number
@@ -107,7 +106,7 @@ bool IsPrime(const U number)
 	if (0 == number%2)
 		return false;
 
-	const U max = static_cast<U>(sqrt(number));
+	const auto max = static_cast<U>(sqrt(number));
 	size_t i;
 	for (i = 3; (i <= max) && (number%i); i+=2);
 	return (max < i);
@@ -117,19 +116,24 @@ template <typename T>
 static inline
 T LargestPrimeFactor_2_Base(T number)
 {
-	if (number%2 == 0) {
-		if (number == 2)
-			return 2;
-		return LargestPrimeFactor_2_Base(number/2);
-	}
+	auto divide_and_call = [](T number, size_t divisor) {
+		assert(IsPrime(divisor) && "otherwise already checked");
+		while (number%divisor == 0)
+			number /= divisor;
+		if (number == 1)
+			return divisor;
+		return LargestPrimeFactor_2_Base(number);
+	};
+
+	if (number%2 == 0)
+		return divide_and_call(number, 2);
 
 	const auto max = static_cast<T>(sqrt(number));
 	for (size_t i = 3; i <= max; i+=2)
 	{
 		if (number%i)
 			continue;
-		if (IsPrime(i))
-			return LargestPrimeFactor_2_Base(number/i);
+		return divide_and_call(number, i);
 	}
 
 	return number;
