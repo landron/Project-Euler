@@ -1,23 +1,34 @@
 #! /usr/bin/python3
 '''
     https://projecteuler.net/problem=26
-        Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.
+        Find the value of d < 1000 for which 1/d contains the longest
+        recurring cycle in its decimal fraction part.
 
-        error 1:    no, the length of the repetend is not limited t the number of digits, 10
-                    there is always a repetend (that can be 0/9 for 1/8 by exemple) because these are rational numbers ;)
+        "The infinitely repeated digit sequence is called the repetend."
+        There is always a repetend (that can be 0 for 1/8 = 0.125 by example)
+        because these are rational numbers.
+        "It can be shown that a number is rational if and only if its decimal
+        representation is repeating or terminating."
         https://en.wikipedia.org/wiki/Repeating_decimal
+
+        error 1:    no, the length of the repetend is not limited to the number
+            of digits, 10
+
+        "For an arbitrary integer n, the length L(n) of the decimal repetend
+        of 1/n divides φ(n), where φ is the totient function."
+        https://en.wikipedia.org/wiki/Repeating_decimal#Totient_rule
             Totient rule, https://en.wikipedia.org/wiki/Full_reptend_prime
 
     https://www.hackerrank.com/contests/projecteuler/challenges/euler026
          Score: 100.00 (solve_problem_3)
 
-    pylint 1.5.5
-        Your code has been rated at 7.86/10.
+    pylint, flake8
 '''
-
+from dataclasses import dataclass
 import math
 
-####################################################################################
+###############################################################################
+
 
 def get_primes(limit):
     # not rounded since we skip 1 & 2
@@ -29,41 +40,49 @@ def get_primes(limit):
                 primes[j//2-1] = 0
     return [2]+[i for i in primes if i != 0]
 
+
 def no_digits(number, base=10):
-    """get the number of the digits of the given number in the given base"""
+    '''get the number of the digits of the given number in the given base'''
     digits = 0
     while number >= 1:
         number //= base
         digits += 1
     return digits
 
-####################################################################################
+###############################################################################
+
 
 def get_repetend_length(big_10, number):
     assert big_10 > number
 
     reminders = set()
 
-    current = big_10%number
+    current = big_10 % number
     while current != 0 and current not in reminders:
         reminders.add(current)
-        current = (current*10)%number
+        current = (current*10) % number
 
     length = len(reminders) if current != 0 else 0
     # print(number, length)
     return length
 
-# Score: 66.67
+
+@dataclass
+class Max:
+    # pylint: disable=missing-class-docstring
+    val: int = 2
+    repeating: int = 0
+
+
 def solve_problem_1(limit):
-    maxi = lambda: None
-    maxi.val = 2
-    maxi.repeating = 0
+    '''Score: 66.67'''
+    maxi = Max()
 
     big_10 = 10
     for i in range(2, limit):
         if i == big_10:
             big_10 *= 10
-        if big_10%i == 0:
+        if big_10 % i == 0:
             continue
 
         repetend_len = get_repetend_length(big_10, i)
@@ -74,12 +93,13 @@ def solve_problem_1(limit):
 
     return (maxi.val, maxi.repeating)
 
-# a little risky, as not these numbers are primes
-# Score: 66.67 (3/4)
+
 def solve_problem_2(limit):
-    maxi = lambda: None
-    maxi.val = 2
-    maxi.repeating = 0
+    '''
+        a little risky, as not these numbers are primes
+        Score: 66.67 (3/4)
+    '''
+    maxi = Max()
 
     primes = get_primes(limit)
 
@@ -87,7 +107,7 @@ def solve_problem_2(limit):
     for i in primes:
         if i > big_10:
             big_10 *= 10
-        if big_10%i == 0:
+        if big_10 % i == 0:
             continue
 
         repetend_len = get_repetend_length(big_10, i)
@@ -98,13 +118,14 @@ def solve_problem_2(limit):
 
     return (maxi.val, maxi.repeating)
 
-# stop after the first full reptend prime
-# I think the function is correct for limits that are powers of 10
-# Score: 100.00
+
 def solve_problem_3(limit):
-    maxi = lambda: None
-    maxi.val = 2
-    maxi.repeating = 0
+    '''
+        stop after the first full repetend prime
+        I think the function is correct for limits that are powers of 10
+        Score: 100.00
+    '''
+    maxi = Max()
 
     primes = get_primes(limit)
     primes = primes[::-1]
@@ -114,7 +135,7 @@ def solve_problem_3(limit):
     for i in primes:
         if i < big_10/10:
             big_10 /= 10
-        if big_10%i == 0:
+        if big_10 % i == 0:
             continue
 
         repetend_len = get_repetend_length(big_10, i)
@@ -125,34 +146,45 @@ def solve_problem_3(limit):
 
     return (maxi.val, maxi.repeating)
 
+
 def solve_problem(limit):
     # return solve_problem_1(limit)
     return solve_problem_1(limit) if limit < 100 else solve_problem_3(limit)
+
 
 def solve_problem_get_number_only(limit):
     (number, _) = solve_problem(limit)
     return number
 
-# https://www.hackerrank.com/contests/projecteuler/challenges/euler026
+
 def parse_input():
+    '''https://www.hackerrank.com/contests/projecteuler/challenges/euler026'''
     cases = int(input().strip())
     for _ in range(cases):
         limit = int(input().strip())
         print(solve_problem_get_number_only(limit))
 
+
 def problem():
     print(solve_problem(1000))
+
 
 def debug_assertions():
     assert solve_problem(5) == (3, 1)
     assert solve_problem(10) == (7, 6)
     assert solve_problem(100) == (97, 96)
 
+    assert solve_problem_1(123) == (113, 112)
+    assert solve_problem_2(123) == (113, 112)
+    assert solve_problem_3(123) == (113, 112)
+
+
 def main():
     debug_assertions()
 
     # parse_input()
     # problem()
+
 
 if __name__ == "__main__":
     main()

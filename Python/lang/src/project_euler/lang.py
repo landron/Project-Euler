@@ -3,7 +3,8 @@
         Add here various trips & tricks & subtleties of the language.
 
     TODO
-        For the moment it is intimately related to proj_euler.py.
+        * For the moment it is intimately related to proj_euler.py.
+        * why open in __enter__, not __init__?
 
     pylint, flake8
 '''
@@ -49,11 +50,15 @@ def context_manager():
             "subclassing file objects"
             https://stackoverflow.com/questions/16085292
         '''
-        def __init__(self, fileName):
-            self.file = open(fileName, 'w', encoding="utf8")
+        def __init__(self, file_name):
+            self.file = None
+            self.file_name = file_name
 
         def __enter__(self):
-            # return self.file
+            # Not in __init__:
+            # R1732: Consider using 'with' for resource-allocating operations
+            #   (consider-using-with)
+            self.file = open(self.file_name, 'w', encoding="utf8")
             return self
 
         def __exit__(self, exc_type, exc_value, traceback):
@@ -98,24 +103,30 @@ def eliminate_duplicates(lista):
 def define_object():
     '''
         rapidly define structures
+            https://stackoverflow.com/questions/35988/c-like-structures-in-python
     '''
     def change(point):
         ''' point.x++ does not work !! '''
         point.x -= 1
         point.y += 2
 
-    # lambda : DEPRECATED
+    print("\ndefine object")
 
-    print("Passing simple objects")
-    something = lambda: 0  # noqa: E731
-    something.x = 30
-    something.y = 67
-    change(something)
-    print(something.x, ' ', end='')
-    print(something.y)
-    print(something.__dict__)
+    # lambda : DEPRECATED
+    print("\t ... with lambda")
+
+    def lambda_hack():
+        # pylint: disable=unnecessary-lambda-assignment no-member
+        something = lambda: 0  # noqa: E731
+        something.x = 30
+        something.y = 67
+        change(something)
+        print(something.x, something.y)
+        print(something.__dict__)
+    lambda_hack()
 
     # NamedTuple : they are immutable
+    print("\t ...  with NamedTuple")
 
     class Point1(typing.NamedTuple):
         '''
@@ -135,19 +146,32 @@ def define_object():
     print(something)
 
     # dataclass
+    print("\t ...  with dataclass: the winner!")
 
-    #   TODO:   unsafe_hash
-    @dataclass(unsafe_hash=True)
+    # @dataclass(unsafe_hash=True)
+    @dataclass
     class Point3:
-        '''
-            Simple Point generated class
-        '''
-        # pylint: disable=invalid-name
+        # pylint: disable=invalid-name, missing-class-docstring
         x: int = 0
         y: int = 0
     something = Point3(30, 67)
     change(something)
-    print(something)
+    print(something.x, something.y)
+
+    # simple class
+    print("\t ...  with just some class")
+
+    def just_class():
+        # pylint: disable=invalid-name attribute-defined-outside-init
+        # pylint: disable=too-few-public-methods
+        class Point4:
+            '''fake class'''
+        something = Point4()
+        something.x = 30
+        something.y = 67
+        change(something)
+        print(something.x, something.y)
+    just_class()
 
 
 def list_comprehensions():
@@ -194,8 +218,7 @@ def python_coding():
 
     value = 48
     result = proj_euler.get_divisors(value)
-    print("get_divisors({0}): {1} in {2:.2f} seconds".
-          format(value, result, time()-start))
+    print(f"get_divisors({value}): {result} in {time()-start:.2f} seconds")
 
 
 def debug_validations():

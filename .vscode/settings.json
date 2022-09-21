@@ -1,3 +1,8 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "cSpell.words": [
+        "Totient"
+    ],
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true
 }
