@@ -1,48 +1,74 @@
-"""
+'''
     Project Euler problems working functionality
-        primes, divisors
-    Version: 2016.01.17
 
-    pylint --version
-        No config file found, using default configuration
-        pylint 1.5.2,
-        astroid 1.4.3
-        Python 3.5.1 (v3.5.1:37a07cee5969, Dec  6 2015, 01:38:48) [MSC v.1900 32 bit (Intel)]
+    TODO:   improve performance by generating all the prime divisors
+        from the start
+'''
+import time
+from project_euler import proj_euler as pe
 
-"""
-import proj_euler
 
-def fi_base(limit, no_primes, primes_n):
-    # print(limit,no_primes)
-    assert limit > 0
-    assert no_primes >= 0
+def is_permutation(left, right):
+    '''are the number a permutation of each other ?'''
+    digits = {}
+    for i in pe.get_digits(left):
+        if i in digits:
+            digits[i] += 1
+        else:
+            digits[i] = 0
+    while right >= 1:
+        if right % 10 not in digits:
+            return False
+        if digits[right % 10] == 0:
+            del digits[right % 10]
+        else:
+            digits[right % 10] -= 1
+        right //= 10
+    return True
 
-    if no_primes == 0:
-        return limit
-    result = fi_base(limit, no_primes-1, primes_n)
-    result -= fi_base(int(limit/primes_n[no_primes-1]), no_primes-1, primes_n)
-    return result
 
- # Let p_1, p_2,...,p_n be the first n primes and denote by \Phi(m,n) the number of natural\
- #  numbers not greater than m which are divisible by no p_i.
- # http://en.wikipedia.org/wiki/Prime-counting_function, Ernst Meissel
-def fi(limit, no_primes):
-    prob7_module = __import__("Problems 7 & 10 - 10001st prime")
-    primes_n = proj_euler.get_primes(1+prob7_module.find_prime_number(no_primes))
-    # print(primes_n)
-    assert no_primes == len(primes_n)
-    return int(fi_base(limit, no_primes, primes_n))
+def problem(limit):
+    '''https://projecteuler.net/problem=70'''
+    primes = pe.get_primes_for_divisors_of(limit)
+    best = (2, 2)
+    for i in range(3, limit):
+        totient = pe.get_totient(i, primes)
+        if is_permutation(i, totient):
+            if best[1] > i/totient:
+                best = (i,i/totient)
+        if i % 100000 == 0:
+            print(i)
+    return best
+
+
+def problem_counter():
+    '''count problem() duration
+
+        10**6:  10.05 seconds
+        10**7:  225.38 seconds
+    '''
+    start = time.time()
+    result = problem(10**7)
+    print(f"Result {result} in {time.time()-start:.2f} seconds")
+
 
 def debug_validations():
-    """module's assertions"""
+    '''module's assertions'''
+    primes = pe.get_primes(1000)
+    assert pe.get_totient(87109, primes) == 79180
+    assert is_permutation(87109, 79180)
+    assert not is_permutation(87109, 79280)
+    assert not is_permutation(87109, 791801)
+
+    assert pe.get_totient(13, primes) == 12
+    assert pe.get_totient(2, primes) == 1
+
 
 def main():
-    '''main: defined here to avoid scope problems'''
+    '''main'''
     debug_validations()
+    problem_counter()
 
-    # print(fi(17, 2))
-    prob7_module = __import__("problem_8_largest_product_in_a_series")
-    prob7_module.main()
 
 if __name__ == "__main__":
     main()
