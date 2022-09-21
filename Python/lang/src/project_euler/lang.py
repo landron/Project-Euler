@@ -78,7 +78,7 @@ def context_manager():
         fptr_w.writenl("Context manager is some nice feature!")
 
 
-def eliminate_duplicates(lista):
+def eliminate_duplicates(alist):
     '''
         eliminate duplicate elements from the given sorted list in-place
 
@@ -87,15 +87,15 @@ def eliminate_duplicates(lista):
 
         reverse to delete while not affecting the iteration
     '''
-    assert lista
-    assert all(lista[i] <= lista[i+1] for i in range(len(lista)-1))
+    assert alist
+    assert all(alist[i] <= alist[i+1] for i in range(len(alist)-1))
 
-    last = lista[-1] + 1
-    size = len(lista)
-    for i, val in enumerate(reversed(lista)):
+    last = alist[-1]
+    size = len(alist)
+    for i, val in enumerate(reversed(alist[:-1])):
         if val == last:
             # the indexes are reversed
-            del lista[size-i-1]
+            del alist[size-i-1]
         else:
             last = val
 
@@ -239,6 +239,22 @@ def debug_validations():
     test_l = ["abc"]
     test_l.extend("def")
     assert test_l == ["abc", "d", "e", "f"]
+
+    # eliminate_duplicates
+
+    # 'str' object doesn't support item deletion
+    test_l = [1, 2, 4, 4, 6, 7, 7, 7]
+    eliminate_duplicates(test_l)
+    assert test_l == [1, 2, 4, 6, 7]
+    test_l = list("abccddde")
+    eliminate_duplicates(test_l)
+    assert "".join(test_l) == "abcde"
+    test_l = list("aaabcdeee")
+    eliminate_duplicates(test_l)
+    assert "".join(test_l) == "abcde"
+    test_l = ["abc", "c", "cer", "cer", "d", "e", "f", "f", "fert"]
+    eliminate_duplicates(test_l)
+    assert test_l == ["abc", "c", "cer", "d", "e", "f", "fert"]
 
 
 if __name__ == "__main__":
