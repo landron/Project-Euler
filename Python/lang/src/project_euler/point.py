@@ -21,7 +21,9 @@ class Point:
     def __str__(self):
         if not self:
             return "Undefined point"
-        return "({0:.2f},{1:.2f})".format(self.x, self.y)
+        if isinstance(self.x, int) and isinstance(self.y, int):
+            return f"({self.x},{self.y})"
+        return f"({self.x:.2f},{self.y:.2f})"
 
     def __bool__(self):
         '''
@@ -60,7 +62,7 @@ class Point:
         return Point(x_new, y_new)
 
 
-def tests():
+def debug_assertions():
     '''
         unit tests, assertions
     '''
@@ -72,19 +74,12 @@ def tests():
     pt3 = Point(1, 2)
     assert pt2 != pt1
     assert pt3 == pt2
+    assert str(pt3) == "(1,2)"
 
 
 def main():
-    '''
-        main
-
-        https://stackoverflow.com/questions/6323860/sibling-package-imports
-    '''
-    # this only for tests inside the package
-    import sys
-    sys.path.append("..")
-
-    tests()
+    '''main'''
+    debug_assertions()
 
 
 if __name__ == '__main__':

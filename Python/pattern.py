@@ -45,7 +45,7 @@ def problem():
     start = time.time()
 
     result = solve(666)
-    print("Result {0} in {1:.2f} seconds".format(result, time.time()-start))
+    print(f"Result {result} in {time.time()-start:.2f} seconds")
 
 
 def debug_validations():
