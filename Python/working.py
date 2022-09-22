@@ -1,5 +1,6 @@
 '''
     Project Euler problems working functionality
+        see Python/lang/src/samples/pattern.py
 
     TODO:   improve performance by generating all the prime divisors
         from the start
@@ -27,18 +28,23 @@ def is_permutation(left, right):
     return True
 
 
-def problem(limit):
-    '''https://projecteuler.net/problem=70'''
+def problem_direct(limit):
+    '''direct solution'''
     primes = pe.get_primes_for_divisors_of(limit)
     best = (2, 2)
     for i in range(3, limit):
         totient = pe.get_totient(i, primes)
         if is_permutation(i, totient):
             if best[1] > i/totient:
-                best = (i,i/totient)
+                best = (i, i/totient)
         if i % 100000 == 0:
             print(i)
     return best
+
+
+def problem(limit):
+    '''https://projecteuler.net/problem=70'''
+    return problem_direct(limit)
 
 
 def problem_counter():
@@ -60,14 +66,15 @@ def debug_validations():
     assert not is_permutation(87109, 79280)
     assert not is_permutation(87109, 791801)
 
-    assert pe.get_totient(13, primes) == 12
-    assert pe.get_totient(2, primes) == 1
+    for i in range(2, 10000):
+        totient = pe.get_totient(i, primes)
+        assert totient == i-1 or not pe.isprime(i)
 
 
 def main():
     '''main'''
     debug_validations()
-    problem_counter()
+    # problem_counter()
 
 
 if __name__ == "__main__":

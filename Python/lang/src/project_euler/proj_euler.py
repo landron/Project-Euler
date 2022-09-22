@@ -223,13 +223,20 @@ def get_totient(number, primes):
         return divisors
     divisors = get_prime_divisors_list(number, primes)
 
-    numerator = number
-    denominator = 1
-    for i in divisors:
-        numerator *= (i-1)
-        denominator *= i
-    assert numerator % denominator == 0
-    return numerator // denominator
+    def euler_formula(number, divisors):
+        '''why not directly product ?
+            This does not use powers
+            https://en.wikipedia.org/wiki/Euler%27s_totient_function#Euler's_product_formula
+        '''
+        numerator = number
+        denominator = 1
+        for i in divisors:
+            numerator *= (i-1)
+            denominator *= i
+        assert numerator % denominator == 0
+        return numerator // denominator
+
+    return euler_formula(number, divisors)
 
 
 def get_divisors_as_primes(number, primes=None):
@@ -507,15 +514,25 @@ def debug_validations():
     assert not isprime(19519)
 
     primes_1000 = get_primes(1000)
+    # primes
+    assert get_totient(2, primes_1000) == 1
     assert get_totient(5, primes_1000) == 4
     assert get_totient(11, primes_1000) == 10
+    assert get_totient(37, primes_1000) == 36
+    # not primes
+    assert get_totient(6, primes_1000) == 2
     assert get_totient(12, primes_1000) == 4
     assert get_totient(15, primes_1000) == 8
     assert get_totient(16, primes_1000) == 8
+    assert get_totient(22, primes_1000) == 10
     assert get_totient(34, primes_1000) == 16
     assert get_totient(35, primes_1000) == 24
     assert get_totient(36, primes_1000) == 12
-    assert get_totient(37, primes_1000) == 36
+    # vs 15
+    assert get_totient(45, primes_1000) == 24
+    assert get_totient(135, primes_1000) == 72
+    assert get_totient(75, primes_1000) == 40
+    assert get_totient(270, primes_1000) == 72
 
     assert get_prime_divisors(28, primes_1000) == [(2, 2), (7, 1)]
 

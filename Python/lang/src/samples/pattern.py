@@ -1,10 +1,4 @@
 """
-    This is private code.
-        (try keep projecteuler problems private)
-
-    https://projecteuler.net/problem=63
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler063
-
     pylint, flake8
 
     Knowledge base
@@ -18,7 +12,7 @@ import time
 USE_LIB = False
 
 if USE_LIB:
-    # from lib.proj_euler import get_primes
+    # from project_euler.proj_euler import get_primes
     pass
 else:
     # import math
@@ -54,7 +48,7 @@ def problem():
 
     duration = time.time()-start
     if duration >= 1:
-        print("Result {0} in {1:.2f} seconds".format(result, duration))
+        print(f"Result {result} in {duration:.2f} seconds")
     else:
         print(result)
 
@@ -64,7 +58,7 @@ def debug_validations():
         unit tests
 
         pass -O to ignore assertions and gain some time:
-            py -3 -O ./prob.py
+            python -O ./prob.py
     """
 
 
