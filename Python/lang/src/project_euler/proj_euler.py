@@ -282,7 +282,7 @@ class Combinatorics:
 
     def __init__(self, is_combinations, limit, limit_subset=0):
         '''
-            initialisation
+            initialization
             taken = used indexes (each index appears one time only)
         '''
         self.is_combinations = is_combinations
@@ -540,4 +540,7 @@ def debug_validations():
 if __name__ == "__main__":
     debug_validations()
 
+    # 4-combination of 7
     # debug_get_combinations(7, 4, print_it=True)
+    # 3-permutation of 4
+    # debug_get_permutations(4, 3, print_it=True)

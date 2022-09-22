@@ -42,6 +42,51 @@ def problem_direct(limit):
     return best
 
 
+def generate_totient(limit):
+    '''generate totient instead of calculating divisors
+        too slow once there are enough primes: already from 100
+    '''
+    def generate(tot_arr, pos, totient, div):
+        assert totient
+        tot_arr[pos] = totient
+        while pos * div < len(tot_arr):
+            totient *= div
+            pos *= div
+            assert not tot_arr[pos]
+            tot_arr[pos] = totient
+
+    primes = []
+    tot_arr = [0 for i in range(limit)]
+    for i in range(2, limit):
+        # only for primes
+        if tot_arr[i]:
+            continue
+        generate(tot_arr, i, i-1, i)
+
+        for j in range(len(primes)):
+            comb = pe.get_combinatorics_start(True, len(primes), j+1)
+            while True:
+                val = 1
+                for k in comb.current():
+                    val *= primes[k]
+                k = val
+                while i*k < limit:
+                    generate(tot_arr, k*i, tot_arr[k]*(i-1), i)
+                    k *= val
+                if not comb.get_next():
+                    break
+
+        primes.append(i)
+        # print(primes)
+
+    primes = pe.get_primes_for_divisors_of(limit)
+    for i, val in enumerate(tot_arr[2:]):
+        totient = pe.get_totient(i+2, primes)
+        # print(f"({i+2},{val},{totient})")
+        assert val == totient
+    print()
+
+
 def problem(limit):
     '''https://projecteuler.net/problem=70'''
     return problem_direct(limit)
@@ -75,6 +120,8 @@ def main():
     '''main'''
     debug_validations()
     # problem_counter()
+
+    generate_totient(50)
 
 
 if __name__ == "__main__":
