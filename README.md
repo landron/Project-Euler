@@ -4,14 +4,19 @@ http://projecteuler.net/
 - [2019.01] Most of the new solutions are private, especially if the result is not very interesting.
 
 [Badge](http://projecteuler.net/profile/landron.png)
-> Solved: 53   
-> 2019.01.26
+> Solved: 83   
+> 2022.09.23
 
-[HackerRank](https://www.hackerrank.com/results/projecteuler/Liviul): 1108 (/94071), challenges (solved perfectly): 30/40
-> 2019.01.26  
-\todo todo_hackerrank : no optimal solution yet
+[HackerRank](https://www.hackerrank.com/results/projecteuler/Liviul)
+> 1584 (/158420), challenges (solved perfectly): 44/56  
+> 2022.09.23
+
+
+## Tags
+tag_knapsack, tag_cache, tag_totient
 
 ## Todos
+todo_hackerrank : no optimal solution yet
 
 ### Large prime number detection
 tag_is_prime
