@@ -14,9 +14,11 @@
                 iterator wrongly used a second time
 
             100 : all passed in Python 2
-                (one line changed: raw_input instead of input, see tag_python_2)
+                (one line changed: raw_input instead of input,
+                see tag_python_2)
 
-            There are still some improvements that can be done, there is only brute force here.
+            There are still some improvements that can be done, there is only
+            brute force here.
 
     pylint 1.8.1
         Your code has been rated at 8.62/10.
@@ -26,6 +28,7 @@
 
 from proj_euler import get_digits
 
+
 def multiply(digits, mul, pass_allowed=False):
     size = len(digits)
     result = [0]*size
@@ -33,7 +36,7 @@ def multiply(digits, mul, pass_allowed=False):
     reminder = 0
     for i in range(size):
         val = mul*digits[i] + reminder
-        result[i] = val%10
+        result[i] = val % 10
         reminder = val//10
 
     if reminder != 0:
@@ -43,11 +46,13 @@ def multiply(digits, mul, pass_allowed=False):
 
     return result
 
+
 def is_zero(list_in):
     for i in list_in:
         if i:
             return False
     return True
+
 
 def same_digits_hash(hash_digits, number2):
     for i in number2:
@@ -56,6 +61,7 @@ def same_digits_hash(hash_digits, number2):
         hash_digits[i] -= 1
 
     return is_zero(hash_digits)
+
 
 def same_digits(number1, number2):
     size = len(number1)
@@ -66,6 +72,7 @@ def same_digits(number1, number2):
         found[i] += 1
     return same_digits_hash(found, number2)
 
+
 def has_permuted_multiples(number, max_multiplier):
     digits = get_digits(number)
     # -1 : skip 1
@@ -74,6 +81,7 @@ def has_permuted_multiples(number, max_multiplier):
         if not mul or not same_digits(mul, digits):
             return False
     return True
+
 
 def has_permuted_multiples_2(number, max_multiplier):
     digits = get_digits(number)
@@ -96,6 +104,7 @@ def has_permuted_multiples_2(number, max_multiplier):
 
     return True
 
+
 def solve_problem():
     i = 1
     while not has_permuted_multiples(i, 6):
@@ -103,6 +112,7 @@ def solve_problem():
         # if 0 == i % 1000:
         #     print(i)
     return i
+
 
 def get_all(limit, max_multiplier):
     '''
@@ -119,6 +129,7 @@ def get_all(limit, max_multiplier):
 
     return result
 
+
 def parse_input():
     '''
         https://www.hackerrank.com/contests/projecteuler/challenges/euler052
@@ -134,8 +145,10 @@ def parse_input():
             show += ' '
         print(show)
 
+
 def problem():
     return solve_problem()
+
 
 def debug_assertions():
     assert get_digits(125874) == [4, 7, 8, 5, 2, 1]
@@ -143,11 +156,13 @@ def debug_assertions():
     assert same_digits([8, 4, 7, 1, 5, 2], [4, 7, 8, 5, 2, 1])
     assert not same_digits([8, 4, 7, 1, 5, 2, 2], [4, 7, 8, 5, 2, 1, 1])
 
+
 def main():
     debug_assertions()
 
     # parse_input()
     print(problem())
+
 
 if __name__ == "__main__":
     main()

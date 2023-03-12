@@ -6,6 +6,7 @@
         2 = 1; 2
         41 = 6; 2, 2, 12
         55 = 7; 2, 2, 2, 14
+
     "All irrational square roots of integers have a special form for the
     period; a symmetrical string, like the empty string (for √2) or 1,2,1
     (for √14), followed by the double of the leading integer."
@@ -21,6 +22,8 @@ def representation(number):
             2 = 1; 2
             41 = 6; 2, 2, 12
             55 = 7; 2, 2, 2, 14
+        "Period of continued fraction for square root of n
+                (or 0 if n is a square)."
     """
     integer = math.floor(math.sqrt(number))
     if integer**2 == number:
@@ -67,7 +70,7 @@ def problem(limit):
     odd_period = 0
     for i in range(2, limit + 1):
         rep = representation(i)
-        # reprensetation includes the square root besides the period
+        # representation includes the square root besides the period
         if len(rep) % 2 == 0:
             odd_period += 1
     return odd_period
@@ -81,28 +84,27 @@ def problem_hackerrank():
     print(problem(limit))
 
 
-def test_period_serie():
+def test_period_series():
     """
-        "Period of continued fraction for square root of n
-            (or 0 if n is a square)."
-        https://oeis.org/A003285
-        ref_1
+        Reference
+            "Period of continued fraction for square root of n
+                (or 0 if n is a square)."
+            https://oeis.org/A003285
 
-        https://planetmath.org/tableofcontinuedfractionsofsqrtnfor1n102
-        ref_2
+            https://planetmath.org/tableofcontinuedfractionsofsqrtnfor1n102
     """
-    serie = [
+    series = [
         0, 1, 2, 0, 1, 2, 4, 2, 0, 1, 2, 2, 5, 4, 2, 0, 1, 2, 6, 2, 6, 6, 4, 2,
         0, 1, 2, 4, 5, 2, 8, 4, 4, 4, 2, 0, 1, 2, 2, 2, 3, 2, 10, 8, 6, 12, 4,
         2, 0, 1, 2, 6, 5, 6, 4, 2, 6, 7, 6, 4, 11, 4, 2, 0, 1, 2, 10, 2, 8, 6,
         8, 2, 7, 5, 4, 12, 6, 4, 4, 2, 0, 1, 2, 2, 5, 10, 2, 6, 5, 2, 8, 8, 10,
         16, 4, 4, 11, 4, 2, 0, 1, 2, 12]
-    for i, val_ref in enumerate(serie):
+    for i, val_ref in enumerate(series):
         val = representation(i+1)
         assert len(val) > 0
-        if len(val) - 1 != val_ref:
-            print(i+1, val_ref)
-            print(val)
+        # if len(val) - 1 != val_ref:
+        #     print(i+1, val_ref)
+        #     print(val)
         assert len(val) - 1 == val_ref
 
 
@@ -127,7 +129,7 @@ def debug_validations():
 
     assert problem(13) == 4
 
-    test_period_serie()
+    test_period_series()
 
 
 if __name__ == "__main__":
