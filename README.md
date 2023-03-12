@@ -1,15 +1,15 @@
 # Project Euler
 http://projecteuler.net/
-- [2018.12] I stopped giving the number of the problem or direct links to the sites (Project Euler, HackerRank). Unfortunately, I am still using the name.
-  "Problems 1 to 100 provide a wealth of helpful introductory teaching material and if you are able to respect our requirements, then we give permission for those problems and their solutions to be discussed elsewhere." (https://projecteuler.net/about)
+- [2018.12] I stopped giving the number of the problem or direct links to the sites (Project Euler, HackerRank). Unfortunately, I am still using the name.  
 - [2019.01] Most of the new solutions are private, especially if the result is not very interesting.
+- [2023.03] "Problems 1 to 100 provide a wealth of helpful introductory teaching material and if you are able to respect our requirements, then we give permission for those problems and their solutions to be discussed elsewhere." (https://projecteuler.net/about)
 
 [Badge](http://projecteuler.net/profile/landron.png)
-> Solved: 83
+> Solved: 83  
 > 2022.09.23
 
 [HackerRank](https://www.hackerrank.com/results/projecteuler/Liviul)
-> 1584 (/158420), challenges (solved perfectly): 44/56
+> 1584 (/158420), challenges (solved perfectly): 44/56  
 > 2022.09.23
 
 
