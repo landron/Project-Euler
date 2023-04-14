@@ -6,9 +6,6 @@
 
     Version: 2023.04.14
 
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler007
-        todo_hackerrank:    75/100
-
     TODO:
         ? 1. find_primes_number_count, position <= 0
         2. find_primes_number_count is still not fast enough (Sieve of Eratosthenes) for the latest
@@ -16,9 +13,10 @@
         See "Is there a known mathematical equation to find the nth prime?", http://goo.gl/er9cas
 '''
 
-from math import log
-from time import time
 from datetime import datetime
+from math import log
+import sys
+from time import time
 
 from project_euler.proj_euler import get_primes
 
@@ -53,8 +51,6 @@ def find_prime_number2(position):
     result = find_primes_number_count(limit_sup, position)[1]
     assert result != 0
     return result
-
-#
 
 
 def find_prime_number1(position):
@@ -145,8 +141,24 @@ def problem_10():
     print(f"Problem 10 - result {result:d} in {time()-start:.2f} seconds")
 
 
+def hackerrank():
+    '''
+        https://www.hackerrank.com/contests/projecteuler/challenges/euler007
+    '''
+    limit = 1000
+    primes = get_primes(limit)
+
+    test_cases = int(sys.stdin.readline())
+    for _ in range(test_cases):
+        position = int(sys.stdin.readline())
+        while position > len(primes):
+            limit *= 2
+            primes = get_primes(limit)
+        print(primes[position-1])
+
+
 def main():
-    """the main function, exported like this for external utilization"""
+    """main"""
     start = time()
 
     validate_primes_number_count()
@@ -164,3 +176,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # hackerrank()
