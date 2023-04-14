@@ -6,11 +6,7 @@
 
     Version: 2023.04.14
 
-    TODO:
-        ? 1. find_primes_number_count, position <= 0
-        2. find_primes_number_count is still not fast enough (Sieve of Eratosthenes) for the latest
-            test case of http://www.hackerrank.com/contests/projecteuler/challenges/euler007
-        See "Is there a known mathematical equation to find the nth prime?", http://goo.gl/er9cas
+    TODO:   hackerrank_10
 '''
 
 from datetime import datetime
@@ -141,9 +137,10 @@ def problem_10():
     print(f"Problem 10 - result {result:d} in {time()-start:.2f} seconds")
 
 
-def hackerrank():
+def hackerrank_7():
     '''
         https://www.hackerrank.com/contests/projecteuler/challenges/euler007
+        Nth prime
     '''
     limit = 1000
     primes = get_primes(limit)
@@ -155,6 +152,44 @@ def hackerrank():
             limit *= 2
             primes = get_primes(limit)
         print(primes[position-1])
+
+
+def hackerrank_10():
+    '''
+        https://www.hackerrank.com/contests/projecteuler/challenges/euler010
+        sum of the primes below the given limit
+
+        timeout:        6,7
+        wrong results:  the rest, except 0 and 4
+    '''
+    limit = 1000
+    primes = get_primes(limit)
+    sums = {}
+
+    test_cases = int(sys.stdin.readline())
+    for _ in range(test_cases):
+        new_limit = int(sys.stdin.readline())
+        sum_of = 0
+        last_index = 0
+        if new_limit > limit:
+            limit = 1+new_limit
+            primes = get_primes(limit)
+
+        # TODO: wrong result
+        if 0:   # pylint: disable=using-constant-test
+            for key, val in sums.items():
+                if last_index < key < new_limit:
+                    last_index = val[0]
+                    sum_of = val[1]
+
+        # print(sum_of, last_index)
+        for i, val in enumerate(primes[last_index:]):
+            if val > new_limit:
+                last_index = i
+                break
+            sum_of += val
+        sums[new_limit] = (last_index, sum_of)
+        print(sum_of)
 
 
 def main():
@@ -176,4 +211,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # hackerrank()
+    # hackerrank_10()
