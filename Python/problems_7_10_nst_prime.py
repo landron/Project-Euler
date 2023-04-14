@@ -161,6 +161,8 @@ def hackerrank_10():
 
         timeout:        6,7
         wrong results:  the rest, except 0 and 4
+
+        Idea: keep a list with all the numbers < limit and their calculated sums
     '''
     limit = 1000
     primes = get_primes(limit)
