@@ -4,7 +4,7 @@
     http://projecteuler.net/problem=10
       Problem 10. Sum all primes below N million
 
-    Version: 2016.05.01
+    Version: 2023.04.14
 
     https://www.hackerrank.com/contests/projecteuler/challenges/euler007
         todo_hackerrank:    75/100
@@ -14,13 +14,6 @@
         2. find_primes_number_count is still not fast enough (Sieve of Eratosthenes) for the latest
             test case of http://www.hackerrank.com/contests/projecteuler/challenges/euler007
         See "Is there a known mathematical equation to find the nth prime?", http://goo.gl/er9cas
-
-    pylint --version
-        No config file found, using default configuration
-        pylint 1.5.2,
-        astroid 1.4.3
-        Python 3.5.1 (v3.5.1:37a07cee5969, Dec  6 2015, 01:38:48) [MSC v.1900 32 bit (Intel)]
-    Your code has been rated at 9.87/10 (previous run: 9.73/10, +0.13)
 '''
 
 from math import log
@@ -31,6 +24,7 @@ from project_euler.proj_euler import get_primes
 
 HARD_VALIDATE = False
 
+
 def find_primes_number_count(limit, position=1):
     """find the number of prime numbers below the given limit"""
     assert position > 0
@@ -39,11 +33,16 @@ def find_primes_number_count(limit, position=1):
         return (len(primes), primes[position-1])
     return (len(primes), 0)
 
-# get_primes_limits(limitInf, limitSup) doesn't work as there are more primes in the interval
-# [2016-05-01 16:22] Total time: 2.50 seconds / HARD_VALIDATE, both problems
+
 def find_prime_number2(position):
-    """find the nth prime number; version 2, in production
+    """
+        Purpose
+            find the nth prime number; version 2, in production
         this time we know approximately where to search for
+
+        Performance
+        get_primes_limits(limitInf, limitSup) doesn't work as there are more primes in the interval
+        [2016-05-01 16:22] Total time: 2.50 seconds / HARD_VALIDATE, both problems
     """
     if position < 6:
         return find_prime_number1(position)
@@ -55,9 +54,16 @@ def find_prime_number2(position):
     assert result != 0
     return result
 
-# [2016-05-01 16:21] Total time: 2.98 seconds / HARD_VALIDATE, both problems
+#
+
+
 def find_prime_number1(position):
-    """find the nth prime number; version 1, deprecated"""
+    """
+        Purpose
+            find the nth prime number; version 1, deprecated
+
+        [2016-05-01 16:21] Total time: 2.98 seconds / HARD_VALIDATE, both problems
+    """
     limit = 100
     prime = 0
     while prime == 0:
@@ -65,16 +71,19 @@ def find_prime_number1(position):
         limit *= 10
     return prime
 
+
 def find_prime_number(position):
     """the function to find the nth prime number"""
     # return find_prime_number1(position)
     return find_prime_number2(position)
+
 
 def find_primes_sum(limit):
     """calculate the sum of all the prime numbers smaller than the given limit"""
     primes = get_primes(limit)
     # print(primes)
     return sum(primes)
+
 
 def validate_primes_number_count():
     """module's assertions: count primes"""
@@ -92,6 +101,7 @@ def validate_primes_number_count():
     assert find_prime_number(25) == 97
     assert find_prime_number(168) == 997
 
+
 def validate_find_primes_sum():
     """module's assertions: primes sum"""
     assert find_primes_sum(9) == 17
@@ -107,24 +117,36 @@ def validate_find_primes_sum():
     if HARD_VALIDATE:
         assert find_primes_sum(2000000) == 142913828922
 
-# 0.5 - 0.6 seconds
+
 def problem_7():
-    """solve the problem 7, print the needed time"""
+    """
+        Purpose
+            solve the problem 7, print the needed time
+        Performance
+            0.5 - 0.6 seconds
+    """
     start = time()
     result = find_prime_number(10001)
-    assert  result == 104743
-    print("Problem 7 - result {0:d} in {1:.2f} seconds".format(result, time()-start))
+    assert result == 104743
+    print(f"Problem 7 - result {result:d} in {time()-start:.2f} seconds")
 
-# around 1 second, be aware of the validations
+
 def problem_10():
-    """solve the problem 10, print the needed time"""
+    """
+    Purpose
+        solve the problem 10, print the needed time
+
+    Performance
+        around 1 second, be aware of the validations
+    """
     start = time()
     result = find_primes_sum(2000000)
     assert result == 142913828922
-    print("Problem 10 - result {0:d} in {1:.2f} seconds".format(result, time()-start))
+    print(f"Problem 10 - result {result:d} in {time()-start:.2f} seconds")
+
 
 def main():
-    """the main function, exported like this for external utilisation"""
+    """the main function, exported like this for external utilization"""
     start = time()
 
     validate_primes_number_count()
@@ -136,8 +158,9 @@ def main():
     # for i in range(1,100):
     #     print(find_prime_number(i))
 
-    print("[{0}] Total time: {1:.2f} seconds".format(datetime.now().strftime("%Y-%m-%d %H:%M")\
-        , time()-start))
+    print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M")}] '
+          f'Total time: {time()-start:.2f} seconds')
+
 
 if __name__ == "__main__":
     main()
