@@ -2,6 +2,7 @@
 https://projecteuler.net/problem=68
 Magic 5-gon Ring
 
+todo_hackerrank: 6/22
 TODO: parse_input can be optimized knowing the sum of the line
 """
 
@@ -156,7 +157,7 @@ def main():
     debug_validations()
 
     # solve()
-    parse_input()
+    # parse_input()
 
 
 if __name__ == "__main__":
