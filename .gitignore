@@ -11,10 +11,9 @@
 *.lai
 *.la
 *.a
+
 /CPP/Debug
-/CPP/.gitignore
-/Python/*.gitignore
-/Haskell/*.gitignore
 *.pyc
 /Python/lang/build
 /Python/lang/src/project_euler_landron.egg-info
+now.py
