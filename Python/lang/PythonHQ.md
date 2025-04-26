@@ -8,6 +8,10 @@ from project_euler.proj_euler import get_primes
    * Problems 7 & 10 - 10001st prime.py  
    * problem_21_divisors.py  
 
+### build, install
+
+see setup.cfg
+
 ## Scholar
 
 ### Packages are not supposed to be self tested.
