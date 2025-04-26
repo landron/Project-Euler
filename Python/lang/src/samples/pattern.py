@@ -1,11 +1,12 @@
 """
-    pylint, flake8
+pylint, flake8
 
-    Knowledge base
-        1.  "Files using ASCII (in Python 2) or UTF-8 (in Python 3) should
-        not have an encoding declaration."
-            https://www.python.org/dev/peps/pep-0008/
+Knowledge base
+    1.  "Files using ASCII (in Python 2) or UTF-8 (in Python 3) should
+    not have an encoding declaration."
+        https://www.python.org/dev/peps/pep-0008/
 """
+
 import time
 
 
@@ -20,33 +21,33 @@ else:
 
 
 def solve(limit):
-    '''
-        Return the solution of the problem.
-    '''
+    """
+    Return the solution of the problem.
+    """
     return limit
 
 
 def parse_input():
-    '''
-        read input and solve the problem as defined on HackerRank
-    '''
+    """
+    read input and solve the problem as defined on HackerRank
+    """
     limit, _ = (int(i) for i in input().strip().split())
     solution = solve(limit)
     solution.sort()
     for i in solution:
-        print(i, end='')
+        print(i, end="")
     print()
 
 
 def problem():
     """
-        Solve the problem as formulated on the original site.
+    Solve the problem as formulated on the original site.
     """
     start = time.time()
 
     result = solve(666)
 
-    duration = time.time()-start
+    duration = time.time() - start
     if duration >= 1:
         print(f"Result {result} in {duration:.2f} seconds")
     else:
@@ -55,10 +56,10 @@ def problem():
 
 def debug_validations():
     """
-        unit tests
+    unit tests
 
-        pass -O to ignore assertions and gain some time:
-            python -O ./prob.py
+    pass -O to ignore assertions and gain some time:
+        python -O ./prob.py
     """
 
 

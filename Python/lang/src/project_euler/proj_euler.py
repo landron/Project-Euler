@@ -80,12 +80,16 @@ def get_primes_limits(limit_inf, limit_sup):
 
     for i in range(3, limit_of_sieve, 2):
         remainder = limit_inf % i
-        inf = limit_inf - remainder + i if remainder != 0 else limit_inf - remainder
+        inf = limit_inf
+        if remainder != 0:
+            inf = limit_inf - remainder + i
         for j in range(inf, limit_sup, i):
             if j != i:
                 primes[j - limit_inf] = 0
     remainder = limit_inf % 2
-    inf = limit_inf - remainder + 2 if remainder != 0 else limit_inf - remainder
+    inf = limit_inf
+    if remainder != 0:
+        inf = limit_inf - remainder + 2
     for j in range(inf, limit_sup, 2):
         if j != 2:
             primes[j - limit_inf] = 0
@@ -394,6 +398,10 @@ class Combinatorics:
             return None
         return self.current()
 
+    def next(self):
+        """convenient alias"""
+        return self.get_next()
+
 
 def get_combinatorics_start(is_combinatorics, limit, limit_subset=0):
     """
@@ -429,6 +437,17 @@ def get_digits(number, base=10):
         digits.append(number % base)
         number //= base
     return digits if digits else [0]
+
+
+def combine_numbers(numbers, revert=False):
+    """get the number from the given numbers"""
+    number = 0
+    size = len(numbers)
+    for i in range(size):
+        current = numbers[i] if not revert else numbers[size - i - 1]
+        number *= 10 ** number_of_digits(current)
+        number += current
+    return number
 
 
 def get_number(digits, revert=False):
@@ -573,6 +592,10 @@ def debug_validations():
     assert get_totient(270, primes_1000) == 72
 
     assert get_prime_divisors(28, primes_1000) == [(2, 2), (7, 1)]
+
+    assert combine_numbers([1, 4, 3]) == 143
+    assert combine_numbers([1, 20, 3]) == 1203
+    assert combine_numbers([1, 8, 111]) == 18111
 
 
 if __name__ == "__main__":
