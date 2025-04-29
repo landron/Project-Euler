@@ -76,9 +76,6 @@ def problem():
 def debug_validations():
     """
     unit tests
-
-    pass -O to ignore assertions and gain some time:
-        python -O ./prob.py
     """
     assert solve(50) == 4
     assert solve(100) == 10
@@ -92,4 +89,4 @@ if __name__ == "__main__":
     # problem()
 
     # harden/generalized HackerRank problem
-    parse_input()
+    # parse_input()
