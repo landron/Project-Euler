@@ -344,7 +344,7 @@ def problem():
 
     selection = [3, 4, 5, 6, 7, 8]
     result = solve(selection)
-    print(f"solve({selection}): {result} in {time.time()-start:.2f}s")
+    print(f"solve({selection}): {result} in {time.time() - start:.2f}s")
 
 
 def parse_input():

@@ -3,7 +3,8 @@
 https://projecteuler.net/problem=34
     "Find the sum of all numbers which are equal to the sum of the factorial of their digits."
 
-    It very much reassembles to https://projecteuler.net/problem=30, only here we use factorials, no power.
+    It very much reassembles to https://projecteuler.net/problem=30,
+    only here we use factorials, no power.
 
 https://www.hackerrank.com/contests/projecteuler/challenges/euler034
     Score: 100.

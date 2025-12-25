@@ -78,7 +78,7 @@ def solve_problem_primes(primes, limit):
         for j in range(1, len(digits)):
             rotation = get_rotation(digits, j)
             # print(i, rotation)
-            if not rotation in primes_set:
+            if rotation not in primes_set:
                 is_circular_prime = False
                 break
         if is_circular_prime:

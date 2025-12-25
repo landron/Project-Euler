@@ -125,7 +125,7 @@ NUMBERS = """\
 
 def get_numbers(numbers):
     """get integers lists from the input string"""
-    return [[int(ch) for ch in l] for l in numbers.splitlines()]
+    return [[int(ch) for ch in i] for i in numbers.splitlines()]
 
 
 def get_numbers_validate():
@@ -188,7 +188,7 @@ def add_numbers(nb1, nb2):
 
 def debug_validations():
     """all the assertions"""
-    numbers = [int(l) for l in NUMBERS.splitlines()]
+    numbers = [int(i) for i in NUMBERS.splitlines()]
     assert 100 == len(numbers)
     asum = reduce(lambda x, y: x + y, numbers)
     assert 5537376230390876637302048746832985971773659831892672 == asum

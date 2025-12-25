@@ -141,7 +141,7 @@ def problem():
 
     value = 2000000
     result = solve(value)
-    print(f"solve({value}): {result} in {time.time()-start:.2f}s")
+    print(f"solve({value}): {result} in {time.time() - start:.2f}s")
 
 
 def debug_validations():

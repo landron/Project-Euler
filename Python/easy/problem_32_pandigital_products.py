@@ -115,7 +115,8 @@ def is_pandigital(number_digits, mul, div, N):
     mul_digits = get_digits(mul)
     div_digits = get_digits(div)
 
-    # print("107", number_digits, mul_digits, div_digits, (len(number_digits) + len(mul_digits) + len(div_digits)) == N)
+    # print("107", number_digits, mul_digits, div_digits,
+    #       (len(number_digits) + len(mul_digits) + len(div_digits)) == N)
     # print("108", number_digits, mul, div)
 
     if len(number_digits) + len(mul_digits) + len(div_digits) != N:

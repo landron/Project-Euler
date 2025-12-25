@@ -23,7 +23,10 @@ def get_triangular(nth):
 
 def create_triangulars():
     """creates the triangulars cache used through this program"""
-    triangulars = lambda: None
+
+    def triangulars():
+        pass
+
     triangulars.limit = 0
     triangulars.numbers = {}
 

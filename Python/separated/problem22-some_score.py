@@ -4,7 +4,7 @@ https://projecteuler.net/problem=22
     https://www.hackerrank.com/contests/projecteuler/challenges/euler022
 """
 
-import sys
+import os
 
 
 def score(name):
@@ -46,7 +46,13 @@ def debug_assertions():
 
 
 def parse_names_file(names_file):
-    f = open(names_file, "r")
+    try:
+        f = open(names_file, "r")
+    except FileNotFoundError:
+        # Try in the script's folder
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        names_file = os.path.join(script_dir, os.path.basename(names_file))
+        f = open(names_file, "r")
     names_f = f.read()
     names = [i for i in names_f.strip('" ').split('","')]
 

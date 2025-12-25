@@ -11,9 +11,12 @@ https://www.hackerrank.com/contests/projecteuler/challenges/euler033
         replace brute force in "solve_problem_base" with numbers generator as in the original answer
 
     "
-    1) The digits removed from the numerator and the denominator should be the same and could be in any order. For example, 6483/8644=3/4 where the numerator canceled {6,4,8} and the denominator canceled {8,6,4};
+    1) The digits removed from the numerator and the denominator should be the
+    same and could be in any order. For example, 6483/8644=3/4 where the
+    numerator canceled {6,4,8} and the denominator canceled {8,6,4};
 
-    2) Leading zeros are allowed in the post-cancled number. For instance, 4808/8414=8/14 is a valid fraction for N=4 and K=2.
+    2) Leading zeros are allowed in the post-cancled number. For instance,
+    4808/8414=8/14 is a valid fraction for N=4 and K=2.
     "
 
     2018.04.15 : Score: 16.67   (4 timeouts, 1 wrong answer)

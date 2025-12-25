@@ -17,7 +17,10 @@ pylint --version
 
 def create_right_triangles():
     """create the structure used as cache"""
-    cache = lambda: None
+
+    def cache():
+        pass
+
     cache.limit = 0
     cache.squares = {}
     cache.perimeters = None  # solve_problem_2

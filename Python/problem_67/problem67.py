@@ -8,8 +8,8 @@ https://projecteuler.net/problem=18
 tag_knapsack, tag_dynamic
 """
 
-import sys
 import time
+import os
 
 TRIANGLE_SIMPLE = """
 3
@@ -105,7 +105,9 @@ def solve_triangle_direct(mat):
     # return
 
     # find a first candidate
-    max = lambda: None
+    def max():
+        pass
+
     max.positions = [0] * n
     max.sum = mat[0][0]
     for i in range(1, n):
@@ -116,12 +118,17 @@ def solve_triangle_direct(mat):
         max.positions[i] = curr
     print(max.positions, max.sum)
 
-    max.stats = lambda: None
+    def max_stats():
+        pass
+
+    max.stats = max_stats
     max.stats.line = n
     max.stats.time_start = time.clock()
 
     # now try to improve it
-    curr = lambda: None
+    def curr():
+        pass
+
     curr.positions = [0] * n
     curr.sum = mat[0][0]
     find_max_from(mat, 1, max_rest, curr, max)
@@ -155,15 +162,21 @@ def solve_triangle(mat):
 
 def parse_triangle(triangle):
     mat = []
-    for l in triangle.strip().splitlines():
-        c = [int(i) for i in l.strip().split(" ")]
+    for line in triangle.strip().splitlines():
+        c = [int(i) for i in line.strip().split(" ")]
         mat.append(c)
     max = solve_triangle(mat)
     print(max)
 
 
 def parse_triangle_file(triangle_file):
-    f = open(triangle_file, "r")
+    try:
+        f = open(triangle_file, "r")
+    except FileNotFoundError:
+        # Try in the script's folder
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        triangle_file = os.path.join(script_dir, os.path.basename(triangle_file))
+        f = open(triangle_file, "r")
     triangle = f.read()
     # print(triangle)
     parse_triangle(triangle)

@@ -4,7 +4,6 @@ https://projecteuler.net/problem=24
     https://www.hackerrank.com/contests/projecteuler/challenges/euler024
 """
 
-import sys
 import math
 
 
@@ -44,7 +43,9 @@ def find_nth_number(position, symbols_no):
     assert position != 0
     assert position <= math.factorial(symbols_no)
 
-    symbols = lambda: None
+    def symbols():
+        pass
+
     symbols.used = [False] * symbols_no
     symbols.factorials = []
     for i in range(symbols_no):

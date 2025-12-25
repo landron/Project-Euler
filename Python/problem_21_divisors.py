@@ -6,7 +6,6 @@ https://www.hackerrank.com/contests/projecteuler/challenges/euler021
     todo_hackerrank: 33.33
 """
 
-import sys
 import math
 
 ####################################################
@@ -14,7 +13,7 @@ import math
 from project_euler import proj_euler
 import itertools
 
-########################################################################################################################
+##############################################################################
 
 
 def get_primes_2(limit):
@@ -74,7 +73,7 @@ def proj_euler_get_primes(limit):
 def get_divisors_as_primes(number, primes=None):
     """get the divisors of a given number as a list of primes and powers"""
     if not primes:
-        primes = get_primes(1 + math.floor(math.sqrt(number)))
+        primes = proj_euler_get_primes(1 + math.floor(math.sqrt(number)))
     return get_prime_divisors(number, primes)
 
 
@@ -99,7 +98,7 @@ def proj_euler_get_divisors(number, primes=None):
     return divisors
 
 
-########################################################################################################################
+##############################################################################
 
 
 def get_proper_divisor(n, primes, get_divisors_func):

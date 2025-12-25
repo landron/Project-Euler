@@ -41,7 +41,7 @@ GRID = b"""\
 
 def get_grid(grid):
     """get integers matrix from the string grid"""
-    return [[int(x) for x in l.split()] for l in grid.splitlines()]
+    return [[int(x) for x in line.split()] for line in grid.splitlines()]
 
 
 def get_product(matrix, index, direction, size):
@@ -70,7 +70,9 @@ def get_max_product(matrix, serie_size):
         assert len(line) == len(matrix)
     size = len(matrix)
 
-    result = lambda: None
+    def result():
+        pass
+
     result.index = (0, 0)
     result.direction = (1, 0)
     result.product = 0

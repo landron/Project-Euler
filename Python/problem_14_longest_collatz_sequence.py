@@ -174,7 +174,9 @@ def find_longest_chain_generate_all(all_lengths, print_it=False):
     the real worker function"""
     limit = len(all_lengths)
 
-    best = lambda: 0
+    def best():
+        pass
+
     best.val = 4
 
     # the current size has to be remembered as there can be always two paths to follow
@@ -273,7 +275,10 @@ def find_longest_chain_generate(limit, print_it=False):
 
 def find_longest_chain_brute(limit, print_it=False):
     """finds the longest Collatz sequence using the brutal force approach"""
-    best = lambda: 0
+
+    def best():
+        pass
+
     best.val = 8
     best.size = 4
 
@@ -360,60 +365,22 @@ def debug_validations_generate():
 def debug_validations():
     """all the assertions"""
     debug_validations_generate()
+    # fmt: off
     assert [
-        1,
-        2,
-        8,
-        3,
-        6,
-        9,
-        17,
-        4,
-        20,
-        7,
-        15,
-        10,
-        10,
-        18,
-        18,
-        5,
-        13,
-        21,
-        21,
-        8,
+        1, 2, 8, 3, 6,
+        9, 17, 4, 20, 7,
+        15, 10, 10, 18, 18,
+        5, 13, 21, 21, 8,
     ] == find_longest_chain_generate(20, False)[0]
     assert [
-        1,
-        2,
-        8,
-        3,
-        6,
-        9,
-        17,
-        4,
-        20,
-        7,
-        15,
-        10,
-        10,
-        18,
-        18,
-        5,
-        13,
-        21,
-        21,
-        8,
-        8,
-        16,
-        16,
-        11,
-        24,
-        11,
-        112,
-        19,
-        19,
-        19,
+        1, 2, 8, 3, 6,
+        9, 17, 4, 20, 7,
+        15, 10, 10, 18, 18,
+        5, 13, 21, 21, 8,
+        8, 16, 16, 11, 24,
+        11, 112, 19, 19, 19,
     ] == find_longest_chain_generate(30, False)[0]
+    # fmt: on
 
 
 if __name__ == "__main__":

@@ -120,7 +120,7 @@ def problem_7():
     start = time()
     result = find_prime_number(10001)
     assert result == 104743
-    print(f"Problem 7 - result {result:d} in {time()-start:.2f} seconds")
+    print(f"Problem 7 - result {result:d} in {time() - start:.2f} seconds")
 
 
 def problem_10():
@@ -134,7 +134,7 @@ def problem_10():
     start = time()
     result = find_primes_sum(2000000)
     assert result == 142913828922
-    print(f"Problem 10 - result {result:d} in {time()-start:.2f} seconds")
+    print(f"Problem 10 - result {result:d} in {time() - start:.2f} seconds")
 
 
 def hackerrank_7():
@@ -209,7 +209,7 @@ def main():
 
     print(
         f'[{datetime.now().strftime("%Y-%m-%d %H:%M")}] '
-        f"Total time: {time()-start:.2f} seconds"
+        f"Total time: {time() - start:.2f} seconds"
     )
 
 

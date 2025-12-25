@@ -1,7 +1,8 @@
 #!/bin/python3
 """
 https://projecteuler.net/problem=36
-    "Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2."
+    "Find the sum of all numbers, less than one million, which are palindromic
+    in base 10 and base 2."
 
 https://www.hackerrank.com/contests/projecteuler/challenges/euler036
     Score: 100

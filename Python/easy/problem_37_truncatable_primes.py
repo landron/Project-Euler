@@ -51,7 +51,7 @@ def is_truncatable(prime, primes):
     while number > 0:
         digits += 1
         # print(number)
-        if not number in primes:
+        if number not in primes:
             return False
         number = number // 10
 
@@ -60,7 +60,7 @@ def is_truncatable(prime, primes):
     while digits > 1:
         number = number % digits
         # print(number)
-        if not number in primes:
+        if number not in primes:
             # print(prime)
             return False
         digits //= 10

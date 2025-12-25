@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # pip install ./lang
-# pip install ./lang --upgrade # really needed ?
+# pip install ./lang --upgrade # it seems unneeded
 
 set -euo pipefail
 # set -x
 
 # fmt: off/on
 black ./
-# flake8 ./
+flake8 ./
 # pylint ./
 
 for f in lang/src/project_euler/*.py; do

@@ -172,7 +172,9 @@ def greatest_sequence(number, number_of_digits, trace):
     if partial < 0:
         return 0
 
-    dbg_stats = lambda: None
+    def dbg_stats():
+        pass
+
     dbg_stats.product_comp = 0
     dbg_stats.zero_found = 0
     dbg_stats.last_greater = 0
