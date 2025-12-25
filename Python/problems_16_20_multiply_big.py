@@ -48,7 +48,7 @@ def problem_16():
         number = multiply(number, 2)
     result = sum(number)
     assert 1366 == result
-    print("Result 16: {0}".format(result))
+    print(f"Result 16: {result}")
 
 
 def problem_20():
@@ -59,7 +59,7 @@ def problem_20():
         number = multiply(number, i + 1)
     result = sum(number)
     assert 648 == result
-    print("Result 20: {0}".format(result))
+    print(f"Result 20: {result}")
 
 
 if __name__ == "__main__":

@@ -196,7 +196,7 @@ def greatest_sequence_wrap(number, number_of_digits, trace=False):
     assert index + number_of_digits <= len(number)
     result = number[index : index + number_of_digits]
     if trace:
-        print("Sequence found ({0}): ".format(index), result)
+        print(f"Sequence found ({index}): ", result)
 
     prod = calculate_product(number, number_of_digits, index)
     if trace:

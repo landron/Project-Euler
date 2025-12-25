@@ -168,8 +168,7 @@ def divide_by_2(primes):
     assert primes[0][0] == 2
     if primes[0][1] == 1:
         return primes[1:]
-    else:
-        return [(2, primes[0][1] - 1)] + primes[1:]
+    return [(2, primes[0][1] - 1)] + primes[1:]
 
 
 def divisors_number(primes):
@@ -206,7 +205,6 @@ def get_triangular_divisors_number(number, previous, primes):
 
 def first_triangle_number_base(number_of_divisors):
     """get the first triangular number with the given number of divisors"""
-
     limit = 13000  # 100
     primes = get_primes(limit)
     # 3 because get_prime_divisors wants > 1 (2/2 = 1)
@@ -221,6 +219,7 @@ def first_triangle_number_base(number_of_divisors):
         (previous, divisors) = get_triangular_divisors_number(i, previous, primes)
         if divisors >= number_of_divisors:
             return (divisors, i, i * (i + 1) // 2)
+    return (0, 0, 0)
 
 
 def first_triangle_number(number_of_divisors):
@@ -315,7 +314,7 @@ def problem_12():
     result = first_triangle_number_base(500)
     # print(result)
     assert result[2] == 76576500
-    print("Result {0} in {1:.2f} seconds".format(result[2], time() - start))
+    print(f"Result {result[2]} in {time() - start:.2f} seconds")
 
 
 if __name__ == "__main__":

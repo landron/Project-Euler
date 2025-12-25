@@ -1,0 +1,14 @@
+[MASTER]
+# folders temporarily ignored: easy
+ignore=
+    easy,
+    lang/.build,
+
+# easy/problem_61_cycle_chain.py:1:0: R0801: Similar lines in 2 files
+# ==easy.problem_38_pandigital_multiples:[83:90]
+# ==lang..build.lib.project_euler.proj_euler:[419:434]
+[MESSAGES CONTROL]
+disable=
+    duplicate-code,  # R0801
+    # TODO: enable these later
+    missing-function-docstring,
