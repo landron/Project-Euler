@@ -1,26 +1,27 @@
 #!/bin/python3
-'''
-    https://projecteuler.net/problem=41
-        Pandigital primes
-        Done, but the validation of the 8-digit primes takes already
-             too much memory (2G)
+"""
+https://projecteuler.net/problem=41
+    Pandigital primes
+    Done, but the validation of the 8-digit primes takes already
+         too much memory (2G)
 
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler041
-        solve_problem_generate is very fast
-        todo_hackerrank :   Score: 25.00 (2 ok, 3 timeouts)
-            my cache (collections based) is not good enough
-            neither the bisect based one
+https://www.hackerrank.com/contests/projecteuler/challenges/euler041
+    solve_problem_generate is very fast
+    todo_hackerrank :   Score: 25.00 (2 ok, 3 timeouts)
+        my cache (collections based) is not good enough
+        neither the bisect based one
 
-            cannot precalculate: too many
-            optimization: verify that the numbers are pandigital and prime
-                solve_problem_generate_testthem => no gain
+        cannot precalculate: too many
+        optimization: verify that the numbers are pandigital and prime
+            solve_problem_generate_testthem => no gain
 
-    pylint, flake8
+pylint, flake8
 
-    tag_cache
-'''
+tag_cache
+"""
 
 import math
+
 # import collections
 import bisect
 
@@ -35,9 +36,9 @@ if PROJ_EULER:
 
 
 def is_pandigital(number_digits):
-    '''
-        has this number all the digits ?
-    '''
+    """
+    has this number all the digits ?
+    """
     assert len(number_digits) < 10
 
     arr = [False] * 10
@@ -49,7 +50,7 @@ def is_pandigital(number_digits):
     # 0 took a righteous position :(
     if arr[0]:
         return False
-    for i in range(1, len(number_digits)+1):
+    for i in range(1, len(number_digits) + 1):
         if not arr[i]:
             return False
 
@@ -63,18 +64,18 @@ def get_number(digits):
     for i in range(size):
         number *= 10
         # +1 : skip 0
-        number += (size-digits[i])
+        number += size - digits[i]
     return number
 
 
 def is_prime(number, max_factor):
-    '''
-        test prime property until max factor
-    '''
+    """
+    test prime property until max factor
+    """
     # print(number, digits)
     if number < 3:
         return False
-    for i in range(2, max_factor+1):
+    for i in range(2, max_factor + 1):
         if number % i == 0:
             return False
     return True
@@ -112,11 +113,11 @@ def solve_problem_generate_reallimit(limit_in):
 
 
 def solve_problem_generate_testthem(limit_in):
-    '''
-        desperate try to pass the hackerrank tests
-            just test for small enough numbers (instead of calculation
-                based on the number of digits)
-    '''
+    """
+    desperate try to pass the hackerrank tests
+        just test for small enough numbers (instead of calculation
+            based on the number of digits)
+    """
     no_digits = number_of_digits(limit_in)
     max_factor = math.floor(math.sqrt(limit_in))
 
@@ -137,17 +138,17 @@ def solve_problem_generate_testthem(limit_in):
 
 
 def solve_problem_calculate_primes(limit):
-    '''
-        10**8 is too much for my computer: more than 2G memory
-            => generate the numbers and try find a divisor < sqrt
+    """
+    10**8 is too much for my computer: more than 2G memory
+        => generate the numbers and try find a divisor < sqrt
 
-        solve_problem_generate is much faster
-    '''
+    solve_problem_generate is much faster
+    """
     pandigital = -1
 
     primes = get_primes(limit)
 
-    for i in range(len(primes)-1, 0, -1):
+    for i in range(len(primes) - 1, 0, -1):
         prime = primes[i]
 
         digits = get_digits(prime)
@@ -165,14 +166,14 @@ def solve_problem_reallimit(limit):
 
 
 def solve_problem_power10(limit_in):
-    limit = 10**limit_in-1
+    limit = 10**limit_in - 1
     return solve_problem_generate_reallimit(limit)
 
 
 def parse_input():
-    '''
-        https://www.hackerrank.com/contests/projecteuler/challenges/euler032
-    '''
+    """
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler032
+    """
     calculated = {}
     cache = []
 
@@ -191,7 +192,7 @@ def parse_input():
             if calculated[after] == -1:
                 result = -1
                 found = True
-            elif pos and calculated[after] == calculated[cache[pos-1]]:
+            elif pos and calculated[after] == calculated[cache[pos - 1]]:
                 result = calculated[after]
                 found = True
 
@@ -220,12 +221,12 @@ def parse_input():
 
 
 def problem():
-    '''solve Project Euler original variant'''
+    """solve Project Euler original variant"""
     return solve_problem_power10(9)
 
 
 def debug_assertions():
-    '''assertions'''
+    """assertions"""
     assert is_pandigital([4, 3, 2, 1])
     assert solve_problem_reallimit(100) == -1
 
@@ -233,7 +234,7 @@ def debug_assertions():
 
 
 def main():
-    '''main'''
+    """main"""
     debug_assertions()
 
     # parse_input()

@@ -1,18 +1,19 @@
 #!/bin/python3
-'''    
-    https://projecteuler.net/problem=25
-    
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler025
-        todo_hackerrank:    66.67
-'''
+"""
+https://projecteuler.net/problem=25
+
+https://www.hackerrank.com/contests/projecteuler/challenges/euler025
+    todo_hackerrank:    66.67
+"""
 
 import sys
 
+
 def large_sum_base(a, b):
     assert len(b) == len(a) or len(b) == len(a) - 1
-    
+
     m = len(a)
-    if m > len(b): 
+    if m > len(b):
         b += [0]
     # print(a, b)
 
@@ -33,6 +34,7 @@ def large_sum_base(a, b):
         b += [1]
         return True
 
+
 def Fibonacci_index_for_digits(n, use_cache, cache):
     assert n >= 1
     if n == 1:
@@ -46,7 +48,7 @@ def Fibonacci_index_for_digits(n, use_cache, cache):
         assert len(cache.table) <= n
         f1 = cache.f1
         f2 = cache.f2
-        digits = len(cache.table)-1
+        digits = len(cache.table) - 1
         index = cache.table[-1]
     # print(index, f1, f2, digits)
 
@@ -60,7 +62,6 @@ def Fibonacci_index_for_digits(n, use_cache, cache):
         t = f1
         f1 = f2
         f2 = t
-        
 
     if use_cache:
         cache.f1 = f1
@@ -68,17 +69,20 @@ def Fibonacci_index_for_digits(n, use_cache, cache):
 
     return index
 
+
 # not enough for hackerrank
 def Fibonacci_index_cache(n, cache):
     if n < len(cache.table):
         return cache.table[n]
     return Fibonacci_index_for_digits(n, True, cache)
 
+
 def Fibonacci_index(n):
     return Fibonacci_index_for_digits(n, False, None)
 
+
 # hackerrank, \todo:   find the formula - here is the 500 table
-'''
+"""
 [0, 2, 7, 12, 17, 21, 26, 31, 36, 40, 45, 50, 55, 60, 64, 69, 74, 79, 84, 88, 93, 98, 103, 107, 112, 117, 122, 127, 131, 136, 141, 146, 151,
  155, 160, 165, 170, 174, 179, 184, 189, 194, 198, 203, 208, 213, 217, 222, 227, 232, 237, 241, 246, 251, 256, 261, 265, 270, 275, 280, 284,
  289, 294, 299, 304, 308, 313, 318, 323, 328, 332, 337, 342, 347, 351, 356, 361, 366, 371, 375, 380, 385, 390, 395, 399, 404, 409, 414, 418,
@@ -99,24 +103,29 @@ def Fibonacci_index(n):
 , 2084, 2088, 2093, 2098, 2103, 2108, 2112, 2117, 2122, 2127, 2131, 2136, 2141, 2146, 2151, 2155, 2160, 2165, 2170, 2175, 2179, 2184, 2189,
 2194, 2198, 2203, 2208, 2213, 2218, 2222, 2227, 2232, 2237, 2242, 2246, 2251, 2256, 2261, 2265, 2270, 2275, 2280, 2285, 2289, 2294, 2299, 23
 04, 2309, 2313, 2318, 2323, 2328, 2332, 2337, 2342, 2347, 2352, 2356, 2361, 2366, 2371, 2376, 2380, 2385, 2390]
-'''
+"""
+
+
 def WIP_Fibonacci_index_formula(n):
     if n < 5:
-        return 2 + (n-1)*5                                                  #  17
+        return 2 + (n - 1) * 5  #  17
     elif n < 9:
         n -= 5
-        return Fibonacci_index_formula(4) + 4 + n*5                         #  36
-    elif n < 9+2*14:
-        n -= 9 
-        return Fibonacci_index_formula(8) + 4 + n*5 - n//5 - n//14          #  40+135-5-1 = 174
-    elif n < 37+9:
+        return Fibonacci_index_formula(4) + 4 + n * 5  #  36
+    elif n < 9 + 2 * 14:
+        n -= 9
+        return (
+            Fibonacci_index_formula(8) + 4 + n * 5 - n // 5 - n // 14
+        )  #  40+135-5-1 = 174
+    elif n < 37 + 9:
         n -= 37
-        return Fibonacci_index_formula(36) + 4 + n*5 - n//5 - n//14
+        return Fibonacci_index_formula(36) + 4 + n * 5 - n // 5 - n // 14
 
         # \todo
     else:
         n -= 45
-        return Fibonacci_index_formula(45) + 4 + n*5 - n//5 - n//14
+        return Fibonacci_index_formula(45) + 4 + n * 5 - n // 5 - n // 14
+
 
 # https://www.hackerrank.com/contests/projecteuler/challenges/euler025
 def parse_input_with_cache(cache):
@@ -129,8 +138,9 @@ def parse_input_with_cache(cache):
         print(index)
         # print(cache.table)
 
+
 def parse_input():
-    cache = lambda:None
+    cache = lambda: None
     # initialization, not correct for the first two entries
     cache.table = [0, 2]
     cache.f1 = [1]
@@ -140,17 +150,20 @@ def parse_input():
     # Fibonacci_index_cache(500, cache)
     # print(cache.table)
 
+
 def debug_assertions():
     assert Fibonacci_index(2) == 7
     assert Fibonacci_index(3) == 12
     assert Fibonacci_index(4) == 17
     assert Fibonacci_index(1000) == 4782
 
+
 def main():
     # debug_assertions()
     # parse_input()
-    
+
     print(Fibonacci_index(1000))
+
 
 if __name__ == "__main__":
     main()

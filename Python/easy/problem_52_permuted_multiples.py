@@ -1,5 +1,5 @@
 #!/bin/python3
-'''
+"""
     https://projecteuler.net/problem=52
         Permuted multiples
 
@@ -24,20 +24,20 @@
         Your code has been rated at 8.62/10.
 
     tag_digits
-'''
+"""
 
 from proj_euler import get_digits
 
 
 def multiply(digits, mul, pass_allowed=False):
     size = len(digits)
-    result = [0]*size
+    result = [0] * size
 
     reminder = 0
     for i in range(size):
-        val = mul*digits[i] + reminder
+        val = mul * digits[i] + reminder
         result[i] = val % 10
-        reminder = val//10
+        reminder = val // 10
 
     if reminder != 0:
         if not pass_allowed:
@@ -67,7 +67,7 @@ def same_digits(number1, number2):
     size = len(number1)
     assert len(number2) == size
 
-    found = [0]*10
+    found = [0] * 10
     for i in number1:
         found[i] += 1
     return same_digits_hash(found, number2)
@@ -76,8 +76,8 @@ def same_digits(number1, number2):
 def has_permuted_multiples(number, max_multiplier):
     digits = get_digits(number)
     # -1 : skip 1
-    for i in range(max_multiplier-1):
-        mul = multiply(digits, max_multiplier-i)
+    for i in range(max_multiplier - 1):
+        mul = multiply(digits, max_multiplier - i)
         if not mul or not same_digits(mul, digits):
             return False
     return True
@@ -85,12 +85,12 @@ def has_permuted_multiples(number, max_multiplier):
 
 def has_permuted_multiples_2(number, max_multiplier):
     digits = get_digits(number)
-    found = [0]*10
+    found = [0] * 10
 
     # -1 : skip 1
-    for i in range(max_multiplier-1):
+    for i in range(max_multiplier - 1):
         # hackerrank - starting with the greatest matters: one test passed
-        mul = number * (max_multiplier-i)
+        mul = number * (max_multiplier - i)
         digits_2 = get_digits(mul)
 
         if len(digits_2) > len(digits):
@@ -115,9 +115,9 @@ def solve_problem():
 
 
 def get_all(limit, max_multiplier):
-    '''
-        hackerrank conditions
-    '''
+    """
+    hackerrank conditions
+    """
     result = []
 
     i = 1
@@ -131,18 +131,18 @@ def get_all(limit, max_multiplier):
 
 
 def parse_input():
-    '''
-        https://www.hackerrank.com/contests/projecteuler/challenges/euler052
-    '''
-    (N, K) = (int(i) for i in input().strip().split(' '))
+    """
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler052
+    """
+    (N, K) = (int(i) for i in input().strip().split(" "))
     # tag_python_2
     # (N, K) = (int(i) for i in raw_input().strip().split(' '))
     result = get_all(N, K)
     for i in result:
-        show = ''
+        show = ""
         for j in range(K):
-            show += str((j+1)*i)
-            show += ' '
+            show += str((j + 1) * i)
+            show += " "
         print(show)
 
 

@@ -1,40 +1,43 @@
 #! /usr/bin/python3
-'''
-    tag_primes
+"""
+tag_primes
 
-    https://projecteuler.net/problem=37
+https://projecteuler.net/problem=37
 
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler037
-    Score: 100.00
+https://www.hackerrank.com/contests/projecteuler/challenges/euler037
+Score: 100.00
 
-    "Your code has been rated at 10.00/10"
-    pylint --version
-        No config file found, using default configuration
-        pylint 1.8.1,
-        astroid 1.6.0
-        Python 3.6.4
-'''
+"Your code has been rated at 10.00/10"
+pylint --version
+    No config file found, using default configuration
+    pylint 1.8.1,
+    astroid 1.6.0
+    Python 3.6.4
+"""
 
 import math
 
 ####################################################
 
+
 def get_primes(limit):
-    '''get the list of all primes up to the given limit'''
+    """get the list of all primes up to the given limit"""
 
     # not rounded since we skip 1 & 2
-    primes = [i*2+3 for i in range(limit//2-1)]
-    limit_of_sieve = 1+math.floor(math.sqrt(limit))
+    primes = [i * 2 + 3 for i in range(limit // 2 - 1)]
+    limit_of_sieve = 1 + math.floor(math.sqrt(limit))
     for i in range(3, limit_of_sieve, 2):
-        if primes[i//2-1]:
-            for j in range(i*i, limit, 2*i):
-                primes[j//2-1] = 0
-    return [2]+[i for i in primes if i != 0]
+        if primes[i // 2 - 1]:
+            for j in range(i * i, limit, 2 * i):
+                primes[j // 2 - 1] = 0
+    return [2] + [i for i in primes if i != 0]
+
 
 ####################################################
 
+
 def is_truncatable(prime, primes):
-    '''find out if the given prime is truncatable'''
+    """find out if the given prime is truncatable"""
 
     assert prime in primes
     assert not isinstance(prime, list) or prime <= primes[-1]
@@ -50,12 +53,12 @@ def is_truncatable(prime, primes):
         # print(number)
         if not number in primes:
             return False
-        number = number//10
+        number = number // 10
 
     number = prime
     digits = 10**digits
     while digits > 1:
-        number = number%digits
+        number = number % digits
         # print(number)
         if not number in primes:
             # print(prime)
@@ -64,8 +67,9 @@ def is_truncatable(prime, primes):
 
     return True
 
+
 def solve_problem(limit):
-    '''solve the problem up to the given limit'''
+    """solve the problem up to the given limit"""
 
     primes_list = get_primes(limit)
     # this really speeds up the process
@@ -73,7 +77,7 @@ def solve_problem(limit):
     # print(len(primes))
 
     sum_of_truncable_primes = 0
-    for i, prime in enumerate(primes):      #pylint: disable=unused-variable
+    for i, prime in enumerate(primes):  # pylint: disable=unused-variable
         if is_truncatable(prime, primes):
             # print(prime)
             sum_of_truncable_primes += prime
@@ -82,21 +86,24 @@ def solve_problem(limit):
 
     print(sum_of_truncable_primes)
 
+
 def parse_input():
-    '''
-        parse hackerrank input
-        https://www.hackerrank.com/contests/projecteuler/challenges/euler037
-    '''
+    """
+    parse hackerrank input
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler037
+    """
     limit = int(input().strip())
     solve_problem(limit)
 
+
 def problem():
-    '''solve the project Euler problem'''
+    """solve the project Euler problem"""
 
     solve_problem(1000000)
 
+
 def debug_assertions():
-    '''unit tests'''
+    """unit tests"""
 
     primes = get_primes(10000)
     # print(primes)
@@ -106,12 +113,14 @@ def debug_assertions():
     assert not is_truncatable(8311, primes)
     assert is_truncatable(3797, primes)
 
+
 def main():
-    '''THE main'''
+    """THE main"""
     debug_assertions()
 
     # parse_input()   # hackerrank
     problem()
+
 
 if __name__ == "__main__":
     main()

@@ -1,19 +1,19 @@
 """
-    Problem 13 : Large sum
-    http://projecteuler.net/problem=13
-        Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
-    Version: 2015.01.25
+Problem 13 : Large sum
+http://projecteuler.net/problem=13
+    Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
+Version: 2015.01.25
 
-    pylint.bat --version
-        No config file found, using default configuration
-        pylint 1.4.0,
-        astroid 1.3.2, common 0.63.2
-        Python 3.4.2 (v3.4.2:ab2c023a9432, Oct  6 2014, 22:15:05) [MSC v.1600 32 bit (Intel)]
-    Your code has been rated at 10.00/10
+pylint.bat --version
+    No config file found, using default configuration
+    pylint 1.4.0,
+    astroid 1.3.2, common 0.63.2
+    Python 3.4.2 (v3.4.2:ab2c023a9432, Oct  6 2014, 22:15:05) [MSC v.1600 32 bit (Intel)]
+Your code has been rated at 10.00/10
 
-    TODO
-        make add_numbers_2 more functional like:  apply some map & reduce function
-            (to carry the carry)
+TODO
+    make add_numbers_2 more functional like:  apply some map & reduce function
+        (to carry the carry)
 """
 
 import itertools
@@ -122,9 +122,11 @@ NUMBERS = """\
 53503534226472524250874054075591789781264330331690
 """
 
+
 def get_numbers(numbers):
     """get integers lists from the input string"""
     return [[int(ch) for ch in l] for l in numbers.splitlines()]
+
 
 def get_numbers_validate():
     """validate the input transformation"""
@@ -133,6 +135,7 @@ def get_numbers_validate():
     for i in numbers:
         assert 50 == len(i)
     return numbers
+
 
 def add_numbers_1(nb_max, nb_min):
     """add two very large numbers: index based classical method"""
@@ -144,13 +147,13 @@ def add_numbers_1(nb_max, nb_min):
         assert 0 <= nb_min[i] and nb_min[i] < 10
         assert 0 <= nb_max[j] and nb_max[j] < 10
         asum = nb_min[i] + nb_max[j] + (1 if carry else 0)
-        result += [asum%10]
-        carry = True if 0 != asum//10 else False
-    for i in reversed(range(len(nb_max)-len(nb_min))):
+        result += [asum % 10]
+        carry = True if 0 != asum // 10 else False
+    for i in reversed(range(len(nb_max) - len(nb_min))):
         if carry:
             asum = nb_max[i] + (1 if carry else 0)
-            result += [asum%10]
-            carry = True if 0 != asum//10 else False
+            result += [asum % 10]
+            carry = True if 0 != asum // 10 else False
         else:
             result += [nb_max[i]]
     if carry:
@@ -158,50 +161,58 @@ def add_numbers_1(nb_max, nb_min):
     result.reverse()
     return result
 
+
 def add_numbers_2(nb1, nb2):
     """add two very large numbers: a more functional approach"""
     assert len(nb1) >= len(nb2)
-    asum = [x + y for x, y in itertools.zip_longest(reversed(nb1), reversed(nb2), fillvalue=0)]
+    asum = [
+        x + y
+        for x, y in itertools.zip_longest(reversed(nb1), reversed(nb2), fillvalue=0)
+    ]
     # ! apply some map+reduce function
     carry = 0
     result = []
     for i in asum:
-        result += [(carry+i)%10]
-        carry = (carry+i) // 10
+        result += [(carry + i) % 10]
+        carry = (carry + i) // 10
     if carry:
         result += [1]
     result.reverse()
     return result
 
+
 def add_numbers(nb1, nb2):
     """add two very large numbers"""
     return add_numbers_2(nb1, nb2)
+
 
 def debug_validations():
     """all the assertions"""
     numbers = [int(l) for l in NUMBERS.splitlines()]
     assert 100 == len(numbers)
-    asum = reduce(lambda x, y: x+y, numbers)
+    asum = reduce(lambda x, y: x + y, numbers)
     assert 5537376230390876637302048746832985971773659831892672 == asum
 
     numbers_list = get_numbers_validate()
-    asum2 = reduce(lambda x, y: 10*x+y, reduce(add_numbers_1, numbers_list))
+    asum2 = reduce(lambda x, y: 10 * x + y, reduce(add_numbers_1, numbers_list))
     assert asum == asum2
 
-    asum3 = reduce(lambda x, y: 10*x+y, reduce(add_numbers_2, numbers_list))
+    asum3 = reduce(lambda x, y: 10 * x + y, reduce(add_numbers_2, numbers_list))
     assert asum == asum3
+
 
 def problem_13():
     """solve the problem"""
     numbers = get_numbers_validate()
     asum = reduce(add_numbers, numbers)
-    result = ''.join([chr(ord('0')+i) for i in asum])
+    result = "".join([chr(ord("0") + i) for i in asum])
 
     assert 52 == len(result)
     result = result[:10]
     assert "5537376230" == result
 
     print("Result: {0}".format(result))
+
 
 if __name__ == "__main__":
     debug_validations()

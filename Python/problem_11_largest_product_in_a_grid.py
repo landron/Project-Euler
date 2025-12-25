@@ -38,14 +38,20 @@ GRID = b"""\
 01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48
 """
 
+
 def get_grid(grid):
     """get integers matrix from the string grid"""
     return [[int(x) for x in l.split()] for l in grid.splitlines()]
 
+
 def get_product(matrix, index, direction, size):
     """calculate hte product for a sequence"""
-    sequence = [matrix[index[0]+direction[0]*i][index[1]+direction[1]*i] for i in range(size)]
-    return reduce(lambda x,y: x*y, sequence)
+    sequence = [
+        matrix[index[0] + direction[0] * i][index[1] + direction[1] * i]
+        for i in range(size)
+    ]
+    return reduce(lambda x, y: x * y, sequence)
+
 
 def compare_products(matrix, index, direction, size, result):
     """compare the sequence to the current maximum"""
@@ -55,6 +61,7 @@ def compare_products(matrix, index, direction, size, result):
         result.direction = direction
         result.product = prod
         # print([matrix[index[0]+direction[0]*i][index[1]+direction[1]*i] for i in range(size)])
+
 
 def get_max_product(matrix, serie_size):
     """find the sequence with the maximum product"""
@@ -70,20 +77,29 @@ def get_max_product(matrix, serie_size):
 
     # horizontal & vertical
     for i in range(size):
-        for j in range(size-serie_size):
+        for j in range(size - serie_size):
             compare_products(matrix, (i, j), (0, 1), serie_size, result)
             compare_products(matrix, (j, i), (1, 0), serie_size, result)
 
     # diagonals
     # unfortunately, we get the main diagonals two times
-    for i in range(size-serie_size):
-        for j in range(size-serie_size-i):
-            compare_products(matrix, (i+j, j), (1, 1), serie_size, result) #left, bottom
-            compare_products(matrix, (j, i+j), (1, 1), serie_size, result) #right, top
-            compare_products(matrix, (size-(i+j)-1, j), (-1, 1), serie_size, result) #left, top
-            compare_products(matrix, (size-j-1, i+j), (-1, 1), serie_size, result) #right, bottom
+    for i in range(size - serie_size):
+        for j in range(size - serie_size - i):
+            compare_products(
+                matrix, (i + j, j), (1, 1), serie_size, result
+            )  # left, bottom
+            compare_products(
+                matrix, (j, i + j), (1, 1), serie_size, result
+            )  # right, top
+            compare_products(
+                matrix, (size - (i + j) - 1, j), (-1, 1), serie_size, result
+            )  # left, top
+            compare_products(
+                matrix, (size - j - 1, i + j), (-1, 1), serie_size, result
+            )  # right, bottom
 
     return result
+
 
 def calculate_max_product(grid, size):
     """find the best sequence given the grid and the size of the sequence"""
@@ -91,6 +107,7 @@ def calculate_max_product(grid, size):
     result = get_max_product(matrix, size)
     assert result.product == get_product(matrix, result.index, result.direction, size)
     print("Max product for size {1}: {0}".format(result.__dict__, size))
+
 
 def validate():
     """test units"""
@@ -100,6 +117,7 @@ def validate():
     assert 188210512710 == get_max_product(matrix, 6).product
     assert 13927577940540 == get_max_product(matrix, 7).product
     assert 72356716950336000000 == get_max_product(matrix, 11).product
+
 
 if __name__ == "__main__":
     validate()

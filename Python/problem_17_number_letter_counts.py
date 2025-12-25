@@ -17,44 +17,69 @@
         Difficulty: Easy
 """
 
+
 def letters_no(number):
     """the number of letter for a given number"""
     no_letters = 0
     if number < 11:
-        catalog = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
-        no_letters = len(catalog[number-1])
+        catalog = [
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine",
+            "ten",
+        ]
+        no_letters = len(catalog[number - 1])
     elif number < 18:
-        catalog = ["eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen"]
-        no_letters = len(catalog[number-11])
+        catalog = [
+            "eleven",
+            "twelve",
+            "thirteen",
+            "fourteen",
+            "fifteen",
+            "sixteen",
+            "seventeen",
+        ]
+        no_letters = len(catalog[number - 11])
     elif number < 21:
         catalog = ["eighteen", "nineteen", "twenty"]
-        no_letters = len(catalog[number-18])
-    elif number%10 == 0 and number < 100:
+        no_letters = len(catalog[number - 18])
+    elif number % 10 == 0 and number < 100:
         catalog = ["thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
-        no_letters = len(catalog[number//10-3])
-    elif number%100 == 0 and number < 1000:
-        no_letters = letters_no(number//100) + len("hundred")
+        no_letters = len(catalog[number // 10 - 3])
+    elif number % 100 == 0 and number < 1000:
+        no_letters = letters_no(number // 100) + len("hundred")
     elif number < 100:
-        no_letters = letters_no(number//10*10) + letters_no(number%10)
+        no_letters = letters_no(number // 10 * 10) + letters_no(number % 10)
     elif number < 1000:
-        no_letters = letters_no(number//100*100) + letters_no(number%100) + len("and")
-    elif number%1000 == 0 and number < 1000000:
-        no_letters = letters_no(number//1000) + len("thousand")
+        no_letters = (
+            letters_no(number // 100 * 100) + letters_no(number % 100) + len("and")
+        )
+    elif number % 1000 == 0 and number < 1000000:
+        no_letters = letters_no(number // 1000) + len("thousand")
     else:
         # above thousand is trickier because it has to have only one "and"
         assert False
     return no_letters
 
+
 def count_letters_1(limit):
     """brute-force algorithm"""
     count = 0
-    for year in range(1, 1+limit):
+    for year in range(1, 1 + limit):
         count += letters_no(year)
     return count
+
 
 def count_letters(limit):
     """solve the problem, print the needed time"""
     return count_letters_1(limit)
+
 
 def debug_validations():
     """all the assertions"""
@@ -67,10 +92,12 @@ def debug_validations():
     assert letters_no(700) == 12
     assert count_letters(1000) == 21124
 
+
 def main():
     """main function: defined explicitly for external calling"""
     debug_validations()
     print(count_letters(1000))
+
 
 if __name__ == "__main__":
     main()

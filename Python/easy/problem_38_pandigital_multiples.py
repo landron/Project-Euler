@@ -1,14 +1,14 @@
 #!/bin/python3
-'''
-    https://projecteuler.net/problem=38
-        Pandigital multiples
+"""
+https://projecteuler.net/problem=38
+    Pandigital multiples
 
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler038
+https://www.hackerrank.com/contests/projecteuler/challenges/euler038
 
-    pylint, flake8
+pylint, flake8
 
-    tag_permutation, tag_digits
-'''
+tag_permutation, tag_digits
+"""
 
 PROJ_EULER = 1
 
@@ -21,11 +21,11 @@ if PROJ_EULER:
 else:
     # DEPRECATED
     def get_permutation_next(indexes, taken, limit):
-        '''
-            Number (N, K) = N! / (N-K)!
-        '''
+        """
+        Number (N, K) = N! / (N-K)!
+        """
         assert indexes
-        max_i = len(indexes)-1
+        max_i = len(indexes) - 1
         assert indexes[max_i] < limit
 
         i = max_i
@@ -48,7 +48,7 @@ else:
         # give proper values to the remaining
 
         next_free = 0
-        for j in range(i+1, max_i+1):
+        for j in range(i + 1, max_i + 1):
             while taken[next_free]:
                 next_free += 1
                 assert next_free != limit
@@ -61,11 +61,11 @@ else:
 
     # DEPRECATED
     def get_permutation_start(indexes, taken, limit, subset=0):
-        '''
-            Initialisation
-                taken = used indexes (each index appears one time only)
-                limit, subset = (usually known as) N, K
-        '''
+        """
+        Initialisation
+            taken = used indexes (each index appears one time only)
+            limit, subset = (usually known as) N, K
+        """
         if subset == 0:
             subset = limit
 
@@ -80,7 +80,7 @@ else:
 
     def number_of_digits(number, base=10):
         """get the number of the digits of the given number
-            in the given base"""
+        in the given base"""
         digits = 0
         while number >= 1:
             number //= base
@@ -96,11 +96,12 @@ else:
             number //= base
         return digits
 
+
 #####################################################################
 
 
 def number_from_permutation(indexes, limit=0):
-    '''get the number from the (reversed) digits'''
+    """get the number from the (reversed) digits"""
     assert limit <= len(indexes)
     if limit == 0:
         limit = len(indexes)
@@ -109,70 +110,70 @@ def number_from_permutation(indexes, limit=0):
     number = 0
     for i in range(limit):
         number *= 10
-        number += (max_digit - indexes[i])
+        number += max_digit - indexes[i]
     return number
 
 
 def is_prod(indexes, digits_n, idx, factor):
-    '''
-        is there a multiple contained in these digits ?
-            = verify that the digits following idx is the product by factor
-            of the number until digits_n
-    '''
+    """
+    is there a multiple contained in these digits ?
+        = verify that the digits following idx is the product by factor
+        of the number until digits_n
+    """
     assert digits_n != 0
     assert factor > 1
 
-    prod = number_from_permutation(indexes, digits_n)*factor
+    prod = number_from_permutation(indexes, digits_n) * factor
     # list is reversed
     prod_idx = get_digits(prod)
 
     limit = len(indexes)
-    if len(prod_idx)+idx > limit:
+    if len(prod_idx) + idx > limit:
         return 0
     for i in range(len(prod_idx)):
-        expected = prod_idx[len(prod_idx)-i-1]
-        real = limit - indexes[idx+i]
+        expected = prod_idx[len(prod_idx) - i - 1]
+        real = limit - indexes[idx + i]
         if expected != real:
             # print(prod_idx, indexes, idx)
             return 0
-    return idx+len(prod_idx)
+    return idx + len(prod_idx)
 
 
 def get_solution(indexes, max_multiplier):
-    '''
-        max_multiplier: needed only for the hackerrank variant
-    '''
+    """
+    max_multiplier: needed only for the hackerrank variant
+    """
     # number of digits in the number < n/2 to contain at least
     #   2 numbers (x, x*2)
-    for i in range(len(indexes)//2):
+    for i in range(len(indexes) // 2):
         if max_multiplier != 0:
-            mul = number_from_permutation(indexes, i+1)
+            mul = number_from_permutation(indexes, i + 1)
             # print(mul)
             if mul >= max_multiplier:
                 return 0
-        j = i+1
+        j = i + 1
         prod = 2
         while j < len(indexes):
-            j = is_prod(indexes, i+1, j, prod)
+            j = is_prod(indexes, i + 1, j, prod)
             if j == 0:
                 # print("Failed: ", i, j, prod)
                 break
             assert j <= len(indexes)
             prod += 1
         if j != 0:
-            return number_from_permutation(indexes, i+1)
+            return number_from_permutation(indexes, i + 1)
     return 0
 
 
 def is_solution(indexes):
-    '''are the given digits a solution ?'''
+    """are the given digits a solution ?"""
     return get_solution(indexes, 0) != 0
 
 
 def solve_problem(no_digits, max_multiplier=0, stop_when_found=True):
-    '''
-        0 is excluded among digits
-    '''
+    """
+    0 is excluded among digits
+    """
 
     multipliers = []
 
@@ -198,11 +199,11 @@ def solve_problem(no_digits, max_multiplier=0, stop_when_found=True):
 
 
 def parse_input():
-    '''
-        solve the problem as defined on hackerrank
-        https://www.hackerrank.com/contests/projecteuler/challenges/euler038
-    '''
-    (limit, no_digits) = [int(j) for j in input().strip().split(' ')]
+    """
+    solve the problem as defined on hackerrank
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler038
+    """
+    (limit, no_digits) = [int(j) for j in input().strip().split(" ")]
     sol = solve_problem(no_digits, limit, False)
     sol.sort()
     for i in sol:
@@ -210,14 +211,14 @@ def parse_input():
 
 
 def problem():
-    '''
-        solve the problem as defined on project Euler site
-    '''
+    """
+    solve the problem as defined on project Euler site
+    """
     return solve_problem(9)
 
 
 def debug_assertions():
-    '''unit tests'''
+    """unit tests"""
     assert number_from_permutation([0, 3, 8, 5, 1, 4, 7, 6, 2]) == 961485237
     assert number_from_permutation([0, 3, 8, 5, 1, 6, 2, 4, 7]) == 961483752
     assert number_from_permutation([0, 3, 8, 5, 1, 6, 2, 7, 4]) == 961483725
@@ -238,7 +239,7 @@ def debug_assertions():
 
 
 def main():
-    '''main: unit tests, project Euler, hackerrank'''
+    """main: unit tests, project Euler, hackerrank"""
     debug_assertions()
 
     # project Euler

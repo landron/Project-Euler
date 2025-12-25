@@ -1,15 +1,17 @@
 #!/bin/python3
-'''
-    https://projecteuler.net/problem=30
-        "Find the sum of all the numbers that can be written as the sum of fifth powers of their digits."
+"""
+https://projecteuler.net/problem=30
+    "Find the sum of all the numbers that can be written as the sum of fifth
+    powers of their digits."
 
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler030
-        score: 100
+https://www.hackerrank.com/contests/projecteuler/challenges/euler030
+    score: 100
 
-    Your code has been rated at 8.14/10 (previous run: 8.14/10, +0.00)
-'''
+Your code has been rated at 8.14/10 (previous run: 8.14/10, +0.00)
+"""
 
 from array import array
+
 
 def no_digits(n):
     digits = 0
@@ -18,26 +20,29 @@ def no_digits(n):
         digits += 1
     return digits
 
+
 def get_digits(n):
     digits = []
     while n >= 1:
-        digits.append(n%10)
+        digits.append(n % 10)
         n //= 10
     return digits
+
 
 def max_digits_for_power(power):
     term_9 = 9**power
 
     factor = 2
-    digits = no_digits(factor*term_9)
+    digits = no_digits(factor * term_9)
     while digits >= factor:
-        digits = no_digits(factor*term_9)
+        digits = no_digits(factor * term_9)
         factor += 1
-    return factor-1
+    return factor - 1
+
 
 def solve_problem(power, to_print=False):
 
-    powers = array('I')
+    powers = array("I")
     for i in range(10):
         powers.append(i**power)
 
@@ -46,7 +51,7 @@ def solve_problem(power, to_print=False):
     # for i in range(nb_digits):
     #     digits.append(0)
 
-    max_nb = nb_digits*powers[9]
+    max_nb = nb_digits * powers[9]
     # print(max_nb)
     sum_powers = 0
     # digits[1] = 1
@@ -62,13 +67,16 @@ def solve_problem(power, to_print=False):
             sum_powers += i
     return sum_powers
 
+
 # https://www.hackerrank.com/contests/projecteuler/challenges/euler030
 def parse_input():
     power = int(input().strip())
     print(solve_problem(power))
 
+
 def problem():
     print(solve_problem(5))
+
 
 def debug_assertions():
     assert no_digits(2) == 1
@@ -85,11 +93,13 @@ def debug_assertions():
     assert solve_problem(3) == 1301
     assert solve_problem(4) == 19316
 
+
 def main():
     debug_assertions()
 
     # parse_input()
     problem()
+
 
 if __name__ == "__main__":
     main()

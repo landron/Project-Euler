@@ -1,13 +1,13 @@
-'''
-    http://projecteuler.net/problem=7
-      What is the 10 001st prime number?
-    http://projecteuler.net/problem=10
-      Problem 10. Sum all primes below N million
+"""
+http://projecteuler.net/problem=7
+  What is the 10 001st prime number?
+http://projecteuler.net/problem=10
+  Problem 10. Sum all primes below N million
 
-    Version: 2023.04.14
+Version: 2023.04.14
 
-    TODO:   hackerrank_10
-'''
+TODO:   hackerrank_10
+"""
 
 from datetime import datetime
 from math import log
@@ -23,26 +23,26 @@ def find_primes_number_count(limit, position=1):
     """find the number of prime numbers below the given limit"""
     assert position > 0
     primes = get_primes(limit)
-    if position-1 < len(primes):
-        return (len(primes), primes[position-1])
+    if position - 1 < len(primes):
+        return (len(primes), primes[position - 1])
     return (len(primes), 0)
 
 
 def find_prime_number2(position):
     """
-        Purpose
-            find the nth prime number; version 2, in production
-        this time we know approximately where to search for
+    Purpose
+        find the nth prime number; version 2, in production
+    this time we know approximately where to search for
 
-        Performance
-        get_primes_limits(limitInf, limitSup) doesn't work as there are more primes in the interval
-        [2016-05-01 16:22] Total time: 2.50 seconds / HARD_VALIDATE, both problems
+    Performance
+    get_primes_limits(limitInf, limitSup) doesn't work as there are more primes in the interval
+    [2016-05-01 16:22] Total time: 2.50 seconds / HARD_VALIDATE, both problems
     """
     if position < 6:
         return find_prime_number1(position)
 
     # Consequence Two: The nth prime is about n (ln n + ln (ln n))
-    limit_sup = int(position * (log(position)+log(log(position))))
+    limit_sup = int(position * (log(position) + log(log(position))))
 
     result = find_primes_number_count(limit_sup, position)[1]
     assert result != 0
@@ -51,10 +51,10 @@ def find_prime_number2(position):
 
 def find_prime_number1(position):
     """
-        Purpose
-            find the nth prime number; version 1, deprecated
+    Purpose
+        find the nth prime number; version 1, deprecated
 
-        [2016-05-01 16:21] Total time: 2.98 seconds / HARD_VALIDATE, both problems
+    [2016-05-01 16:21] Total time: 2.98 seconds / HARD_VALIDATE, both problems
     """
     limit = 100
     prime = 0
@@ -112,10 +112,10 @@ def validate_find_primes_sum():
 
 def problem_7():
     """
-        Purpose
-            solve the problem 7, print the needed time
-        Performance
-            0.5 - 0.6 seconds
+    Purpose
+        solve the problem 7, print the needed time
+    Performance
+        0.5 - 0.6 seconds
     """
     start = time()
     result = find_prime_number(10001)
@@ -138,10 +138,10 @@ def problem_10():
 
 
 def hackerrank_7():
-    '''
-        https://www.hackerrank.com/contests/projecteuler/challenges/euler007
-        Nth prime
-    '''
+    """
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler007
+    Nth prime
+    """
     limit = 1000
     primes = get_primes(limit)
 
@@ -151,19 +151,19 @@ def hackerrank_7():
         while position > len(primes):
             limit *= 2
             primes = get_primes(limit)
-        print(primes[position-1])
+        print(primes[position - 1])
 
 
 def hackerrank_10():
-    '''
-        https://www.hackerrank.com/contests/projecteuler/challenges/euler010
-        sum of the primes below the given limit
+    """
+    https://www.hackerrank.com/contests/projecteuler/challenges/euler010
+    sum of the primes below the given limit
 
-        timeout:        6,7
-        wrong results:  the rest, except 0 and 4
+    timeout:        6,7
+    wrong results:  the rest, except 0 and 4
 
-        Idea: keep a list with all the numbers < limit and their calculated sums
-    '''
+    Idea: keep a list with all the numbers < limit and their calculated sums
+    """
     limit = 1000
     primes = get_primes(limit)
     sums = {}
@@ -174,11 +174,11 @@ def hackerrank_10():
         sum_of = 0
         last_index = 0
         if new_limit > limit:
-            limit = 1+new_limit
+            limit = 1 + new_limit
             primes = get_primes(limit)
 
         # TODO: wrong result
-        if 0:   # pylint: disable=using-constant-test
+        if 0:  # pylint: disable=using-constant-test
             for key, val in sums.items():
                 if last_index < key < new_limit:
                     last_index = val[0]
@@ -207,8 +207,10 @@ def main():
     # for i in range(1,100):
     #     print(find_prime_number(i))
 
-    print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M")}] '
-          f'Total time: {time()-start:.2f} seconds')
+    print(
+        f'[{datetime.now().strftime("%Y-%m-%d %H:%M")}] '
+        f"Total time: {time()-start:.2f} seconds"
+    )
 
 
 if __name__ == "__main__":

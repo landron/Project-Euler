@@ -1,29 +1,31 @@
 #!/bin/python3
-'''
-    tag_digits
+"""
+tag_digits
 
-    https://projecteuler.net/problem=33
-        Digit cancelling fractions
+https://projecteuler.net/problem=33
+    Digit cancelling fractions
 
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler033
-        !hard
-        todo_hackerrank : 16.67
-            replace brute force in "solve_problem_base" with numbers generator as in the original answer
+https://www.hackerrank.com/contests/projecteuler/challenges/euler033
+    !hard
+    todo_hackerrank : 16.67
+        replace brute force in "solve_problem_base" with numbers generator as in the original answer
 
-        "
-        1) The digits removed from the numerator and the denominator should be the same and could be in any order. For example, 6483/8644=3/4 where the numerator canceled {6,4,8} and the denominator canceled {8,6,4};
+    "
+    1) The digits removed from the numerator and the denominator should be the same and could be in any order. For example, 6483/8644=3/4 where the numerator canceled {6,4,8} and the denominator canceled {8,6,4};
 
-        2) Leading zeros are allowed in the post-cancled number. For instance, 4808/8414=8/14 is a valid fraction for N=4 and K=2.
-        "
+    2) Leading zeros are allowed in the post-cancled number. For instance, 4808/8414=8/14 is a valid fraction for N=4 and K=2.
+    "
 
-        2018.04.15 : Score: 16.67   (4 timeouts, 1 wrong answer)
+    2018.04.15 : Score: 16.67   (4 timeouts, 1 wrong answer)
 
-    pylint 1.8.1
-        "Your code has been rated at 7.84/10."
-'''
+pylint 1.8.1
+    "Your code has been rated at 7.84/10."
+"""
+
 
 def are_equals(nom1, denom1, nom2, denom2):
-    return nom1*denom2 == nom2*denom1
+    return nom1 * denom2 == nom2 * denom1
+
 
 def get_greatest_common_divisor(a, b):
     if a == b:
@@ -32,13 +34,15 @@ def get_greatest_common_divisor(a, b):
         return get_greatest_common_divisor(b, a)
     elif b == 0:
         return a
-    return get_greatest_common_divisor(b, a%b)
+    return get_greatest_common_divisor(b, a % b)
+
 
 def is_curious(start, end, common, K):
     p_10 = 10**K
-    nom = start*p_10+common
-    denominator = common*p_10+end
+    nom = start * p_10 + common
+    denominator = common * p_10 + end
     return are_equals(nom, denominator, start, end)
+
 
 def is_curious_calc(start, end, common):
     digits = 0
@@ -48,17 +52,19 @@ def is_curious_calc(start, end, common):
         digits += 1
     return is_curious(start, end, common, digits)
 
+
 def get_digits(nb):
     digits = []
     while nb > 0:
-        digits.insert(0, nb%10)
+        digits.insert(0, nb % 10)
         nb //= 10
     return digits
 
+
 def eliminate_digits(source, digits, N, seq, see_used):
-    '''
-        the digits must have the same positions, ex: 127/762 is alright
-    '''
+    """
+    the digits must have the same positions, ex: 127/762 is alright
+    """
     assert len(source) == N
     assert len(digits) == N
 
@@ -72,11 +78,11 @@ def eliminate_digits(source, digits, N, seq, see_used):
         for j in range(len(seq)):
             assert seq[j] < N
             if digits[i] == source[seq[j]]:
-                if i < seq[j] and digits == source: # already seen
+                if i < seq[j] and digits == source:  # already seen
                     return 0
                 # use only once !!
                 if used[j]:
-                    continue #break should be fine
+                    continue  # break should be fine
                 skip = True
                 trailing_zeros = source[seq[j]] == 0
                 used[j] = True
@@ -93,12 +99,14 @@ def eliminate_digits(source, digits, N, seq, see_used):
 
     return nb if not trailing_zeros else 0
 
+
 def eliminate_digits_same(digits, N, seq):
     return eliminate_digits(digits, digits, N, seq, True)
 
+
 # Ex. : N = 4 : [0, 1, 2], [0, 1, 3], [0, 2, 3]
 def get_next_comb(indexes, N):
-    mi = len(indexes)-1
+    mi = len(indexes) - 1
     assert indexes[mi] < N
 
     i = mi
@@ -111,19 +119,20 @@ def get_next_comb(indexes, N):
         indexes[i] += 1
 
     # the combination is different now, but we also want different ascending values
-    j = i+1
-    while j < mi+1:
-        indexes[j] = indexes[j-1] + 1
+    j = i + 1
+    while j < mi + 1:
+        indexes[j] = indexes[j - 1] + 1
         if indexes[j] == N:
             break
         j += 1
-    if j < mi+1:
+    if j < mi + 1:
         # the replace is quite weird in Python
-        for k in range(j, mi+1):
-            indexes[k] = N-1
+        for k in range(j, mi + 1):
+            indexes[k] = N - 1
         return get_next_comb(indexes, N)
 
     return True
+
 
 def is_curious_2(nom_in, denom_in, N, K):
     assert K < N
@@ -154,8 +163,8 @@ def is_curious_2(nom_in, denom_in, N, K):
             if not get_next_comb(seq, N):
                 return False
             distinct_digits = True
-            for i in range(len(seq)-1):
-                for j in range(i+1, len(seq)):
+            for i in range(len(seq) - 1):
+                for j in range(i + 1, len(seq)):
                     if nom[seq[i]] == nom[seq[j]]:
                         distinct_digits = False
                         break
@@ -165,20 +174,21 @@ def is_curious_2(nom_in, denom_in, N, K):
     # to avoid warning: never here
     return False
 
-def solve_problem_base(N, K):
-    '''
-        N = total number of digits, K = number of digits to eliminate
-        brute force
 
-            not good enough for 4 digits
-    '''
+def solve_problem_base(N, K):
+    """
+    N = total number of digits, K = number of digits to eliminate
+    brute force
+
+        not good enough for 4 digits
+    """
     nominator = []
     denominator = []
 
     cnt = 0
 
-    for i in range(10**(N-1), 10**N):
-        for j in range(i+1, 10**N):
+    for i in range(10 ** (N - 1), 10**N):
+        for j in range(i + 1, 10**N):
             cnt += 1
             if cnt == 1000:
                 # print("Evaluating:",i,j)
@@ -194,24 +204,26 @@ def solve_problem_base(N, K):
     # print(nominator, denominator)
     return (nominator, denominator)
 
+
 # https://projecteuler.net/problem=33 only
 def solve_problem_original_base():
     nominator = []
     denominator = []
 
     for i in range(10, 100):
-        d1 = i//10
-        d2 = i%10
+        d1 = i // 10
+        d2 = i % 10
         for j in range(1, 10):
             if d1 == d2 == j:
                 continue
             if is_curious(d1, d2, j, 1):
                 # print("curious: {0}{1}/{1}{2}".format(d1, j, d2))
-                nominator.append(d1*10+j)
-                denominator.append(j*10+d2)
+                nominator.append(d1 * 10 + j)
+                denominator.append(j * 10 + d2)
 
     # print(nominator, denominator)
     return (nominator, denominator)
+
 
 # https://projecteuler.net/problem=33 only
 def solve_problem_original():
@@ -225,7 +237,8 @@ def solve_problem_original():
         denom *= i
 
     gcd = get_greatest_common_divisor(nom, denom)
-    return denom//gcd
+    return denom // gcd
+
 
 # https://www.hackerrank.com/contests/projecteuler/challenges/euler033
 def solve_problem(N, K):
@@ -240,14 +253,17 @@ def solve_problem(N, K):
 
     return (nom, denom)
 
+
 # https://www.hackerrank.com/contests/projecteuler/challenges/euler033
 def parse_input():
-    (N, K) = (int(i) for i in input().strip().split(' '))
+    (N, K) = (int(i) for i in input().strip().split(" "))
     (sum_nominators, sum_denominators) = solve_problem(N, K)
     print(sum_nominators, sum_denominators)
 
+
 def problem():
     return solve_problem_original()
+
 
 def debug_get_comb(initial, N):
     a = initial[:]
@@ -255,6 +271,7 @@ def debug_get_comb(initial, N):
     while get_next_comb(a, N):
         b += [list(a)]
     return b
+
 
 def debug_assertions():
     assert are_equals(49, 98, 4, 8)
@@ -296,10 +313,11 @@ def debug_assertions():
     # others
     assert is_curious_2(1616, 6464, 4, 1)
 
-    if 0:   # pylint: disable=using-constant-test
+    if 0:  # pylint: disable=using-constant-test
         assert solve_problem(2, 1) == (110, 322)
         assert solve_problem(3, 1) == (41518, 81969)
         assert solve_problem(3, 2) == (6299, 13983)
+
 
 def main():
     debug_assertions()
@@ -308,7 +326,7 @@ def main():
     # parse_input()
     print(solve_problem(3, 2))
 
-    if 0: # pylint: disable=using-constant-test
+    if 0:  # pylint: disable=using-constant-test
         print(solve_problem(4, 1))
 
         # curious: 1045/9405
@@ -320,6 +338,7 @@ def main():
         # curious: 1687/6748
         # curious: 1837/7348
         print(solve_problem(4, 3))
+
 
 if __name__ == "__main__":
     main()

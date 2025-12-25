@@ -1,10 +1,10 @@
 #!/bin/python3
-'''    
-    https://projecteuler.net/problem=21
+"""
+https://projecteuler.net/problem=21
 
-    https://www.hackerrank.com/contests/projecteuler/challenges/euler021
-        todo_hackerrank: 33.33
-'''
+https://www.hackerrank.com/contests/projecteuler/challenges/euler021
+    todo_hackerrank: 33.33
+"""
 
 import sys
 import math
@@ -16,33 +16,35 @@ import itertools
 
 ########################################################################################################################
 
+
 def get_primes_2(limit):
     """minor optimization version of the previous"""
     # not rounded since we skip 1 & 2
-    primes = [i*2+3 for i in range(limit//2-1)]
-    limit_of_sieve = 1+math.floor(math.sqrt(limit))
+    primes = [i * 2 + 3 for i in range(limit // 2 - 1)]
+    limit_of_sieve = 1 + math.floor(math.sqrt(limit))
     for i in range(3, limit_of_sieve, 2):
-        if primes[i//2-1]:
-            for j in range(i*i, limit, 2*i):
-                primes[j//2-1] = 0
-    return [2]+[i for i in primes if i != 0]
+        if primes[i // 2 - 1]:
+            for j in range(i * i, limit, 2 * i):
+                primes[j // 2 - 1] = 0
+    return [2] + [i for i in primes if i != 0]
 
 
 def __get_power(number, prime):
     """gets the maximal power of the prime that divides the number"""
-    if number%prime != 0:
+    if number % prime != 0:
         return (number, 0)
     power = 1
-    divisor = prime*prime
-    while number%divisor == 0:
+    divisor = prime * prime
+    while number % divisor == 0:
         divisor *= prime
         power += 1
-    return (number//int(divisor/prime), power)
+    return (number // int(divisor / prime), power)
+
 
 def get_prime_divisors(number, primes):
     """get the prime divisors of a given number
-            the sqrt(number) is enough for the limit of the primes because
-                we consider the remainder, a last "big" prime number
+    the sqrt(number) is enough for the limit of the primes because
+        we consider the remainder, a last "big" prime number
     """
     assert number > 1
     assert primes
@@ -61,11 +63,13 @@ def get_prime_divisors(number, primes):
         divisors.append((number, 1))
     return divisors
 
+
 def proj_euler_get_primes(limit):
     """get the list of primes until the given limit
-            returns the list of them
+    returns the list of them
     """
     return get_primes_2(limit)
+
 
 def get_divisors_as_primes(number, primes=None):
     """get the divisors of a given number as a list of primes and powers"""
@@ -73,16 +77,17 @@ def get_divisors_as_primes(number, primes=None):
         primes = get_primes(1 + math.floor(math.sqrt(number)))
     return get_prime_divisors(number, primes)
 
+
 def proj_euler_get_divisors(number, primes=None):
     """get all the divisors of a given number"""
     divisors_and_powers = get_divisors_as_primes(number, primes)
 
     divisors_expanded = []
     for item in divisors_and_powers:
-        divisors_expanded.append([item[0]**(i+1) for i in range(item[1])])
+        divisors_expanded.append([item[0] ** (i + 1) for i in range(item[1])])
 
     divisors = []
-    for i in range(1+len(divisors_expanded)):
+    for i in range(1 + len(divisors_expanded)):
         for item in itertools.combinations(divisors_expanded, i):
             for j in list(itertools.product(*item)):
                 prod = 1
@@ -93,7 +98,9 @@ def proj_euler_get_divisors(number, primes=None):
     divisors = sorted(divisors)
     return divisors
 
+
 ########################################################################################################################
+
 
 def get_proper_divisor(n, primes, get_divisors_func):
     divs = get_divisors_func(n, primes)
@@ -105,25 +112,30 @@ def get_proper_divisor(n, primes, get_divisors_func):
     divs[-1] = 0
     return sum(divs)
 
+
 def sum_of_amicable(primes, n, get_divisors_func):
     sum = 0
     for i in range(4, n):
         proper_divisor_1 = get_proper_divisor(i, primes, get_divisors_func)
-        if proper_divisor_1 == 0:   # prime number
+        if proper_divisor_1 == 0:  # prime number
             continue
-        if proper_divisor_1 == i:   # amicable to itself number = perfect number
+        if proper_divisor_1 == i:  # amicable to itself number = perfect number
             continue
-        proper_divisor_2 = get_proper_divisor(proper_divisor_1, primes, get_divisors_func)
+        proper_divisor_2 = get_proper_divisor(
+            proper_divisor_1, primes, get_divisors_func
+        )
         if proper_divisor_2 != i:
             continue
 
         # print(i, proper_divisor_1)
-        sum += i    # only our number, not the other one
+        sum += i  # only our number, not the other one
     return sum
 
+
 def debug_assertions(primes):
-    assert get_proper_divisor(220, primes) == 284 
+    assert get_proper_divisor(220, primes) == 284
     assert get_proper_divisor(284, primes) == 220
+
 
 def project_euler_test():
     n = 10000
@@ -135,9 +147,12 @@ def project_euler_test():
     sum = sum_of_amicable(primes, n, proj_euler.get_divisors)
     print(sum)
 
-'''
+
+"""
     https://www.hackerrank.com/contests/projecteuler/challenges/euler021/:  33.33 / 100
-'''
+"""
+
+
 def WIP_parse_input():
     T = int(input().strip())
 
@@ -151,9 +166,11 @@ def WIP_parse_input():
         sum = sum_of_amicable(primes, N, proj_euler_get_divisors)
         print(sum)
 
+
 def main():
     project_euler_test()
     # WIP_parse_input()
+
 
 if __name__ == "__main__":
     main()

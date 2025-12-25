@@ -23,21 +23,24 @@
         1582 introduces the Gregorian calendar
 """
 
+
 def is_leap_year(year):
     """is the given year a leap one? it affects February"""
-    return year%4 == 0 and (year%100 != 0 or year%400 == 0)
+    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
+
 
 # 1 Jan 1900 was a Monday.
 def get_leap_years_to_1900(year):
     """calculate the number of leap years between 1900 and the given one"""
-    years = year-1900 if year > 1900 else 1900-year
-    leap_years = years//4-years//100
+    years = year - 1900 if year > 1900 else 1900 - year
+    leap_years = years // 4 - years // 100
     if year >= 1900:
         if years >= 100:
-            leap_years += (1+(years-100)//400)
+            leap_years += 1 + (years - 100) // 400
     elif years >= 300:
-        leap_years += (1+(years-300)//400)
+        leap_years += 1 + (years - 300) // 400
     return (years, leap_years)
+
 
 def get_first_day_1(year):
     """get the first day of a given year: brute force"""
@@ -46,11 +49,12 @@ def get_first_day_1(year):
     if year >= 1900:
         for i in range(1900, year):
             days += 366 if is_leap_year(i) else 365
-        return days%7
+        return days % 7
     else:
         for i in range(year, 1900):
             days += 366 if is_leap_year(i) else 365
-        return 7-days%7
+        return 7 - days % 7
+
 
 def get_first_day_2(year):
     """get the first day of a given year: calculus"""
@@ -60,18 +64,20 @@ def get_first_day_2(year):
         # calculate for 1 of january
         assert leap_years > 0
         leap_years -= 1
-    days = 365*years + leap_years
-    day1 = days%7
+    days = 365 * years + leap_years
+    day1 = days % 7
     if year >= 1900:
         return day1
     else:
-        return 0 if day1 == 0 else 7-day1
+        return 0 if day1 == 0 else 7 - day1
+
 
 # 1 Jan 1900 was a Monday.
 # Convention: 0 = Monday
 def get_first_day(year):
     """get the first day of a given year"""
     return get_first_day_2(year)
+
 
 def count_sundays_base(day1, year, first_month, last_month):
     """calculate the number of sundays in the first day of the month for an interval in a year"""
@@ -82,15 +88,16 @@ def count_sundays_base(day1, year, first_month, last_month):
 
     day1 = sundays = 0
     for month in range(1, first_month):
-        day1 += days_by_month[month-1]
-    for month in range(first_month, 1+last_month):
-        day1 += days_by_month[month-1]
+        day1 += days_by_month[month - 1]
+    for month in range(first_month, 1 + last_month):
+        day1 += days_by_month[month - 1]
         # print("day1 ({0}): ".format(month), day1%7)
-        if day1%7 == 6:
+        if day1 % 7 == 6:
             sundays += 1
     if last_month == 12:
         day1 += days_by_month[12]
     return (sundays, day1)
+
 
 def count_sundays_noday1(year, first_month, last_month):
     """shortcut"""
@@ -99,9 +106,10 @@ def count_sundays_noday1(year, first_month, last_month):
     (sundays, _) = count_sundays_base(day1, year, first_month, last_month)
     return sundays
 
+
 def count_sundays_full_corrected(start, stop):
     """How many Sundays fell on the first of the month between two dates(both inclusive)?
-            days ignored
+    days ignored
     """
     assert start[1] >= 1 and start[1] <= 12
     assert stop[1] >= 1 and stop[1] <= 12
@@ -116,7 +124,7 @@ def count_sundays_full_corrected(start, stop):
         (sundays_year, day1) = count_sundays_base(day1, start[0], start[1], 12)
         sundays += sundays_year
 
-    for year in range(start[0]+1, stop[0]):
+    for year in range(start[0] + 1, stop[0]):
         (sundays_year, day1) = count_sundays_base(day1, year, 1, 12)
         sundays += sundays_year
 
@@ -127,18 +135,23 @@ def count_sundays_full_corrected(start, stop):
 
     return sundays
 
+
 def count_sundays_full(start, stop):
     """How many Sundays fell on the first of the month between two dates(both inclusive)?"""
 
     if start[2] > 1:
-        new_start = (start[0], start[1]+1, 1) if start[1] != 12 else (start[0]+1, 1, 1)
+        new_start = (
+            (start[0], start[1] + 1, 1) if start[1] != 12 else (start[0] + 1, 1, 1)
+        )
         return count_sundays_full_corrected(new_start, stop)
     else:
         return count_sundays_full_corrected(start, stop)
 
+
 def count_sundays(start, stop):
     """shortcut"""
     return count_sundays_full((start, 1, 1), (stop, 12, 31))
+
 
 def read_solve_print():
     """read from console: hackerrank test"""
@@ -146,20 +159,21 @@ def read_solve_print():
     number_of_intervals = int(input().strip())
     results = []
     for _ in range(0, number_of_intervals):
-        date1 = [int(arr_temp) for arr_temp in input().strip().split(' ')]
-        date2 = [int(arr_temp) for arr_temp in input().strip().split(' ')]
+        date1 = [int(arr_temp) for arr_temp in input().strip().split(" ")]
+        date2 = [int(arr_temp) for arr_temp in input().strip().split(" ")]
 
         results.append(count_sundays_full(date1, date2))
     for result in results:
         print(result)
 
+
 def debug_validations():
     """all the assertions"""
     for year in range(1900, 1905):
-        assert (year-1900) == get_first_day(year)
+        assert (year - 1900) == get_first_day(year)
     assert get_first_day(1905) == 6
     for year in range(1897, 1900):
-        assert (7-(1900-year)) == get_first_day(year)
+        assert (7 - (1900 - year)) == get_first_day(year)
     assert get_first_day(1) == 0
     assert get_first_day(1582) == 4
     # 1582 introduces the Gregorian calendar
@@ -210,6 +224,7 @@ def debug_validations():
     # Project Euler
     assert count_sundays(1901, 2000) == 171
 
+
 def main():
     """main function: defined explicitly for external calling and avoiding global scope"""
     debug_validations()
@@ -217,6 +232,7 @@ def main():
     # print(count_sundays_full((1900,12,2), (1901,5,1)))
     # print(get_first_day(2000))
     # read_solve_print()
+
 
 if __name__ == "__main__":
     main()

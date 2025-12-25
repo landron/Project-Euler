@@ -1,28 +1,28 @@
 #!/bin/python3
-'''
-    Warning: avoid direct connection to the project Euler problem number
+"""
+Warning: avoid direct connection to the project Euler problem number
 
-    Consecutive prime sum
+Consecutive prime sum
 
-    hackerrank: Hard
-        50/100 : Runtimes errors
-                 solve_with_primes_1
+hackerrank: Hard
+    50/100 : Runtimes errors
+             solve_with_primes_1
 
-        60/100 : 1,7,8,9 "Terminated due to timeout"
-                 solve_with_primes_2
+    60/100 : 1,7,8,9 "Terminated due to timeout"
+             solve_with_primes_2
 
-        Next:
-            - AKS primality test (Agrawal–Kayal–Saxena primality test)
-            - Miller-Rabin test
+    Next:
+        - AKS primality test (Agrawal–Kayal–Saxena primality test)
+        - Miller-Rabin test
 
-    tag_primes
-    tag_is_prime
-    todo_hackerrank
+tag_primes
+tag_is_prime
+todo_hackerrank
 
-    Reference
-        Further reading
-        https://stackoverflow.com/questions/1801391/what-is-the-best-algorithm-for-checking-if-a-number-is-prime
-'''
+Reference
+    Further reading
+    https://stackoverflow.com/questions/1801391/what-is-the-best-algorithm-for-checking-if-a-number-is-prime
+"""
 import bisect
 import math
 import time
@@ -32,28 +32,29 @@ PROJ_EULER = True
 if PROJ_EULER:
     from project_euler.proj_euler import get_primes, isprime
 else:
+
     def get_primes_2(limit):
         """minor optimization version of the previous"""
         # not rounded since we skip 1 & 2
-        primes = [i*2+3 for i in range(limit//2-1)]
-        limit_of_sieve = 1+math.floor(math.sqrt(limit))
+        primes = [i * 2 + 3 for i in range(limit // 2 - 1)]
+        limit_of_sieve = 1 + math.floor(math.sqrt(limit))
         for i in range(3, limit_of_sieve, 2):
-            if primes[i//2-1]:
-                for j in range(i*i, limit, 2*i):
-                    primes[j//2-1] = 0
-        return [2]+[i for i in primes if i != 0]
+            if primes[i // 2 - 1]:
+                for j in range(i * i, limit, 2 * i):
+                    primes[j // 2 - 1] = 0
+        return [2] + [i for i in primes if i != 0]
 
     def get_primes(limit):
         """get the list of primes until the given limit
-                returns the list of them
+        returns the list of them
         """
         return get_primes_2(limit)
 
     def isprime(n):  # pylint: disable=invalid-name
         """Returns True if n is prime.
 
-            Reference
-                https://stackoverflow.com/questions/1801391/what-is-the-best-algorithm-for-checking-if-a-number-is-prime
+        Reference
+            https://stackoverflow.com/questions/1801391/what-is-the-best-algorithm-for-checking-if-a-number-is-prime
         """
         if n == 2:
             return True
@@ -76,26 +77,27 @@ else:
 
         return True
 
+
 ###########################################################################
 
 
 def solution_brute(debug=False):
-    '''
-        https://projecteuler.net/problem=50
-        "The longest sum of consecutive primes below one-thousand that
-        adds to a prime, contains 21 terms, and is equal to 953."
+    """
+    https://projecteuler.net/problem=50
+    "The longest sum of consecutive primes below one-thousand that
+    adds to a prime, contains 21 terms, and is equal to 953."
 
-        - get_primes(limit/22)
-        Lucky solution for 132 terms: 44683.
-        Needed time: 26.79 seconds.
+    - get_primes(limit/22)
+    Lucky solution for 132 terms: 44683.
+    Needed time: 26.79 seconds.
 
-        - get_primes(limit)
-        Lucky solution for 536 terms: 958577.
-        Solution for 543 terms: 997651.
-        Needed time: 170.47 seconds.
+    - get_primes(limit)
+    Lucky solution for 536 terms: 958577.
+    Solution for 543 terms: 997651.
+    Needed time: 170.47 seconds.
 
-        opt: get the "luckiest" solution as a start
-    '''
+    opt: get the "luckiest" solution as a start
+    """
     limit = 1000000
     primes = get_primes(limit)
     # no_terms = 22
@@ -106,7 +108,7 @@ def solution_brute(debug=False):
     def get_sum(primes, no_terms, index_start):
         current_sum = 0
         for i in range(no_terms):
-            current_sum += primes[index_start+i]
+            current_sum += primes[index_start + i]
         return current_sum
 
     while True:
@@ -116,22 +118,24 @@ def solution_brute(debug=False):
 
         if current_sum in primes:
             if debug:
-                print("Lucky solution for {0} terms: {1}.".
-                      format(no_terms, current_sum))
+                print(
+                    "Lucky solution for {0} terms: {1}.".format(no_terms, current_sum)
+                )
             solution = current_sum
         else:
             found = False
-            for i in range(len(primes)-no_terms):
+            for i in range(len(primes) - no_terms):
                 current_sum -= primes[i]
-                current_sum += primes[i+no_terms]
+                current_sum += primes[i + no_terms]
 
                 if current_sum > limit:
                     break
 
                 if current_sum in primes:
                     if debug:
-                        print("Solution for {0} terms: {1}.".
-                              format(no_terms, current_sum))
+                        print(
+                            "Solution for {0} terms: {1}.".format(no_terms, current_sum)
+                        )
                     solution = current_sum
                     found = True
                     break
@@ -145,22 +149,22 @@ def solution_brute(debug=False):
 
 
 def get_primes_limited(limit):
-    '''
-        get the list of primes, but with a common sense upper limit
-    '''
+    """
+    get the list of primes, but with a common sense upper limit
+    """
     limit_gen = limit if limit < 1000000 else 1000000
-    return get_primes(limit_gen+1)
+    return get_primes(limit_gen + 1)
 
 
 def solve_with_primes_func(primes, limit, debug, test_primality):
-    '''
-        optimization: get the "luckiest" solution as a start
+    """
+    optimization: get the "luckiest" solution as a start
 
-        Possible optimizations:
-        - cache primes set: done
-        - cache sums
-        - try to decompose numbers
-    '''
+    Possible optimizations:
+    - cache primes set: done
+    - cache sums
+    - try to decompose numbers
+    """
     if len(primes) == 1:
         return 2, 1, 2
 
@@ -174,7 +178,7 @@ def solve_with_primes_func(primes, limit, debug, test_primality):
     def get_sum(primes, no_terms, index_start):
         current_sum = 0
         for i in range(no_terms):
-            current_sum += primes[index_start+i]
+            current_sum += primes[index_start + i]
         return current_sum
 
     def get_best_solution_starting_with_2(limit, primes, solution):
@@ -186,8 +190,11 @@ def solve_with_primes_func(primes, limit, debug, test_primality):
         while current_sum <= limit:
             if test_primality(primes, current_sum):
                 if debug:
-                    print("Lucky solution for {0} terms: {1}.".
-                          format(no_terms_from_2, current_sum))
+                    print(
+                        "Lucky solution for {0} terms: {1}.".format(
+                            no_terms_from_2, current_sum
+                        )
+                    )
                 no_terms = no_terms_from_2
                 solution.sum = current_sum
                 solution.no_terms = no_terms
@@ -209,26 +216,28 @@ def solve_with_primes_func(primes, limit, debug, test_primality):
 
         if test_primality(primes, current_sum):
             if debug:
-                print("Lucky solution for {0} terms: {1}.".
-                      format(no_terms, current_sum))
+                print(
+                    "Lucky solution for {0} terms: {1}.".format(no_terms, current_sum)
+                )
             solution.sum = current_sum
             solution.no_terms = no_terms
             solution.first = 2
         else:
-            for i in range(len(primes)-no_terms):
+            for i in range(len(primes) - no_terms):
                 current_sum -= primes[i]
-                current_sum += primes[i+no_terms]
+                current_sum += primes[i + no_terms]
 
                 if current_sum > limit:
                     break
 
                 if test_primality(primes, current_sum):
                     if debug:
-                        print("Solution for {0} terms: {1}.".
-                              format(no_terms, current_sum))
+                        print(
+                            "Solution for {0} terms: {1}.".format(no_terms, current_sum)
+                        )
                     solution.sum = current_sum
                     solution.no_terms = no_terms
-                    solution.first = primes[i+1]
+                    solution.first = primes[i + 1]
                     break
 
         no_terms += 1
@@ -237,23 +246,23 @@ def solve_with_primes_func(primes, limit, debug, test_primality):
 
 
 def solve_with_primes_1(primes, limit, debug):
-    '''
-        test primality using a large primes list
+    """
+    test primality using a large primes list
 
-        10^7:  (9951191, 1587)
-        10^8:  too much time in get_primes
+    10^7:  (9951191, 1587)
+    10^8:  too much time in get_primes
 
-        Hackerrank: 50/100
-            Runtimes errors
-    '''
+    Hackerrank: 50/100
+        Runtimes errors
+    """
 
     def search(alist, item):
-        '''
-            Locate the leftmost value exactly equal to item
-            https://stackoverflow.com/questions/38346013/binary-search-in-a-python-list
+        """
+        Locate the leftmost value exactly equal to item
+        https://stackoverflow.com/questions/38346013/binary-search-in-a-python-list
 
-            about 3 times faster than "item in alist"
-        '''
+        about 3 times faster than "item in alist"
+        """
         found = bisect.bisect_left(alist, item)
         return found != len(alist) and alist[found] == item
 
@@ -264,21 +273,23 @@ def solve_with_primes_1(primes, limit, debug):
 
 
 def solve_with_primes_2(primes, limit, debug):
-    '''
-        solve_with_primes_1 BUT test primality with is_prime function
-            (to limit larger than 10^5 primes lists generations)
+    """
+    solve_with_primes_1 BUT test primality with is_prime function
+        (to limit larger than 10^5 primes lists generations)
 
-        works until 10^9
-    '''
+    works until 10^9
+    """
+
     def is_prime(primes, item):  # pylint: disable=unused-argument
         return isprime(item)
+
     return solve_with_primes_func(primes, limit, debug, is_prime)
 
 
 def parse_input():
-    '''
-        solve the problem as defined on hackerrank
-    '''
+    """
+    solve the problem as defined on hackerrank
+    """
     no_tests = int(input().strip())
     tests = []
     max_limit = 0
@@ -296,13 +307,13 @@ def parse_input():
 
 
 def solve(limit, debug=False):
-    '''
-        optimized solution for Hackerrank
-            (solve_with_primes_1 is enough for project Euler,
-            without any optimization)
-    '''
+    """
+    optimized solution for Hackerrank
+        (solve_with_primes_1 is enough for project Euler,
+        without any optimization)
+    """
     if 0:  # pylint: disable=using-constant-test
-        primes = get_primes(limit+1)
+        primes = get_primes(limit + 1)
         return solve_with_primes_1(primes, limit, debug)
 
     primes = get_primes_limited(limit)
@@ -310,38 +321,38 @@ def solve(limit, debug=False):
 
 
 def problem():
-    '''
-        solve the problem as defined on project Euler site
+    """
+    solve the problem as defined on project Euler site
 
-        solve_with_primes_2
-            Needed time: 0.16 seconds.
-            (997651, 543, 7)
+    solve_with_primes_2
+        Needed time: 0.16 seconds.
+        (997651, 543, 7)
 
-            - function as parameter
-            Needed time: 0.67 seconds.
-            (997651, 543, 7)
-    '''
+        - function as parameter
+        Needed time: 0.67 seconds.
+        (997651, 543, 7)
+    """
 
     start = time.time()
     solution = solve(1000000, True)
-    print("Needed time: {0:.2f} seconds.".format(time.time()-start))
+    print("Needed time: {0:.2f} seconds.".format(time.time() - start))
 
     return solution
 
 
 def test_range():
-    '''
-        test optimizations on a range: 10^4
+    """
+    test optimizations on a range: 10^4
 
-        biggest first term: (21407, 85, 31)
+    biggest first term: (21407, 85, 31)
 
-        10000 limit
-        start :             Total time: 90.11 seconds.
-        binary search:      Total time: 30.55 seconds.
-        primes list cache:  Total time: 13.08 seconds.
+    10000 limit
+    start :             Total time: 90.11 seconds.
+    binary search:      Total time: 30.55 seconds.
+    primes list cache:  Total time: 13.08 seconds.
 
-        solve_with_primes_2: roughly the same time
-    '''
+    solve_with_primes_2: roughly the same time
+    """
 
     start = time.time()
 
@@ -355,13 +366,13 @@ def test_range():
             print(solution)
             last = solution[0]
 
-    print("Total time: {0:.2f} seconds.".format(time.time()-start))
+    print("Total time: {0:.2f} seconds.".format(time.time() - start))
 
 
 def debug_assertions():
-    '''
-        simple unit tests
-    '''
+    """
+    simple unit tests
+    """
     assert solve(2)[0] == 2
     assert solve(3)[0] == 2
     assert solve(10)[0] == 5
@@ -370,9 +381,9 @@ def debug_assertions():
 
 
 def main():
-    '''
-        main
-    '''
+    """
+    main
+    """
     debug_assertions()
 
     # project Euler
