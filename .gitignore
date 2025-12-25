@@ -14,6 +14,7 @@
 
 /CPP/Debug
 *.pyc
-/Python/lang/build
+/Python/lang/.build
 /Python/lang/src/project_euler_landron.egg-info
 now.py
+Python/test.cm.txt
